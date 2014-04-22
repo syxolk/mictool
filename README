@@ -1,0 +1,6 @@
+MikroVM
+=======
+
+This project is intended to be an executor / a virtual machine for
+programs 'written' for Microprocessor. It is compatible to the one
+that was developed at the TUM.
