@@ -1,0 +1,10 @@
+#include <iostream>
+#include "io.h"
+
+using namespace std;
+
+int main() {
+  cout<<"Awesome! Hello World."<<endl;
+  readFile();
+  return 0;
+}

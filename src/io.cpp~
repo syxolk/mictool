@@ -1,0 +1,26 @@
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+void readFile(const char* path) {
+  string line;
+  ifstream file(path, ios::in);
+
+  if(file.is_open()) {
+    if( getline(file, line) ) {
+      if(line.compare("version4") != 0) {
+        cout << "Wrong version code: " << line << endl;
+        return;
+      }
+    } else {
+      cout << "No version code" << endl;
+    }
+
+    while( getline(file, line) ) {
+      cout << line << endl;
+    }
+    file.close();
+  } else {
+    cout << "Unable to open file" << endl;
+  }
+}
