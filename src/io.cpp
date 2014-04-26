@@ -84,14 +84,14 @@ int parseHexDigit(char c) {
 
 void parseMicroBitset(const string& str, bitset<80>& bits) {
   int i, bitPos = 0, hex;
-  for(i = 0; i < 10; i++) {
-    hex = parseHexDigit(str[i*3 + 2]);
+  for(i = 1; i < 30; i+=3) {
+    hex = parseHexDigit(str[i + 1]);
     bits[bitPos++] = hex & 1; hex >>= 1;
     bits[bitPos++] = hex & 1; hex >>= 1;
     bits[bitPos++] = hex & 1; hex >>= 1;
     bits[bitPos++] = hex & 1;
     
-    hex = parseHexDigit(str[i*3 + 1]);
+    hex = parseHexDigit(str[i]);
     bits[bitPos++] = hex & 1; hex >>= 1;
     bits[bitPos++] = hex & 1; hex >>= 1;
     bits[bitPos++] = hex & 1; hex >>= 1;
