@@ -1,6 +1,0 @@
-#ifndef _io_h_
-#define _io_h_
-
-void readFile(const char* path);
-
-#endif /* _io_h_ */
