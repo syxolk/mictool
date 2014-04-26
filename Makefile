@@ -1,5 +1,5 @@
 OBJECTS = $(addprefix bin/,main.o io.o)
-CXXFLAGS = -Wall -Wextra -Werror
+CXXFLAGS = -Wall -Wextra -Werror -std=c++11 -O3
 EXECUTABLE = mikro
 
 $(EXECUTABLE) : $(OBJECTS)
@@ -19,4 +19,4 @@ bin/%.o : src/%.cpp
 	$(CXX) -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
 bin/main.o : src/main.cpp src/io.h
-bin/io.o : src/io.cpp
+bin/io.o : src/io.cpp src/io.h

@@ -1,9 +1,10 @@
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include "io.h"
 using namespace std;
 
-void readFile(const char* path) {
+void readFile(const char* path, vector<micro_line>& lines) {
   string line;
   ifstream file(path, ios::in);
 
@@ -44,15 +45,14 @@ void readFile(const char* path) {
         cout << "Can't parse line: too short: " << line << endl;
         continue;
       }
-
-      string mic_line = line.substr(0, 3);
-      string mic_name = line.substr(4, line_length - 34);
-      string mic_program = line.substr(line_length - 30, 30);
-      bitset<80> mic_bits;
-      parseMicroBitset(mic_program, mic_bits);
-
-      cout << "Line: " << mic_line << " Name: " << mic_name << " Program: " << mic_program << endl;
-      cout << "Bits: " << mic_bits << endl;
+      
+      micro_line ml;
+      
+      ml.number = stoi(line.substr(0, 3), NULL, 16);
+      ml.name = line.substr(4, line_length - 34);
+      parseMicroBitset(line.substr(line_length - 30, 30), ml.bits);
+      
+      lines.push_back(ml);
     }
 
     file.close();
