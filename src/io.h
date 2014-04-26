@@ -1,14 +1,14 @@
-#ifndef _io_h_
-#define _io_h_
+#ifndef _MICTOOL_IO_H_
+#define _MICTOOL_IO_H_
 
 using namespace std;
 #include<bitset>
 #include <vector>
 
 struct micro_line {
-	int number;
-	string name;
-	bitset<80> bits;
+  int number;
+  string name;
+  bitset<80> bits;
 };
 
 void readFile(const char* path, vector<micro_line>& lines);
@@ -16,4 +16,4 @@ void errorUnexpected(const char* expected, const char* found);
 void errorEOF(const char* expected);
 void parseMicroBitset(const string& str, bitset<80>& bits);
 
-#endif /* _io_h_ */
+#endif /* _MICTOOL_IO_H_ */

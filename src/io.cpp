@@ -29,9 +29,6 @@ void readFile(const char* path, vector<micro_line>& lines) {
       return;
     }
 
-    /*string mic_line;
-    string mic_name;
-    string mic_program;*/
     size_t line_length;
 
     while( getline(file, line) ) {
