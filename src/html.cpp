@@ -35,6 +35,7 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
     const char* MI_SRC = "AQ\0AB\0ZQ\0ZB\0ZA\0DA\0DQ\0DZ";
     const char* MI_FUNC = "ADD\0\0\0SUBR\0\0SUBS\0\0OR\0\0\0\0AND\0\0\0NOTRS\0EXOR\0\0EXNOR";
     const char* MI_DEST = "QREG\0\0NOP\0\0\0RAMA\0\0RAMF\0\0RAMQD\0RAMD\0\0RAMQU\0RAMU";
+    const char* MI_CIN_MUX = "CI0\0CI1\0CIX\0CIC";
     
     // program lines
     for(auto& line : lines) {
@@ -80,6 +81,48 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       // Destination
       file << "<td colspan=\"3\">" << MI_DEST + getInt(line.bits, 49, 51) * 6 << "</td>";
     
+      // RA Addr
+      file << "<td colspan=\"4\">" << getInt(line.bits, 45, 48) << "</td>";      
+      
+      file << "<td>";
+      if(line.bits[44]) {
+        file << "MR";
+      } else {
+        file << "IR";
+      }
+      file << "</td>";
+      
+      // RB Addr
+      file << "<td colspan=\"4\">" << getInt(line.bits, 40, 43) << "</td>";      
+      
+      file << "<td>";
+      if(line.bits[39]) {
+        file << "MR";
+      } else {
+        file << "IR";
+      }
+      file << "</td>";
+      
+      // Y-Mux
+      file << "<td>";
+      if(line.bits[38]) {
+        file << "H";
+      } else {
+        file << "AB";
+      }
+      file << "</td>";
+      
+      file << "<td>";
+      if(line.bits[37]) {
+        file << "H";
+      } else {
+        file << "DB";
+      }
+      file << "</td>";
+      
+      // CIN-MUX
+      file << "<td colspan=\"2\">" << MI_CIN_MUX + getInt(line.bits, 35, 36) * 4 << "</td>";
+      
       //file << line.name << ": " << line.bits << endl;
       
       file << "</tr>" << endl;
