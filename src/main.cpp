@@ -10,37 +10,44 @@ void printHelp();
 void printVersion();
 void printError();
 
+#define EXIT_SUCCESS 0
+#define EXIT_ERROR 1
+
 int main(int argc, char* argv[]) {
-  if(argc == 2) {
-    if(strcmp(argv[1], "--version") == 0) {
+  
+  int returnCode = EXIT_SUCCESS;
+  
+  if(argc == 2) { // check 1 parameter
+    if(strcmp(argv[1], "--version") == 0) { // check version option
       printVersion();
-    } else if(strcmp(argv[1], "--help") == 0) {
+    } else if(strcmp(argv[1], "--help") == 0) { // check help option
       printHelp();
     } else {
-      printError();
-      return 1;
+      returnCode = EXIT_ERROR;
     }
-  } else if(argc == 4 || argc == 3) {
+  } else if(argc == 4 || argc == 3) { // check 3/4 parameters
     vector<micro_line> lines;
     readFile(argv[1], lines);
     
-    if(argc == 4 && strcmp(argv[2], "--output-html") == 0) {
+    if(argc == 4 && strcmp(argv[2], "--output-html") == 0) { // check HTML option
       writeHTML(argv[3], lines);
-    } else if(argc == 3 && strcmp(argv[2], "--show") == 0) {
+    } else if(argc == 3 && strcmp(argv[2], "--show") == 0) { // check debug option
       for(auto& line : lines) {
         cout << line.number << " : " << line.name  << endl;
         cout << " " << line.bits << endl;
       }
     } else {
-      printError();
-      return 1;
+      returnCode = EXIT_ERROR;
     }
   } else {
-    printError();
-    return 1;
+    returnCode = EXIT_ERROR;
   }
-
-  return 0;
+  
+  if(returnCode == EXIT_ERROR) {
+    printError();
+  }
+  
+  return returnCode;
 }
 
 void printHelp() {
