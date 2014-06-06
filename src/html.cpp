@@ -32,9 +32,14 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
     file << "</tr>" << endl;
     
     const char* MI_INTERRUPT = "LDM\0\0RDM\0\0CLM\0\0STM\0\0BCLM\0BSTM\0LDST\0RDST\0ENI\0\0DISI\0RDVC\0CLI\0\0CLMR\0CLMB\0CLVC\0MCL";
+    const char* MI_SRC = "AQ\0AB\0ZQ\0ZB\0ZA\0DA\0DQ\0DZ";
+    const char* MI_FUNC = "ADD\0\0\0SUBR\0\0SUBS\0\0OR\0\0\0\0AND\0\0\0NOTRS\0EXOR\0\0EXNOR";
+    const char* MI_DEST = "QREG\0\0NOP\0\0\0RAMA\0\0RAMF\0\0RAMQD\0RAMD\0\0RAMQU\0RAMU";
     
     // program lines
     for(auto& line : lines) {
+      
+      file << "<tr>";
       
       // Name and line number
       file << "<td>" << line.number;
@@ -51,7 +56,7 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       }
       file << "</td>";
       
-      file << "<td>";
+      file << "<td colspan=\"4\">";
       file << MI_INTERRUPT + getInt(line.bits, 75, 78) * 5;
       file << "</td>";
       
@@ -63,8 +68,21 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
         file << "K";
       }
       file << "</td>";
+      
+      file << "<td colspan=\"16\">" << getInt(line.bits, 58, 73) << "</td>";
     
-      file << line.name << ": " << line.bits << endl;
+      // Source
+      file << "<td colspan=\"3\">" << MI_SRC + getInt(line.bits, 55, 57) * 3 << "</td>";
+    
+      // Function
+      file << "<td colspan=\"3\">" << MI_FUNC + getInt(line.bits, 52, 54) * 6 << "</td>";
+      
+      // Destination
+      file << "<td colspan=\"3\">" << MI_DEST + getInt(line.bits, 49, 51) * 6 << "</td>";
+    
+      //file << line.name << ": " << line.bits << endl;
+      
+      file << "</tr>" << endl;
     }
     
     file << "</table></body>" << endl << "</html>";
