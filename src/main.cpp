@@ -61,6 +61,7 @@ void printHelp() {
 
 void printVersion() {
   cout << "mictool 1.0" << endl;
+  cout << "This program is compatible with JMIC 1.4 and MPR-Files v4." << endl;
   cout << "This is open source software." << endl;
 }
 
