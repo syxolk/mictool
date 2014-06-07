@@ -31,11 +31,16 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
     }
     file << "</tr>" << endl;
     
-    const char* MI_INTERRUPT = "LDM\0\0RDM\0\0CLM\0\0STM\0\0BCLM\0BSTM\0LDST\0RDST\0ENI\0\0DISI\0RDVC\0CLI\0\0CLMR\0CLMB\0CLVC\0MCL";
-    const char* MI_SRC = "AQ\0AB\0ZQ\0ZB\0ZA\0DA\0DQ\0DZ";
-    const char* MI_FUNC = "ADD\0\0\0SUBR\0\0SUBS\0\0OR\0\0\0\0AND\0\0\0NOTRS\0EXOR\0\0EXNOR";
-    const char* MI_DEST = "QREG\0\0NOP\0\0\0RAMA\0\0RAMF\0\0RAMQD\0RAMD\0\0RAMQU\0RAMU";
-    const char* MI_CIN_MUX = "CI0\0CI1\0CIX\0CIC";
+    const char *MI_INTERRUPT[] = {"LDM", "RDM", "CLM", "STM", "BCLM", "BSTM", "LDST", 
+      "RDST", "ENI", "DISI", "RDVC", "CLI", "CLMR", "CLMB", "CLVC", "MCL"};
+    const char *MI_SRC[] = {"AQ", "AB", "ZQ", "ZB", "ZA", "DA", "DQ", "DZ"};
+    const char *MI_FUNC[] = {"ADD", "SUBR", "SUBS", "OR", "AND", "NOTRS", "EXOR", "EXNOR"};
+    const char *MI_DEST[] = {"QREG", "NOP", "RAMA", "RAMF", "RAMQD", "RAMD", "RAMQU", "RAMU"};
+    const char *MI_CIN_MUX[] = {"CI0", "CI1", "CIX", "CIC"};
+    const char *MI_TEST_WHAT[] = {"-", "&mu;SR", "MSR", "-"};
+    const char *MI_TEST[] = {"signed >", "signed <=", "signed >=", "signed <", "!=", "==",
+      "Not overflow", "Overflow", "&not; (C &or; Z)", "C &or; Z", "unsigned <", "unsigned >=",
+      "unsigned >", "unsigned <=", "not N", "N"};
     
     // program lines
     for(auto& line : lines) {
@@ -57,9 +62,7 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       }
       file << "</td>";
       
-      file << "<td colspan=\"4\">";
-      file << MI_INTERRUPT + getInt(line.bits, 75, 78) * 5;
-      file << "</td>";
+      file << "<td colspan=\"4\">" << MI_INTERRUPT[getInt(line.bits, 75, 78)] << "</td>";
       
       // Constant
       file << "<td>";
@@ -73,13 +76,13 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       file << "<td colspan=\"16\">" << getInt(line.bits, 58, 73) << "</td>";
     
       // Source
-      file << "<td colspan=\"3\">" << MI_SRC + getInt(line.bits, 55, 57) * 3 << "</td>";
+      file << "<td colspan=\"3\">" << MI_SRC[getInt(line.bits, 55, 57)] << "</td>";
     
       // Function
-      file << "<td colspan=\"3\">" << MI_FUNC + getInt(line.bits, 52, 54) * 6 << "</td>";
+      file << "<td colspan=\"3\">" << MI_FUNC[getInt(line.bits, 52, 54)] << "</td>";
       
       // Destination
-      file << "<td colspan=\"3\">" << MI_DEST + getInt(line.bits, 49, 51) * 6 << "</td>";
+      file << "<td colspan=\"3\">" << MI_DEST[getInt(line.bits, 49, 51)] << "</td>";
     
       // RA Addr
       file << "<td colspan=\"4\">" << getInt(line.bits, 45, 48) << "</td>";      
@@ -121,7 +124,33 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       file << "</td>";
       
       // CIN-MUX
-      file << "<td colspan=\"2\">" << MI_CIN_MUX + getInt(line.bits, 35, 36) * 4 << "</td>";
+      file << "<td colspan=\"2\">" << MI_CIN_MUX[getInt(line.bits, 35, 36)] << "</td>";
+      
+      // Shifts
+      // TODO unimplemented
+      file << "<td colspan=\"4\"></td>";
+      
+      // Load status register
+      file << "<td>";
+      if(line.bits[30]) {
+        file << "H";
+      } else {
+        file << "L";
+      }
+      file << "</td>";
+      
+      file << "<td>";
+      if(line.bits[29]) {
+        file << "H";
+      } else {
+        file << "L";
+      }
+      file << "</td>";
+      
+      // Test status register
+      file << "<td colspan=\"2\">" << MI_TEST_WHAT[getInt(line.bits, 27, 28)] << "</td>";
+      
+      file << "<td colspan=\"4\">" << MI_TEST[getInt(line.bits, 23, 26)] << "</td>";
       
       //file << line.name << ": " << line.bits << endl;
       
