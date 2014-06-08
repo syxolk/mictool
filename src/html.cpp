@@ -41,6 +41,8 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
     const char *MI_TEST[] = {"signed >", "signed <=", "signed >=", "signed <", "!=", "==",
       "Not overflow", "Overflow", "&not; (C &or; Z)", "C &or; Z", "unsigned <", "unsigned >=",
       "unsigned >", "unsigned <=", "not N", "N"};
+    const char *MI_JUMP[] = {"JZ", "CJS", "JMAP", "CJP", "PUSH", "JSRP", "CJV", "JRP",
+      "RFCT", "RPCT", "CRTN", "CJPP", "LDCT", "LOOP", "CONT", "TWB"};
     
     // program lines
     for(auto& line : lines) {
@@ -151,6 +153,75 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       file << "<td colspan=\"2\">" << MI_TEST_WHAT[getInt(line.bits, 27, 28)] << "</td>";
       
       file << "<td colspan=\"4\">" << MI_TEST[getInt(line.bits, 23, 26)] << "</td>";
+      
+      // Condition Code Enable
+      file << "<td>";
+      if(line.bits[22]) {
+        file << "PS";
+      } else {
+        file << "C";
+      }
+      file << "</td>";
+      
+      // Jump
+      file << "<td colspan=\"4\">" << MI_JUMP[getInt(line.bits, 18, 21)] << "</td>";
+      
+      // BAR
+      file << "<td colspan=\"12\">" << getInt(line.bits, 6, 17) << "</td>";
+      
+      // BZ_LD
+      file << "<td>";
+      if(line.bits[5]) {
+        file << "H";
+      } else {
+        file << "L";
+      }
+      file << "</td>";
+      
+      // BZ_ED
+      file << "<td>";
+      if(line.bits[4]) {
+        file << "H";
+      } else {
+        file << "E";
+      }
+      file << "</td>";
+      
+      // BZ_INC
+      file << "<td>";
+      if(line.bits[3]) {
+        file << "H";
+      } else {
+        file << "I";
+      }
+      file << "</td>";
+      
+      // BZ_EA
+      file << "<td>";
+      if(line.bits[2]) {
+        file << "H";
+      } else {
+        file << "E";
+      }
+      file << "</td>";
+      
+      // IR_LD
+      file << "<td>";
+      if(line.bits[1]) {
+        file << "H";
+      } else {
+        file << "L";
+      }
+      file << "</td>";
+      
+      // MWE
+      file << "<td>";
+      if(line.bits[0]) {
+        file << "R";
+      } else {
+        file << "W";
+      }
+      file << "</td>";
       
       //file << line.name << ": " << line.bits << endl;
       
