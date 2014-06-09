@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <cstring>
+#include <cstdlib>
 #include "io.h"
 #include "html.h"
 
@@ -8,10 +9,7 @@ using namespace std;
 
 void printHelp();
 void printVersion();
-void printError();
-
-#define EXIT_SUCCESS 0
-#define EXIT_ERROR 1
+void printError(char* arg0);
 
 int main(int argc, char* argv[]) {
   
@@ -23,7 +21,7 @@ int main(int argc, char* argv[]) {
     } else if(strcmp(argv[1], "--help") == 0) { // check help option
       printHelp();
     } else {
-      returnCode = EXIT_ERROR;
+      returnCode = EXIT_FAILURE;
     }
   } else if(argc == 4 || argc == 3) { // check 3/4 parameters
     vector<micro_line> lines;
@@ -37,14 +35,14 @@ int main(int argc, char* argv[]) {
         cout << " " << line.bits << endl;
       }
     } else {
-      returnCode = EXIT_ERROR;
+      returnCode = EXIT_FAILURE;
     }
   } else {
-    returnCode = EXIT_ERROR;
+    returnCode = EXIT_FAILURE;
   }
   
-  if(returnCode == EXIT_ERROR) {
-    printError();
+  if(returnCode == EXIT_FAILURE) {
+    printError(argv[0]);
   }
   
   return returnCode;
@@ -65,7 +63,7 @@ void printVersion() {
   cout << "This is open source software." << endl;
 }
 
-void printError() {
+void printError(char* arg0) {
   cout << "Wrong parameters." << endl;
-  cout << "Type mictool --help for help." << endl;
+  cout << "Type " << arg0 << " --help for help." << endl;
 }
