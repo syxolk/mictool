@@ -5,6 +5,11 @@
 #include "io.h"
 using namespace std;
 
+struct row {
+  const char* name;
+  const int colspan;
+};
+
 int getInt(const bitset<80> bits, int fromBit, int toBit);
 
 void writeHTML(const char* path, vector<micro_line>& lines) {
@@ -15,7 +20,7 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       << "<html>" << endl
       << "<head>" << "<title>MI Program</title>" << endl
       << "<style type=\"text/css\">" << endl
-      << ".bits {font-size: x-small;}" << endl
+      << ".bits, .description {font-size: xx-small;}" << endl
       << ".program, .program th, .program td {border: 1px solid black;}" << endl
       << ".program {border-collapse: collapse;}" << endl
       << "</style>" << endl
@@ -30,7 +35,42 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       file << "<td>" << i << "</td>";
     }
     file << "</tr>" << endl;
+
+    // table description header
+    static row descriptionRow[] = {
+      {"IE", 1},
+      {"Interrupt", 4},
+      {"KMUX", 1},
+      {"Konstante", 16},
+      {"Src", 3},
+      {"Func", 3},
+      {"Dest", 3},
+      {"RA", 4}, {"ASEL", 1},
+      {"RB", 4}, {"BSEL", 1},
+      {"YMUX", 2}, {"CIN MUX", 2},
+      {"Shift", 4},
+      {"CE&mu;", 1}, {"CEM", 1},
+      {"Test", 6},
+      {"CCEN", 1},
+      {"AM2910", 4},
+      {"BAR", 12},
+      {"BZ_LD", 1}, {"BZ_ED", 1}, {"BZ_INC", 1}, {"BZ_EA", 1},
+      {"IR_LD", 1}, {"MWE", 1},
+      {NULL, 0}
+    };
     
+    file << "<tr class=\"description\"><td></td>";
+    for(row *column = descriptionRow; column->name != NULL; column++) {
+      if(column->colspan == 0) {
+        file << "<td>";
+      } else {
+        file << "<td colspan=\"" << column->colspan << "\">";
+      }
+      file << column->name << "</td>";
+    }
+    file << "</tr>" << endl;
+    
+    // string constants
     const char *MI_INTERRUPT[] = {"LDM", "RDM", "CLM", "STM", "BCLM", "BSTM", "LDST", 
       "RDST", "ENI", "DISI", "RDVC", "CLI", "CLMR", "CLMB", "CLVC", "MCL"};
     const char *MI_SRC[] = {"AQ", "AB", "ZQ", "ZB", "ZA", "DA", "DQ", "DZ"};
