@@ -2,10 +2,23 @@
 #include <vector>
 #include <cstring>
 #include <cstdlib>
+#include <getopt.h>
 #include "io.h"
 #include "html.h"
 
 using namespace std;
+
+enum OutputType {
+  HTML, DEBUG, LATEX
+};
+
+// CLI options
+// struct is using c++11 default values
+struct options {
+  char *inputFile = NULL;
+  char *outputFile = NULL;
+  OutputType outputType = DEBUG;
+};
 
 void printHelp();
 void printVersion();
@@ -13,48 +26,69 @@ void printError(char* arg0);
 
 int main(int argc, char* argv[]) {
   
-  int returnCode = EXIT_SUCCESS;
+  int c;
+  options opts;
   
-  if(argc == 2) { // check 1 parameter
-    if(strcmp(argv[1], "--version") == 0) { // check version option
-      printVersion();
-    } else if(strcmp(argv[1], "--help") == 0) { // check help option
+  static option long_options[] = {
+    {"help",        no_argument,       0, 'h'},
+    {"version",     no_argument,       0, 'v'},
+    {"debug",       no_argument,       0, 'd'},
+    {"output-html", required_argument, 0, 'o'},
+    {0,             0,                 0,  0 }
+  };
+  
+  while ( (c = getopt_long(argc, argv, "hvo:d", long_options, NULL)) != -1) {
+    switch(c) {
+    case 'h':
       printHelp();
-    } else {
-      returnCode = EXIT_FAILURE;
+      return EXIT_SUCCESS;
+    case 'v':
+      printVersion();
+      return EXIT_SUCCESS;
+    case 'o':
+      opts.outputFile = optarg;
+      opts.outputType = HTML;
+      break;
+    case 'd':
+      opts.outputType = DEBUG;
+      break;
+    case '?':
+      break;
+    default:
+      printError(argv[0]);
+      return EXIT_FAILURE;
     }
-  } else if(argc == 4 || argc == 3) { // check 3/4 parameters
-    vector<micro_line> lines;
-    readFile(argv[1], lines);
+  }
+  
+  if (optind == argc - 1) {
+    opts.inputFile = argv[optind];
     
-    if(argc == 4 && strcmp(argv[2], "--output-html") == 0) { // check HTML option
-      writeHTML(argv[3], lines);
-    } else if(argc == 3 && strcmp(argv[2], "--show") == 0) { // check debug option
+    vector<micro_line> lines;
+    readFile(opts.inputFile, lines);
+    
+    if(opts.outputType == DEBUG) {
       for(auto& line : lines) {
         cout << line.number << " : " << line.name  << endl;
         cout << " " << line.bits << endl;
       }
-    } else {
-      returnCode = EXIT_FAILURE;
+    } else if(opts.outputType == HTML) {
+      writeHTML(opts.outputFile, lines);
     }
   } else {
-    returnCode = EXIT_FAILURE;
-  }
-  
-  if(returnCode == EXIT_FAILURE) {
     printError(argv[0]);
+    return EXIT_FAILURE;
   }
   
-  return returnCode;
+  return EXIT_SUCCESS;
 }
 
 void printHelp() {
   cout << "Usage: mictool inputfile option [outputfile]" << endl;
   cout << "Options:" << endl;
-  cout << "--output-html outputfile Writes a formatted HTML file of the micro program" << endl;
-  cout << "--show                   Writes the micro program to stdout (for debug only)" << endl;
-  cout << "--version                Display mictool version" << endl;
-  cout << "--help                   Display this information" << endl;
+  cout << "-o, --output-html outputfile Writes a formatted HTML file of the micro program" << endl;
+  cout << "-d, --show                   Writes the micro program to stdout (for debug only)" << endl;
+  cout << "-v, --version                Display mictool version" << endl;
+  cout << "-h, --help                   Display this information" << endl;
 }
 
 void printVersion() {
