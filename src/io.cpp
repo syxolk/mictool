@@ -38,7 +38,7 @@ void readFile(const char* path, vector<micro_line>& lines) {
 
       line_length = line.length();
       
-      if(line_length < 34) {
+      if(line_length < 33) {
         cout << "Can't parse line: too short: " << line << endl;
         continue;
       }
@@ -47,7 +47,11 @@ void readFile(const char* path, vector<micro_line>& lines) {
       
       //ml.number = stoi(line.substr(0, 3), NULL, 16);
       sscanf(line.substr(0, 3).c_str(), "%x", &ml.number);
-      ml.name = line.substr(4, line_length - 34);
+      if(line_length > 34) {
+        ml.name = line.substr(4, line_length - 34);
+      } else {
+        ml.name = "";
+      }
       parseMicroBitset(line.substr(line_length - 30, 30), ml.bits);
       
       lines.push_back(ml);
