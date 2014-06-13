@@ -18,11 +18,13 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
     
     file << "<!doctype html>" << endl 
       << "<html>" << endl
-      << "<head>" << "<title>MI Program</title>" << endl
+      << "<head>" << "<meta charset=\"utf-8\"><title>MI Program</title>" << endl
       << "<style type=\"text/css\">" << endl
       << ".bits, .description {font-size: xx-small;}" << endl
       << ".program, .program th, .program td {border: 1px solid black;}" << endl
       << ".program {border-collapse: collapse;}" << endl
+      << ".program .line-name {font-family: monospace;}" << endl
+      << ".program .default {color: gray;}" << endl
       << "</style>" << endl
       << "</head>" << endl
       << "<body>" << endl;
@@ -61,7 +63,7 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
     
     file << "<tr class=\"description\"><td></td>";
     for(row *column = descriptionRow; column->name != NULL; column++) {
-      if(column->colspan == 0) {
+      if(column->colspan == 1) {
         file << "<td>";
       } else {
         file << "<td colspan=\"" << column->colspan << "\">";
@@ -92,7 +94,7 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       // Name and line number
       file << "<td>" << line.number;
       if(line.name.length() > 0) {
-        file << " <tt>" << line.name << "</tt></td>";
+        file << " <span class=\"line-name\">" << line.name << "</span></td>";
       }
       
       // Interrupt
@@ -173,19 +175,17 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       file << "<td colspan=\"4\"></td>";
       
       // Load status register
-      file << "<td>";
       if(line.bits[30]) {
-        file << "H";
+        file << "<td class=\"default\">H";
       } else {
-        file << "L";
+        file << "<td>L";
       }
       file << "</td>";
       
-      file << "<td>";
       if(line.bits[29]) {
-        file << "H";
+        file << "<td class=\"default\">H";
       } else {
-        file << "L";
+        file << "<td>L";
       }
       file << "</td>";
       
@@ -210,56 +210,50 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       file << "<td colspan=\"12\">" << getInt(line.bits, 6, 17) << "</td>";
       
       // BZ_LD
-      file << "<td>";
       if(line.bits[5]) {
-        file << "H";
+        file << "<td class=\"default\">H";
       } else {
-        file << "L";
+        file << "<td>L";
       }
       file << "</td>";
       
       // BZ_ED
-      file << "<td>";
       if(line.bits[4]) {
-        file << "H";
+        file << "<td class=\"default\">H";
       } else {
-        file << "E";
+        file << "<td>E";
       }
       file << "</td>";
       
       // BZ_INC
-      file << "<td>";
       if(line.bits[3]) {
-        file << "H";
+        file << "<td class=\"default\">H";
       } else {
-        file << "I";
+        file << "<td>I";
       }
       file << "</td>";
       
       // BZ_EA
-      file << "<td>";
       if(line.bits[2]) {
-        file << "H";
+        file << "<td class=\"default\">H";
       } else {
-        file << "E";
+        file << "<td>E";
       }
       file << "</td>";
       
       // IR_LD
-      file << "<td>";
       if(line.bits[1]) {
-        file << "H";
+        file << "<td class=\"default\">H";
       } else {
-        file << "L";
+        file << "<td>L";
       }
       file << "</td>";
       
       // MWE
-      file << "<td>";
       if(line.bits[0]) {
-        file << "R";
+        file << "<td class=\"default\">R";
       } else {
-        file << "W";
+        file << "<td>W";
       }
       file << "</td>";
       
