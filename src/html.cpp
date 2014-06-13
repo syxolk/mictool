@@ -24,7 +24,7 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       << ".program, .program th, .program td {border: 1px solid black;}" << endl
       << ".program {border-collapse: collapse;}" << endl
       << ".program .line-name {font-family: monospace;}" << endl
-      << ".program .default {color: gray;}" << endl
+      << ".program .default {color: lightgray;}" << endl
       << "</style>" << endl
       << "</head>" << endl
       << "<body>" << endl;
@@ -85,6 +85,10 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       "unsigned >", "unsigned <=", "not N", "N"};
     const char *MI_JUMP[] = {"JZ", "CJS", "JMAP", "CJP", "PUSH", "JSRP", "CJV", "JRP",
       "RFCT", "RPCT", "CRTN", "CJPP", "LDCT", "LOOP", "CONT", "TWB"};
+    const char *MI_SHIFT[] = {"RSL", "RSH", "RSCONI", "RSDH", "RSDC", "RSDN", "RSDL", "RSDCO",
+      "RSRCO", "RSRCIO", "RSR", "RSDIC", "RSDRCI", "RSDRCO", "RSDXOR", "RSDR",
+      "LSLCO", "LSHCO", "LSL", "LSH", "LSDLCO", "LSDHCO", "LSDL", "LSDH", "LSCRO",
+      "LSCRIO", "LSR", "LSLICI", "LSDCIO", "LSDRCO", "LSDCI", "LDSR"};
     
     // program lines
     for(auto& line : lines) {
@@ -151,19 +155,17 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       file << "</td>";
       
       // Y-Mux
-      file << "<td>";
       if(line.bits[38]) {
-        file << "H";
+        file << "<td class=\"default\">H";
       } else {
-        file << "AB";
+        file << "<td>AB";
       }
       file << "</td>";
       
-      file << "<td>";
       if(line.bits[37]) {
-        file << "H";
+        file << "<td class=\"default\">H";
       } else {
-        file << "DB";
+        file << "<td>DB";
       }
       file << "</td>";
       
@@ -171,8 +173,7 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       file << "<td colspan=\"2\">" << MI_CIN_MUX[getInt(line.bits, 35, 36)] << "</td>";
       
       // Shifts
-      // TODO unimplemented
-      file << "<td colspan=\"4\"></td>";
+      file << "<td colspan=\"4\">" << MI_SHIFT[getInt(line.bits, 31, 34) + (line.bits[50] << 4)] << "</td>";
       
       // Load status register
       if(line.bits[30]) {
