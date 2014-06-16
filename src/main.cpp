@@ -86,7 +86,7 @@ void printHelp() {
   cout << "Usage: mictool inputfile option [outputfile]" << endl;
   cout << "Options:" << endl;
   cout << "-o, --output-html outputfile Writes a formatted HTML file of the micro program" << endl;
-  cout << "-d, --show                   Writes the micro program to stdout (for debug only)" << endl;
+  cout << "-d, --debug                  Writes the micro program to stdout (for debugging purposes)" << endl;
   cout << "-v, --version                Display mictool version" << endl;
   cout << "-h, --help                   Display this information" << endl;
 }
