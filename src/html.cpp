@@ -25,6 +25,8 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       << ".program {border-collapse: collapse;}" << endl
       << ".program .line-name {font-family: monospace;}" << endl
       << ".program .default {color: lightgray;}" << endl
+      << ".program .named {font-weight:bold;}" << endl
+      << ".program .named > td {padding:5px;}" << endl
       << "</style>" << endl
       << "</head>" << endl
       << "<body>" << endl;
@@ -80,9 +82,9 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
     const char *MI_DEST[] = {"QREG", "NOP", "RAMA", "RAMF", "RAMQD", "RAMD", "RAMQU", "RAMU"};
     const char *MI_CIN_MUX[] = {"CI0", "CI1", "CIX", "CIC"};
     const char *MI_TEST_WHAT[] = {"-", "&mu;SR", "MSR", "-"};
-    const char *MI_TEST[] = {"signed >", "signed <=", "signed >=", "signed <", "!=", "==",
-      "Not overflow", "Overflow", "&not; (C &or; Z)", "C &or; Z", "unsigned <", "unsigned >=",
-      "unsigned >", "unsigned <=", "not N", "N"};
+    const char *MI_TEST[] = {"signed &gt;", "signed &le;", "signed &ge;", "signed &lt;", "&ne;", "=",
+      "Not overflow", "Overflow", "&not; (C &or; Z)", "C &or; Z", "unsigned &lt;", "unsigned &ge;",
+      "unsigned &gt;", "unsigned &le;", "not N", "N"};
     const char *MI_JUMP[] = {"JZ", "CJS", "JMAP", "CJP", "PUSH", "JSRP", "CJV", "JRP",
       "RFCT", "RPCT", "CRTN", "CJPP", "LDCT", "LOOP", "CONT", "TWB"};
     const char *MI_SHIFT[] = {"RSL", "RSH", "RSCONI", "RSDH", "RSDC", "RSDN", "RSDL", "RSDCO",
@@ -90,16 +92,25 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       "LSLCO", "LSHCO", "LSL", "LSH", "LSDLCO", "LSDHCO", "LSDL", "LSDH", "LSCRO",
       "LSCRIO", "LSR", "LSLICI", "LSDCIO", "LSDRCO", "LSDCI", "LDSR"};
     
+    int lastLineNumber = -1;
+    bool outputExtraNameLine = true;
+    
     // program lines
     for(auto& line : lines) {
+      
+      if(outputExtraNameLine || (line.number > lastLineNumber + 1)) {
+        file << "<tr class=\"named\"><td colspan=\"81\">" << line.name << "</td></tr>" << endl;
+        outputExtraNameLine = true;
+      }
       
       file << "<tr>";
       
       // Name and line number
       file << "<td>" << line.number;
-      if(line.name.length() > 0) {
-        file << " <span class=\"line-name\">" << line.name << "</span></td>";
+      if(!outputExtraNameLine && line.name.length() > 0) {
+        file << " <span class=\"line-name\">" << line.name << "</span>";
       }
+      file << "</td>";
       
       // Interrupt
       file << "<td>";
@@ -261,6 +272,9 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       //file << line.name << ": " << line.bits << endl;
       
       file << "</tr>" << endl;
+      
+      lastLineNumber = line.number;
+      outputExtraNameLine = false;
     }
     
     file << "</table></body>" << endl << "</html>";
