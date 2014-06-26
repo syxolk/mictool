@@ -25,8 +25,7 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       << ".program {border-collapse: collapse;}" << endl
       << ".program .line-name {font-family: monospace;}" << endl
       << ".program .default {color: lightgray;}" << endl
-      << ".program .named {font-weight:bold;}" << endl
-      << ".program .named > td {padding:5px;}" << endl
+      << ".program th {padding:5px;text-align:left;}" << endl
       << "</style>" << endl
       << "</head>" << endl
       << "<body>" << endl;
@@ -99,7 +98,7 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
     for(auto& line : lines) {
       
       if(outputExtraNameLine || (line.number > lastLineNumber + 1)) {
-        file << "<tr class=\"named\"><td colspan=\"81\">" << line.name << "</td></tr>" << endl;
+        file << "<tr><th colspan=\"81\">" << line.name << "</th></tr>" << endl;
         outputExtraNameLine = true;
       }
       
