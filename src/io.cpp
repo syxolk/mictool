@@ -4,12 +4,22 @@
 #include "io.h"
 using namespace std;
 
+// Helper function that removes \r when from lines when
+// reading Windows files on Linux.
+istream& safe_getline(istream& is, string& str) {
+  getline(is, str);
+  if(str.length() > 0 && str.back() == '\r') {
+    str.resize(str.length() - 1);
+  }
+  return is;
+}
+
 void readFile(const char* path, vector<micro_line>& lines) {
   string line;
   ifstream file(path, ios::in);
 
   if(file.is_open()) {
-    if( getline(file, line) ) {
+    if( safe_getline(file, line) ) {
       if(line.compare("version4") != 0) {
         errorUnexpected("version4", line.c_str());
         return;
@@ -19,7 +29,7 @@ void readFile(const char* path, vector<micro_line>& lines) {
       return;
     }
 
-    if( getline(file, line) ) {
+    if( safe_getline(file, line) ) {
       if(line.compare("mikroprogramm:") != 0) {
         errorUnexpected("mikroprogramm:", line.c_str());
         return;
@@ -31,7 +41,7 @@ void readFile(const char* path, vector<micro_line>& lines) {
 
     size_t line_length;
 
-    while( getline(file, line) ) {
+    while( safe_getline(file, line) ) {
       if( line.compare("maschinenprogramm:") == 0 || line.compare("register:") == 0 ) {
         break;
       }
