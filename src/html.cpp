@@ -16,28 +16,28 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
   ofstream file(path);
   if(file.is_open()) {
     
-    file << "<!doctype html>" << endl 
-      << "<html>" << endl
-      << "<head>" << "<meta charset=\"utf-8\"><title>MI Program</title>" << endl
-      << "<style type=\"text/css\">" << endl
-      << ".bits, .description {font-size: xx-small;}" << endl
-      << ".program, .program th, .program td {border: 1px solid black;}" << endl
-      << ".program {border-collapse: collapse;}" << endl
-      << ".program .line-name {font-family: monospace;}" << endl
-      << ".program .default {color: lightgray;}" << endl
-      << ".program th {padding:5px;text-align:left;}" << endl
-      << "</style>" << endl
-      << "</head>" << endl
-      << "<body>" << endl;
+    file << "<!doctype html>\n"
+      << "<html>\n"
+      << "<head>" << "<meta charset=\"utf-8\"><title>MI Program</title>\n"
+      << "<style type=\"text/css\">\n"
+      << ".bits, .description {font-size: xx-small;}\n"
+      << ".program, .program th, .program td {border: 1px solid black;}\n"
+      << ".program {border-collapse: collapse;}\n"
+      << ".program .line-name {font-family: monospace;}\n"
+      << ".program .default {color: lightgray;}\n"
+      << ".program th {padding:5px;text-align:left;}\n"
+      << "</style>\n"
+      << "</head>\n"
+      << "<body>\n";
     
-    file << "<table class=\"program\">" << endl;
+    file << "<table class=\"program\">\n";
     
     // bit numbers from 79 to 0
     file << "<tr class=\"bits\"><td></td>";
     for(int i=79; i>=0; i--) {
       file << "<td>" << i << "</td>";
     }
-    file << "</tr>" << endl;
+    file << "</tr>\n";
 
     // table description header
     static row descriptionRow[] = {
@@ -71,7 +71,7 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       }
       file << column->name << "</td>";
     }
-    file << "</tr>" << endl;
+    file << "</tr>\n";
     
     // string constants
     const char *MI_INTERRUPT[] = {"LDM", "RDM", "CLM", "STM", "BCLM", "BSTM", "LDST", 
@@ -98,7 +98,7 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
     for(auto& line : lines) {
       
       if(outputExtraNameLine || (line.number > lastLineNumber + 1)) {
-        file << "<tr><th colspan=\"81\">" << line.name << "</th></tr>" << endl;
+        file << "<tr><th colspan=\"81\">" << line.name << "</th></tr>\n";
         outputExtraNameLine = true;
       }
       
@@ -268,15 +268,13 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       }
       file << "</td>";
       
-      //file << line.name << ": " << line.bits << endl;
-      
-      file << "</tr>" << endl;
+      file << "</tr>\n";
       
       lastLineNumber = line.number;
       outputExtraNameLine = false;
     }
     
-    file << "</table></body>" << endl << "</html>";
+    file << "</table></body>\n</html>";
     
     file.close();
   } else {
