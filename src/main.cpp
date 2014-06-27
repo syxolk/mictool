@@ -15,9 +15,9 @@ enum OutputType {
 // CLI options
 // struct is using c++11 default values
 struct options {
-  char *inputFile = NULL;
-  char *outputFile = NULL;
-  OutputType outputType = DEBUG;
+  char *inputFile;
+  char *outputFile;
+  OutputType outputType;
 };
 
 void printHelp();
@@ -28,6 +28,8 @@ int main(int argc, char* argv[]) {
   
   int c;
   options opts;
+  opts.inputFile = opts.outputFile = NULL;
+  opts.outputType = DEBUG;
   
   static option long_options[] = {
     {"help",        no_argument,       0, 'h'},

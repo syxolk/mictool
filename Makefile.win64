@@ -1,7 +1,7 @@
-CXXFLAGS = -Wall -Wextra -Werror -std=c++11 -O3
-EXECUTABLE = mictool
-CXX = g++
-BIN = bin
+CXXFLAGS = -Wall -Wextra -Werror -std=c++0x -O3 -static-libgcc -static-libstdc++ 
+EXECUTABLE = mictool-win64.exe
+CXX = x86_64-w64-mingw32-g++
+BIN = bin-win64
 OBJECTS = $(addprefix $(BIN)/,main.o io.o html.o)
 
 $(EXECUTABLE) : $(OBJECTS)
