@@ -12,8 +12,5 @@ struct micro_line {
 };
 
 void readFile(const char* path, vector<micro_line>& lines);
-void errorUnexpected(const char* expected, const char* found);
-void errorEOF(const char* expected);
-void parseMicroBitset(const string& str, bitset<80>& bits);
 
 #endif /* _MICTOOL_IO_H_ */
