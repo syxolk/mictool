@@ -11,6 +11,10 @@ struct micro_line {
   bitset<80> bits;
 };
 
-void readFile(const char* path, vector<micro_line>& lines);
+struct ram_cell {
+  char data[5];
+};
+
+void readFile(const char* path, vector<micro_line>& lines, vector<ram_cell>& ram_cells);
 
 #endif /* _MICTOOL_IO_H_ */

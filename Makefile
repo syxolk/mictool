@@ -1,8 +1,8 @@
-CXXFLAGS = -Wall -Wextra -Werror -std=c++11 -O3
+CXXFLAGS = -Wall -Wextra -Werror -std=c++0x -O3
 EXECUTABLE = mictool
 CXX = g++
 BIN = bin
-OBJECTS = $(addprefix $(BIN)/,main.o io.o html.o)
+OBJECTS = $(addprefix $(BIN)/,main.o io.o html.o util.o)
 
 $(EXECUTABLE) : $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $(EXECUTABLE) $(OBJECTS)
@@ -20,6 +20,8 @@ $(BIN) :
 $(BIN)/%.o : src/%.cpp
 	$(CXX) -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
+$(BIN)/util.o : src/util.cpp src/util.h
 $(BIN)/main.o : src/main.cpp src/io.h src/html.h
-$(BIN)/io.o : src/io.cpp src/io.h
-$(BIN)/html.o : src/html.cpp src/html.h src/io.h
+$(BIN)/io.o : src/io.cpp src/io.h src/util.h
+$(BIN)/html.o : src/html.cpp src/html.h src/io.h src/util.h
+

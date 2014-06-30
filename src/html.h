@@ -5,6 +5,6 @@
 #include "io.h"
 using namespace std;
 
-void writeHTML(const char* path, vector<micro_line>& lines);
+void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ram_cells);
 
 #endif /* _MICTOOL_HTML_H_ */

@@ -3,6 +3,7 @@
 #include <iostream>
 #include "html.h"
 #include "io.h"
+#include "util.h"
 using namespace std;
 
 struct row {
@@ -11,8 +12,10 @@ struct row {
 };
 
 int getInt(const bitset<80> bits, int fromBit, int toBit);
+int parseOpCode(const char data[5]);
+const char* getMicroLineNameByLineNumber(vector<micro_line>& lines, int lineNumber);
 
-void writeHTML(const char* path, vector<micro_line>& lines) {
+void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ram_cells) {
   ofstream file(path);
   if(file.is_open()) {
     
@@ -274,12 +277,45 @@ void writeHTML(const char* path, vector<micro_line>& lines) {
       outputExtraNameLine = false;
     }
     
-    file << "</table></body>\n</html>";
+    file << "</table>\n<table>\n";
+    file << "<tr><th>#</th><th>data</th><th>interpretation</th></tr>\n";
+    
+    int i = 0;
+    for(auto& cell : ram_cells) {
+      file << "<tr><td>" << (i++) <<"</td><td>" << cell.data << "</td><td>";
+      
+      if(!(cell.data[0] == '0' && cell.data[1] == '0')) {
+        int opCode = parseOpCode(cell.data);
+        const char* name = getMicroLineNameByLineNumber(lines, opCode * 16);
+        
+        if(name != NULL) {
+          file << name;
+        }
+      }
+      
+      file <<"</td></tr>\n";
+    }
+    
+    file << "</table>\n</body>\n</html>";
     
     file.close();
   } else {
     cout << "Cannot write file: " << path << endl;
   }
+}
+
+int parseOpCode(const char data[5]) {
+  return parseHexDigit(data[0]) * 16 + parseHexDigit(data[1]);
+}
+
+const char* getMicroLineNameByLineNumber(vector<micro_line>& lines, int lineNumber) {
+  for(auto& line : lines) {
+    if(line.number == lineNumber) {
+      return line.name.c_str();
+    }
+  }
+  
+  return NULL;
 }
 
 int getInt(const bitset<80> bits, int fromBit, int toBit) {

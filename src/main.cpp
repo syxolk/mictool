@@ -66,15 +66,20 @@ int main(int argc, char* argv[]) {
     opts.inputFile = argv[optind];
     
     vector<micro_line> lines;
-    readFile(opts.inputFile, lines);
+    vector<ram_cell> ram_cells;
+    readFile(opts.inputFile, lines, ram_cells);
     
     if(opts.outputType == DEBUG) {
       for(auto& line : lines) {
         cout << line.number << " : " << line.name  << endl;
         cout << " " << line.bits << endl;
       }
+      
+      for(auto& cell : ram_cells) {
+        cout << cell.data << endl;
+      }
     } else if(opts.outputType == HTML) {
-      writeHTML(opts.outputFile, lines);
+      writeHTML(opts.outputFile, lines, ram_cells);
     }
   } else {
     printError(argv[0]);

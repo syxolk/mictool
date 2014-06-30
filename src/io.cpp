@@ -1,7 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <cstring>
 #include "io.h"
+#include "util.h"
 using namespace std;
 
 void errorUnexpected(const char* expected, const char* found);
@@ -22,7 +24,7 @@ enum ParsingMode {
   UNKNOWN, MI_PROGRAM, MA_PROGRAM, REGISTER, IP
 };
 
-void readFile(const char* path, vector<micro_line>& lines) {
+void readFile(const char* path, vector<micro_line>& lines, vector<ram_cell>& ram_cells) {
   string line;
   
   // open the file
@@ -77,6 +79,15 @@ void readFile(const char* path, vector<micro_line>& lines) {
         parseMicroBitset(line.substr(line_length - 30, 30), ml.bits);
         
         lines.push_back(ml);
+      } else if(mode == MA_PROGRAM) {
+        size_t line_length = line.length();
+        
+        if(line_length == 4) {
+          ram_cell cell;         
+          memcpy(&cell.data, line.c_str(), 5);
+          
+          ram_cells.push_back(cell);
+        }
       }
     }
 
@@ -92,19 +103,6 @@ void errorUnexpected(const char* expected, const char* found) {
 
 void errorEOF(const char* expected) {
   cout << "Error: expected " << expected << "but reached EOF"; 
-}
-
-int parseHexDigit(char c) {
-  if(c >= '0' && c <= '9') {
-    return c - '0';
-  } else if(c >= 'A' && c <= 'F') {
-    return c - 'A' + 10;
-  } else if(c >= 'a' && c <= 'f') {
-    return c - 'a' + 10;
-  } else {
-    cout << "Unexpected char: " << c << endl;
-    return 0;
-  }
 }
 
 void parseMicroBitset(const string& str, bitset<80>& bits) {
