@@ -24,11 +24,13 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
       << "<head>" << "<meta charset=\"utf-8\"><title>MI Program</title>\n"
       << "<style type=\"text/css\">\n"
       << ".bits, .description {font-size: xx-small;}\n"
-      << ".program, .program th, .program td {border: 1px solid black;}\n"
-      << ".program {border-collapse: collapse;}\n"
+      << ".ram {font-size: small;}\n"
+      << ".program, .program th, .program td, .ram, .ram th, .ram td {border: 1px solid black;}\n"
+      << ".program, .ram {border-collapse: collapse;}\n"
       << ".program .line-name {font-family: monospace;}\n"
       << ".program .default {color: lightgray;}\n"
       << ".program th {padding:5px;text-align:left;}\n"
+      << "h1 {font-size: large;}\n"
       << "</style>\n"
       << "</head>\n"
       << "<body>\n";
@@ -277,7 +279,9 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
       outputExtraNameLine = false;
     }
     
-    file << "</table>\n<table>\n";
+    file << "</table>\n";
+    file << "<h1>Machine program</h1>\n";
+    file << "<table class=\"ram\">\n";
     file << "<tr><th>#</th><th>data</th><th>interpretation</th></tr>\n";
     
     int i = 0;
