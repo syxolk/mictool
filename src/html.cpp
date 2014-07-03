@@ -223,7 +223,15 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
       file << "<td colspan=\"4\">" << MI_JUMP[getInt(line.bits, 18, 21)] << "</td>";
       
       // BAR
-      file << "<td colspan=\"12\">" << getInt(line.bits, 6, 17) << "</td>";
+      int barColumn = getInt(line.bits, 6, 17);
+      file << "<td colspan=\"12\">" << barColumn;
+      if(barColumn != 0) {
+        const char* barName = getMicroLineNameByLineNumber(lines, barColumn);
+        if(barName != NULL) {
+          file << " (" << barName << ")";
+        }
+      }
+      file << "</td>";
       
       // BZ_LD
       if(line.bits[5]) {
