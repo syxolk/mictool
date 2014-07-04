@@ -39,8 +39,18 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
     
     // bit numbers from 79 to 0
     file << "<tr class=\"bits\"><td></td>";
-    for(int i=79; i>=0; i--) {
-      file << "<td>" << i << "</td>";
+    for(int i = 79; i >= 0; i--) {
+      if(i == 73) {
+        file << "<td>73 - 58</td>";
+      } else if(i < 73 && i >= 58) {
+        // no column
+      } else if(i == 17) {
+        file << "<td>17 - 6</td>";
+      } else if(i < 17 && i >= 6) {
+        // no column
+      } else {
+        file << "<td>" << i << "</td>";
+      }
     }
     file << "</tr>\n";
 
@@ -49,7 +59,7 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
       {"IE", 1},
       {"Interrupt", 4},
       {"KMUX", 1},
-      {"Konstante", 16},
+      {"Konstante", 1},
       {"Src", 3},
       {"Func", 3},
       {"Dest", 3},
@@ -61,7 +71,7 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
       {"Test", 6},
       {"CCEN", 1},
       {"AM2910", 4},
-      {"BAR", 12},
+      {"BAR", 1},
       {"BZ_LD", 1}, {"BZ_ED", 1}, {"BZ_INC", 1}, {"BZ_EA", 1},
       {"IR_LD", 1}, {"MWE", 1},
       {NULL, 0}
@@ -103,7 +113,7 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
     for(auto& line : lines) {
       
       if(outputExtraNameLine || (line.number > lastLineNumber + 1)) {
-        file << "<tr><th colspan=\"81\">" << line.name << "</th></tr>\n";
+        file << "<tr><th colspan=\"55\">" << line.name << "</th></tr>\n";
         outputExtraNameLine = true;
       }
       
@@ -127,7 +137,7 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
       
       file << "<td colspan=\"4\">" << MI_INTERRUPT[getInt(line.bits, 75, 78)] << "</td>";
       
-      // Constant
+      // KMUX
       file << "<td>";
       if(line.bits[74]) {
         file << "D";
@@ -136,7 +146,8 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
       }
       file << "</td>";
       
-      file << "<td colspan=\"16\">" << getInt(line.bits, 58, 73) << "</td>";
+      // Constant
+      file << "<td>" << getInt(line.bits, 58, 73) << "</td>";
     
       // Source
       file << "<td colspan=\"3\">" << MI_SRC[getInt(line.bits, 55, 57)] << "</td>";
@@ -224,7 +235,7 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
       
       // BAR
       int barColumn = getInt(line.bits, 6, 17);
-      file << "<td colspan=\"12\">" << barColumn;
+      file << "<td>" << barColumn;
       if(barColumn != 0) {
         const char* barName = getMicroLineNameByLineNumber(lines, barColumn);
         if(barName != NULL) {
