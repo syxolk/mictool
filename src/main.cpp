@@ -6,8 +6,6 @@
 #include "io.h"
 #include "html.h"
 
-using namespace std;
-
 enum OutputType {
   HTML, DEBUG, LATEX
 };
@@ -25,12 +23,12 @@ void printVersion();
 void printError(char* arg0);
 
 int main(int argc, char* argv[]) {
-  
+
   int c;
   options opts;
   opts.inputFile = opts.outputFile = NULL;
   opts.outputType = DEBUG;
-  
+
   static option long_options[] = {
     {"help",        no_argument,       0, 'h'},
     {"version",     no_argument,       0, 'v'},
@@ -38,7 +36,7 @@ int main(int argc, char* argv[]) {
     {"output-html", required_argument, 0, 'o'},
     {0,             0,                 0,  0 }
   };
-  
+
   while ( (c = getopt_long(argc, argv, "hvo:d", long_options, NULL)) != -1) {
     switch(c) {
     case 'h':
@@ -61,22 +59,22 @@ int main(int argc, char* argv[]) {
       return EXIT_FAILURE;
     }
   }
-  
+
   if (optind == argc - 1) {
     opts.inputFile = argv[optind];
-    
-    vector<micro_line> lines;
-    vector<ram_cell> ram_cells;
+
+    std::vector<micro_line> lines;
+    std::vector<ram_cell> ram_cells;
     readFile(opts.inputFile, lines, ram_cells);
-    
+
     if(opts.outputType == DEBUG) {
       for(auto& line : lines) {
-        cout << line.number << " : " << line.name  << endl;
-        cout << " " << line.bits << endl;
+        std::cout << line.number << " : " << line.name  << std::endl;
+        std::cout << " " << line.bits << std::endl;
       }
-      
+
       for(auto& cell : ram_cells) {
-        cout << cell.data << endl;
+        std::cout << cell.data << std::endl;
       }
     } else if(opts.outputType == HTML) {
       writeHTML(opts.outputFile, lines, ram_cells);
@@ -85,26 +83,29 @@ int main(int argc, char* argv[]) {
     printError(argv[0]);
     return EXIT_FAILURE;
   }
-  
+
   return EXIT_SUCCESS;
 }
 
 void printHelp() {
-  cout << "Usage: mictool inputfile option [outputfile]" << endl;
-  cout << "Options:" << endl;
-  cout << "-o, --output-html outputfile Writes a formatted HTML file of the micro program" << endl;
-  cout << "-d, --debug                  Writes the micro program to stdout (for debugging purposes)" << endl;
-  cout << "-v, --version                Display mictool version" << endl;
-  cout << "-h, --help                   Display this information" << endl;
+  std::cout << "Usage: mictool inputfile option [outputfile]\n"
+            << "Options:\n"
+            << "-o, --output-html outputfile Writes a formatted HTML file of the micro program\n"
+            << "-d, --debug                  Writes the micro program to stdout (for debugging purposes)\n"
+            << "-v, --version                Display mictool version\n"
+            << "-h, --help                   Display this information\n"
+            << std::endl;
 }
 
 void printVersion() {
-  cout << "mictool 1.0" << endl;
-  cout << "This program is compatible with JMIC 1.4 and MPR-Files v4." << endl;
-  cout << "This is open source software." << endl;
+  std::cout << "mictool 1.0\n"
+            << "This program is compatible with JMIC 1.4 and MPR-Files v4.\n"
+            << "This is open source software.\n"
+            << std::endl;
 }
 
 void printError(char* arg0) {
-  cout << "Wrong parameters." << endl;
-  cout << "Type " << arg0 << " --help for help." << endl;
+  std::cout << "Wrong parameters.\n"
+            << "Type " << arg0 << " --help for help.\n"
+            << std::endl;
 }

@@ -1,6 +1,5 @@
 #include <iostream>
 #include "util.h"
-using namespace std;
 
 int parseHexDigit(char c) {
   if(c >= '0' && c <= '9') {
@@ -10,7 +9,7 @@ int parseHexDigit(char c) {
   } else if(c >= 'a' && c <= 'f') {
     return c - 'a' + 10;
   } else {
-    cout << "Unexpected char: " << c << endl;
+    std::cout << "Unexpected char: " << c << std::endl;
     return 0;
   }
 }

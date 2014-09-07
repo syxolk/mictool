@@ -4,21 +4,20 @@
 #include "html.h"
 #include "io.h"
 #include "util.h"
-using namespace std;
 
 struct row {
   const char* name;
   const int colspan;
 };
 
-int getInt(const bitset<80> bits, int fromBit, int toBit);
+int getInt(const std::bitset<80> bits, int fromBit, int toBit);
 int parseOpCode(const char data[5]);
-const char* getMicroLineNameByLineNumber(vector<micro_line>& lines, int lineNumber);
+const char* getMicroLineNameByLineNumber(std::vector<micro_line>& lines, int lineNumber);
 
-void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ram_cells) {
-  ofstream file(path);
+void writeHTML(const char* path, std::vector<micro_line>& lines, std::vector<ram_cell>& ram_cells) {
+  std::ofstream file(path);
   if(file.is_open()) {
-    
+
     file << "<!doctype html>\n"
       << "<html>\n"
       << "<head>" << "<meta charset=\"utf-8\"><title>MI Program</title>\n"
@@ -34,9 +33,9 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
       << "</style>\n"
       << "</head>\n"
       << "<body>\n";
-    
+
     file << "<table class=\"program\">\n";
-    
+
     // bit numbers from 79 to 0
     file << "<tr class=\"bits\"><td></td>";
     for(int i = 79; i >= 0; i--) {
@@ -76,7 +75,7 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
       {"IR_LD", 1}, {"MWE", 1},
       {NULL, 0}
     };
-    
+
     file << "<tr class=\"description\"><td></td>";
     for(row *column = descriptionRow; column->name != NULL; column++) {
       if(column->colspan == 1) {
@@ -87,7 +86,7 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
       file << column->name << "</td>";
     }
     file << "</tr>\n";
-    
+
     // string constants
     const char *MI_INTERRUPT[] = {"LDM", "RDM", "CLM", "STM", "BCLM", "BSTM", "LDST", 
       "RDST", "ENI", "DISI", "RDVC", "CLI", "CLMR", "CLMB", "CLVC", "MCL"};
@@ -105,27 +104,27 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
       "RSRCO", "RSRCIO", "RSR", "RSDIC", "RSDRCI", "RSDRCO", "RSDXOR", "RSDR",
       "LSLCO", "LSHCO", "LSL", "LSH", "LSDLCO", "LSDHCO", "LSDL", "LSDH", "LSCRO",
       "LSCRIO", "LSR", "LSLICI", "LSDCIO", "LSDRCO", "LSDCI", "LDSR"};
-    
+
     int lastLineNumber = -1;
     bool outputExtraNameLine = true;
-    
+
     // program lines
     for(auto& line : lines) {
-      
+
       if(outputExtraNameLine || (line.number > lastLineNumber + 1)) {
         file << "<tr><th colspan=\"55\">" << line.name << "</th></tr>\n";
         outputExtraNameLine = true;
       }
-      
+
       file << "<tr>";
-      
+
       // Name and line number
       file << "<td>" << line.number;
       if(!outputExtraNameLine && line.name.length() > 0) {
         file << " <span class=\"line-name\">" << line.name << "</span>";
       }
       file << "</td>";
-      
+
       // Interrupt
       file << "<td>";
       if(line.bits[79]) {
@@ -134,9 +133,9 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
         file << "IE";
       }
       file << "</td>";
-      
+
       file << "<td colspan=\"4\">" << MI_INTERRUPT[getInt(line.bits, 75, 78)] << "</td>";
-      
+
       // KMUX
       file << "<td>";
       if(line.bits[74]) {
@@ -145,22 +144,22 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
         file << "K";
       }
       file << "</td>";
-      
+
       // Constant
       file << "<td>" << getInt(line.bits, 58, 73) << "</td>";
-    
+
       // Source
       file << "<td colspan=\"3\">" << MI_SRC[getInt(line.bits, 55, 57)] << "</td>";
-    
+
       // Function
       file << "<td colspan=\"3\">" << MI_FUNC[getInt(line.bits, 52, 54)] << "</td>";
-      
+
       // Destination
       file << "<td colspan=\"3\">" << MI_DEST[getInt(line.bits, 49, 51)] << "</td>";
-    
+
       // RA Addr
-      file << "<td colspan=\"4\">" << getInt(line.bits, 45, 48) << "</td>";      
-      
+      file << "<td colspan=\"4\">" << getInt(line.bits, 45, 48) << "</td>";
+
       file << "<td>";
       if(line.bits[44]) {
         file << "MR";
@@ -168,10 +167,10 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
         file << "IR";
       }
       file << "</td>";
-      
+
       // RB Addr
-      file << "<td colspan=\"4\">" << getInt(line.bits, 40, 43) << "</td>";      
-      
+      file << "<td colspan=\"4\">" << getInt(line.bits, 40, 43) << "</td>";
+
       file << "<td>";
       if(line.bits[39]) {
         file << "MR";
@@ -179,7 +178,7 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
         file << "IR";
       }
       file << "</td>";
-      
+
       // Y-Mux
       if(line.bits[38]) {
         file << "<td class=\"default\">H";
@@ -187,20 +186,20 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
         file << "<td>AB";
       }
       file << "</td>";
-      
+
       if(line.bits[37]) {
         file << "<td class=\"default\">H";
       } else {
         file << "<td>DB";
       }
       file << "</td>";
-      
+
       // CIN-MUX
       file << "<td colspan=\"2\">" << MI_CIN_MUX[getInt(line.bits, 35, 36)] << "</td>";
-      
+
       // Shifts
       file << "<td colspan=\"4\">" << MI_SHIFT[getInt(line.bits, 31, 34) + (line.bits[50] << 4)] << "</td>";
-      
+
       // Load status register
       if(line.bits[30]) {
         file << "<td class=\"default\">H";
@@ -208,19 +207,19 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
         file << "<td>L";
       }
       file << "</td>";
-      
+
       if(line.bits[29]) {
         file << "<td class=\"default\">H";
       } else {
         file << "<td>L";
       }
       file << "</td>";
-      
+
       // Test status register
       file << "<td colspan=\"2\">" << MI_TEST_WHAT[getInt(line.bits, 27, 28)] << "</td>";
-      
+
       file << "<td colspan=\"4\">" << MI_TEST[getInt(line.bits, 23, 26)] << "</td>";
-      
+
       // Condition Code Enable
       file << "<td>";
       if(line.bits[22]) {
@@ -229,10 +228,10 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
         file << "C";
       }
       file << "</td>";
-      
+
       // Jump
       file << "<td colspan=\"4\">" << MI_JUMP[getInt(line.bits, 18, 21)] << "</td>";
-      
+
       // BAR
       int barColumn = getInt(line.bits, 6, 17);
       file << "<td>" << barColumn;
@@ -243,7 +242,7 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
         }
       }
       file << "</td>";
-      
+
       // BZ_LD
       if(line.bits[5]) {
         file << "<td class=\"default\">H";
@@ -251,7 +250,7 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
         file << "<td>L";
       }
       file << "</td>";
-      
+
       // BZ_ED
       if(line.bits[4]) {
         file << "<td class=\"default\">H";
@@ -259,7 +258,7 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
         file << "<td>E";
       }
       file << "</td>";
-      
+
       // BZ_INC
       if(line.bits[3]) {
         file << "<td class=\"default\">H";
@@ -267,7 +266,7 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
         file << "<td>I";
       }
       file << "</td>";
-      
+
       // BZ_EA
       if(line.bits[2]) {
         file << "<td class=\"default\">H";
@@ -275,7 +274,7 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
         file << "<td>E";
       }
       file << "</td>";
-      
+
       // IR_LD
       if(line.bits[1]) {
         file << "<td class=\"default\">H";
@@ -283,7 +282,7 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
         file << "<td>L";
       }
       file << "</td>";
-      
+
       // MWE
       if(line.bits[0]) {
         file << "<td class=\"default\">R";
@@ -291,39 +290,39 @@ void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ra
         file << "<td>W";
       }
       file << "</td>";
-      
+
       file << "</tr>\n";
-      
+
       lastLineNumber = line.number;
       outputExtraNameLine = false;
     }
-    
+
     file << "</table>\n";
     file << "<h1>Machine program</h1>\n";
     file << "<table class=\"ram\">\n";
     file << "<tr><th>#</th><th>data</th><th>interpretation</th></tr>\n";
-    
+
     int i = 0;
     for(auto& cell : ram_cells) {
       file << "<tr><td>" << (i++) <<"</td><td>" << cell.data << "</td><td>";
-      
+
       if(!(cell.data[0] == '0' && cell.data[1] == '0')) {
         int opCode = parseOpCode(cell.data);
         const char* name = getMicroLineNameByLineNumber(lines, opCode * 16);
-        
+
         if(name != NULL) {
           file << name;
         }
       }
-      
-      file <<"</td></tr>\n";
+
+      file << "</td></tr>\n";
     }
-    
+
     file << "</table>\n</body>\n</html>";
-    
+
     file.close();
   } else {
-    cout << "Cannot write file: " << path << endl;
+    std::cout << "Cannot write file: " << path << std::endl;
   }
 }
 
@@ -331,22 +330,22 @@ int parseOpCode(const char data[5]) {
   return parseHexDigit(data[0]) * 16 + parseHexDigit(data[1]);
 }
 
-const char* getMicroLineNameByLineNumber(vector<micro_line>& lines, int lineNumber) {
+const char* getMicroLineNameByLineNumber(std::vector<micro_line>& lines, int lineNumber) {
   for(auto& line : lines) {
     if(line.number == lineNumber) {
       return line.name.c_str();
     }
   }
-  
+
   return NULL;
 }
 
-int getInt(const bitset<80> bits, int fromBit, int toBit) {
+int getInt(const std::bitset<80> bits, int fromBit, int toBit) {
   int result = 0;
-  
+
   for(int i = toBit; i >= fromBit; i--) {
     result = (result << 1) + bits[i];
   }
-  
+
   return result;
 }

@@ -3,8 +3,7 @@
 
 #include <vector>
 #include "io.h"
-using namespace std;
 
-void writeHTML(const char* path, vector<micro_line>& lines, vector<ram_cell>& ram_cells);
+void writeHTML(const char* path, std::vector<micro_line>& lines, std::vector<ram_cell>& ram_cells);
 
 #endif /* _MICTOOL_HTML_H_ */
