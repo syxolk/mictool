@@ -1,0 +1,27 @@
+.TH MICTOOL 1
+.SH NAME
+mictool \- format MPR files from JMic as HTML
+.SH SYNOPSIS
+.B mictool
+[\fB\-\-help\fR]
+[\fB\-\-version\fR]
+.IR inputfile
+[\fB\-\-debug\fR]
+[\fB\-\-output\-html\fR \fIOUTPUTFILE\fR]
+.SH DESCRIPTION
+.B mictool
+parses an MPR file in version 4 (compatible to JMic 1.4) and formats it as an HTML file for better reading.
+(Note: MPR files are text based but the important data is encoded binary.)
+.SH OPTIONS
+.TP
+.BR \-o ", " \-\-output\-html " " \fIOUTPUTFILE\fR
+Format the \fIinputfile\fR as HTML.
+.TP
+.BR \-d ", " \-\-debug
+Print the contents of \fIinputfile\fR on stdout.
+.TP
+.BR \-h ", " \-\-help
+Show help.
+.TP
+.BR \-v ", " \-\-version
+Show version information.

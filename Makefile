@@ -3,14 +3,27 @@ EXECUTABLE = mictool
 CXX = g++
 BIN = bin
 OBJECTS = $(addprefix $(BIN)/,main.o io.o html.o util.o)
+INSTALLDIR = /usr/local/bin
+MANDIR = /usr/local/share/man/man1
 
 $(EXECUTABLE) : $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $(EXECUTABLE) $(OBJECTS)
 
-.PHONY : all clean
+.PHONY : all clean install
 all : $(EXECUTABLE)
 clean :
 	rm -f $(BIN)/*.o $(EXECUTABLE)
+install : all $(INSTALLDIR)/$(EXECUTABLE) $(MANDIR)/$(EXECUTABLE).1.gz
+
+$(INSTALLDIR)/$(EXECUTABLE) : $(EXECUTABLE)
+	cp ./$(EXECUTABLE) $(INSTALLDIR)/$(EXECUTABLE)
+
+$(MANDIR)/$(EXECUTABLE).1.gz : $(EXECUTABLE).1.gz
+	mkdir $(MANDIR)
+	cp $(EXECUTABLE).1.gz $(MANDIR)/$(EXECUTABLE).1.gz
+
+$(EXECUTABLE).1.gz : $(EXECUTABLE).1
+	gzip --keep --force $(EXECUTABLE).1
 
 $(OBJECTS) : | $(BIN)
 

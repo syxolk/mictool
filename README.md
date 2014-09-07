@@ -9,7 +9,10 @@ Functions:
 Usage
 -----
 
-mictool _input file *.mpr_ -o _output file *.html_
+**mictool** \[**--help**\] \[**--version**\] _inputfile_ **-o** _outputfile_
+
+where _inputfile_ should be an MPR file and _outputfile_ an HTML file.
+_outputfile_ will be created if not found and will be overwritten otherwise.
 
 
 Compatibility
