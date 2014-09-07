@@ -100,7 +100,7 @@ void printHelp() {
 void printVersion() {
   std::cout << "mictool 1.0\n"
             << "This program is compatible with JMIC 1.4 and MPR-Files v4.\n"
-            << "This is open source software.\n"
+            << "This is open source software: https://github.com/syxolk/mictool\n"
             << std::endl;
 }
 

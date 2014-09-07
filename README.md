@@ -6,6 +6,11 @@ This project is a CLI based tool compatible to JMic by TUM.
 Functions:
 - parse MPR files and output them as formatted HTML (planned: LaTeX)
 
+Usage
+-----
+
+mictool _input file *.mpr_ -o _output file *.html_
+
 
 Compatibility
 -------------
