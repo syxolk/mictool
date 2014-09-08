@@ -14,6 +14,6 @@ struct ram_cell {
   char data[5];
 };
 
-void readFile(const char* path, std::vector<micro_line>& lines, std::vector<ram_cell>& ram_cells);
+bool readFile(const char* path, std::vector<micro_line>& lines, std::vector<ram_cell>& ram_cells);
 
 #endif /* _MICTOOL_IO_H_ */

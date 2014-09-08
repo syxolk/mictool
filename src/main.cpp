@@ -66,7 +66,9 @@ int main(int argc, char* argv[]) {
 
     std::vector<micro_line> lines;
     std::vector<ram_cell> ram_cells;
-    readFile(opts.inputFile, lines, ram_cells);
+    if(! readFile(opts.inputFile, lines, ram_cells)) {
+      return EXIT_FAILURE;
+    }
 
     if(opts.outputType == DEBUG) {
       std::cout << extractFilename(std::string(opts.inputFile)) << "\n\n";
@@ -80,7 +82,9 @@ int main(int argc, char* argv[]) {
         std::cout << cell.data << std::endl;
       }
     } else if(opts.outputType == HTML) {
-      writeHTML(opts.outputFile, extractFilename(std::string(opts.inputFile)), lines, ram_cells);
+      if(! writeHTML(opts.outputFile, extractFilename(std::string(opts.inputFile)), lines, ram_cells)) {
+        return EXIT_FAILURE;
+      }
     }
   } else {
     printError(argv[0]);

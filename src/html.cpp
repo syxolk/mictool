@@ -14,7 +14,7 @@ int getInt(const std::bitset<80> bits, int fromBit, int toBit);
 int parseOpCode(const char data[5]);
 const char* getMicroLineNameByLineNumber(std::vector<micro_line>& lines, int lineNumber);
 
-void writeHTML(const char* path, const std::string& title, std::vector<micro_line>& lines, std::vector<ram_cell>& ram_cells) {
+bool writeHTML(const char* path, const std::string& title, std::vector<micro_line>& lines, std::vector<ram_cell>& ram_cells) {
   std::ofstream file(path);
   if(file.is_open()) {
 
@@ -322,8 +322,10 @@ void writeHTML(const char* path, const std::string& title, std::vector<micro_lin
     file << "</table>\n</body>\n</html>";
 
     file.close();
+    return true;
   } else {
     std::cout << "Cannot write file: " << path << std::endl;
+    return false;
   }
 }
 

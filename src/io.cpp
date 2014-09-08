@@ -23,7 +23,7 @@ enum ParsingMode {
   UNKNOWN, MI_PROGRAM, MA_PROGRAM, REGISTER, IP
 };
 
-void readFile(const char* path, std::vector<micro_line>& lines, std::vector<ram_cell>& ram_cells) {
+bool readFile(const char* path, std::vector<micro_line>& lines, std::vector<ram_cell>& ram_cells) {
   std::string line;
 
   // open the file
@@ -35,11 +35,11 @@ void readFile(const char* path, std::vector<micro_line>& lines, std::vector<ram_
     if( safe_getline(file, line) ) {
       if(line.compare("version4") != 0) {
         errorUnexpected("version4", line.c_str());
-        return;
+        return false;
       }
     } else {
       errorEOF("version4");
-      return;
+      return false;
     }
 
     // start parsing
@@ -91,8 +91,10 @@ void readFile(const char* path, std::vector<micro_line>& lines, std::vector<ram_
     }
 
     file.close();
+    return true;
   } else {
     std::cout << "Unable to open file: " << path  << std::endl;
+    return false;
   }
 }
 
