@@ -33,7 +33,7 @@ $(BIN)/%.o : src/%.cpp
 	$(CXX) -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
 
 $(BIN)/util.o : src/util.cpp src/util.h
-$(BIN)/main.o : src/main.cpp src/io.h src/html.h
+$(BIN)/main.o : src/main.cpp src/io.h src/html.h src/util.h
 $(BIN)/io.o : src/io.cpp src/io.h src/util.h
 $(BIN)/html.o : src/html.cpp src/html.h src/io.h src/util.h
 

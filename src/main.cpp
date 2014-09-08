@@ -5,6 +5,7 @@
 #include <getopt.h>
 #include "io.h"
 #include "html.h"
+#include "util.h"
 
 enum OutputType {
   HTML, DEBUG, LATEX
@@ -68,6 +69,8 @@ int main(int argc, char* argv[]) {
     readFile(opts.inputFile, lines, ram_cells);
 
     if(opts.outputType == DEBUG) {
+      std::cout << extractFilename(std::string(opts.inputFile)) << "\n\n";
+
       for(auto& line : lines) {
         std::cout << line.number << " : " << line.name  << std::endl;
         std::cout << " " << line.bits << std::endl;
@@ -77,7 +80,7 @@ int main(int argc, char* argv[]) {
         std::cout << cell.data << std::endl;
       }
     } else if(opts.outputType == HTML) {
-      writeHTML(opts.outputFile, lines, ram_cells);
+      writeHTML(opts.outputFile, extractFilename(std::string(opts.inputFile)), lines, ram_cells);
     }
   } else {
     printError(argv[0]);

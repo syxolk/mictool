@@ -3,4 +3,6 @@
 
 int parseHexDigit(char c);
 
+const std::string extractFilename(const std::string& path);
+
 #endif /* _MICTOOL_UTIL_H_ */

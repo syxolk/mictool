@@ -14,13 +14,14 @@ int getInt(const std::bitset<80> bits, int fromBit, int toBit);
 int parseOpCode(const char data[5]);
 const char* getMicroLineNameByLineNumber(std::vector<micro_line>& lines, int lineNumber);
 
-void writeHTML(const char* path, std::vector<micro_line>& lines, std::vector<ram_cell>& ram_cells) {
+void writeHTML(const char* path, const std::string& title, std::vector<micro_line>& lines, std::vector<ram_cell>& ram_cells) {
   std::ofstream file(path);
   if(file.is_open()) {
 
     file << "<!doctype html>\n"
       << "<html>\n"
-      << "<head>" << "<meta charset=\"utf-8\"><title>MI Program</title>\n"
+      << "<head>\n"
+      << "<meta charset=\"utf-8\"><title>" << title << "</title>\n"
       << "<style type=\"text/css\">\n"
       << ".bits, .description {font-size: xx-small;}\n"
       << ".ram {font-size: small;}\n"
