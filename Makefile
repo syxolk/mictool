@@ -5,6 +5,7 @@ BIN = bin
 OBJECTS = $(addprefix $(BIN)/,main.o io.o html.o util.o)
 INSTALLDIR = /usr/local/bin
 MANDIR = /usr/local/share/man/man1
+MANDIR_DE = /usr/local/share/man/de/man1
 
 $(EXECUTABLE) : $(OBJECTS)
 	$(CXX) $(CXXFLAGS) -o $(EXECUTABLE) $(OBJECTS)
@@ -13,7 +14,7 @@ $(EXECUTABLE) : $(OBJECTS)
 all : $(EXECUTABLE)
 clean :
 	rm -f $(BIN)/*.o $(EXECUTABLE)
-install : all $(INSTALLDIR)/$(EXECUTABLE) $(MANDIR)/$(EXECUTABLE).1.gz
+install : all $(INSTALLDIR)/$(EXECUTABLE) $(MANDIR)/$(EXECUTABLE).1.gz $(MANDIR_DE)/$(EXECUTABLE).1.gz
 
 $(INSTALLDIR)/$(EXECUTABLE) : $(EXECUTABLE)
 	cp ./$(EXECUTABLE) $(INSTALLDIR)/$(EXECUTABLE)
@@ -21,8 +22,14 @@ $(INSTALLDIR)/$(EXECUTABLE) : $(EXECUTABLE)
 $(MANDIR)/$(EXECUTABLE).1.gz : $(EXECUTABLE).1 | $(MANDIR)
 	gzip -c $(EXECUTABLE).1 > $(MANDIR)/$(EXECUTABLE).1.gz
 
+$(MANDIR_DE)/$(EXECUTABLE).1.gz : $(EXECUTABLE)_de.1 | $(MANDIR_DE)
+	gzip -c $(EXECUTABLE)_de.1 > $(MANDIR_DE)/$(EXECUTABLE).1.gz
+
 $(MANDIR) :
-	mkdir $(MANDIR)
+	mkdir -p $(MANDIR)
+	
+$(MANDIR_DE) :
+	mkdir -p $(MANDIR_DE)
 
 $(OBJECTS) : | $(BIN)
 
