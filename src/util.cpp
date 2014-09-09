@@ -28,3 +28,23 @@ const std::string extractFilename(const std::string& path) {
 
   return path.substr(slashIndex, dotIndex - slashIndex);
 }
+
+// works like PHP htmlspecialchars
+// -> http://de1.php.net/manual/en/function.htmlspecialchars.php
+// implementation is from stackoverflow
+// -> http://stackoverflow.com/questions/5665231/most-efficient-way-to-escape-xml-html-in-c-string
+const std::string htmlspecialchars(const std::string& data) {
+  std::string buffer;
+  buffer.reserve(data.size());
+  for(size_t pos = 0; pos != data.size(); ++pos) {
+    switch(data[pos]) {
+      case '&':  buffer.append("&amp;");       break;
+      case '\"': buffer.append("&quot;");      break;
+      case '\'': buffer.append("&apos;");      break;
+      case '<':  buffer.append("&lt;");        break;
+      case '>':  buffer.append("&gt;");        break;
+      default:   buffer.append(&data[pos], 1); break;
+    }
+  }
+  return buffer;
+}

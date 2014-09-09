@@ -21,7 +21,7 @@ bool writeHTML(const char* path, const std::string& title, std::vector<micro_lin
     file << "<!doctype html>\n"
       << "<html>\n"
       << "<head>\n"
-      << "<meta charset=\"utf-8\"><title>" << title << "</title>\n"
+      << "<meta charset=\"utf-8\"><title>" << htmlspecialchars(title) << "</title>\n"
       << "<style type=\"text/css\">\n"
       << ".bits, .description {font-size: xx-small;}\n"
       << ".ram {font-size: small;}\n"
@@ -113,7 +113,7 @@ bool writeHTML(const char* path, const std::string& title, std::vector<micro_lin
     for(auto& line : lines) {
 
       if(outputExtraNameLine || (line.number > lastLineNumber + 1)) {
-        file << "<tr><th colspan=\"55\">" << line.name << "</th></tr>\n";
+        file << "<tr><th colspan=\"55\">" << htmlspecialchars(line.name) << "</th></tr>\n";
         outputExtraNameLine = true;
       }
 
@@ -122,7 +122,7 @@ bool writeHTML(const char* path, const std::string& title, std::vector<micro_lin
       // Name and line number
       file << "<td>" << line.number;
       if(!outputExtraNameLine && line.name.length() > 0) {
-        file << " <span class=\"line-name\">" << line.name << "</span>";
+        file << " <span class=\"line-name\">" << htmlspecialchars(line.name) << "</span>";
       }
       file << "</td>";
 
@@ -239,7 +239,7 @@ bool writeHTML(const char* path, const std::string& title, std::vector<micro_lin
       if(barColumn != 0) {
         const char* barName = getMicroLineNameByLineNumber(lines, barColumn);
         if(barName != NULL) {
-          file << " (" << barName << ")";
+          file << " (" << htmlspecialchars(barName) << ")";
         }
       }
       file << "</td>";
@@ -312,7 +312,7 @@ bool writeHTML(const char* path, const std::string& title, std::vector<micro_lin
         const char* name = getMicroLineNameByLineNumber(lines, opCode * 16);
 
         if(name != NULL) {
-          file << name;
+          file << htmlspecialchars(name);
         }
       }
 
