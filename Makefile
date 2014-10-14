@@ -30,6 +30,9 @@ $(MANDIR) :
 	
 $(MANDIR_DE) :
 	mkdir -p $(MANDIR_DE)
+	
+uninstall :
+	rm -f $(INSTALLDIR)/$(EXECUTABLE) $(MANDIR)/$(EXECUTABLE).1.gz $(MANDIR_DE)/$(EXECUTABLE).1.gz
 
 $(OBJECTS) : | $(BIN)
 

@@ -2,6 +2,7 @@ bin
 bin-win32
 bin-win64
 mictool
+mictool.exe
 mictool-win32.exe
 mictool-win64.exe
 mictool.1.gz
