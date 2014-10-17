@@ -1,6 +1,8 @@
 #include <iostream>
 #include "util.h"
 
+// parses a single hexadecimal digit
+// and returns the corresponding value
 int parseHexDigit(char c) {
   if(c >= '0' && c <= '9') {
     return c - '0';
@@ -14,6 +16,9 @@ int parseHexDigit(char c) {
   }
 }
 
+// extracts the filename out of a relative or absolute path
+// file extension is stripped as well
+// example: ~/file.cpp -> file
 const std::string extractFilename(const std::string& path) {
   int slashIndex = path.find_last_of("/\\") + 1;
   // if the slash character is not found the function will return -1

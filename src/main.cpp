@@ -38,6 +38,7 @@ int main(int argc, char* argv[]) {
     {0,             0,                 0,  0 }
   };
 
+  // parse command line options
   while ( (c = getopt_long(argc, argv, "hvo:d", long_options, NULL)) != -1) {
     switch(c) {
     case 'h':
@@ -61,15 +62,18 @@ int main(int argc, char* argv[]) {
     }
   }
 
+  // input file is now the last string in argv
   if (optind == argc - 1) {
     opts.inputFile = argv[optind];
 
+    // read and parse input file
     std::vector<micro_line> lines;
     std::vector<ram_cell> ram_cells;
     if(! readFile(opts.inputFile, lines, ram_cells)) {
       return EXIT_FAILURE;
     }
 
+    // check different output formats
     if(opts.outputType == DEBUG) {
       std::cout << extractFilename(std::string(opts.inputFile)) << "\n\n";
 
@@ -94,6 +98,7 @@ int main(int argc, char* argv[]) {
   return EXIT_SUCCESS;
 }
 
+// print help and usage (should be equals to README and man file)
 void printHelp() {
   std::cout << "Usage: mictool inputfile option [outputfile]\n"
             << "Options:\n"
@@ -104,6 +109,7 @@ void printHelp() {
             << std::endl;
 }
 
+// print version and license information
 void printVersion() {
   std::cout << "mictool 1.0\n"
             << "This program is compatible with JMIC 1.4 and MPR-Files v4.\n"
@@ -111,6 +117,7 @@ void printVersion() {
             << std::endl;
 }
 
+// print error in case of wrong command line usage
 void printError(char* arg0) {
   std::cout << "Wrong parameters.\n"
             << "Type " << arg0 << " --help for help.\n"

@@ -5,7 +5,7 @@
 #include "io.h"
 #include "util.h"
 
-struct row {
+struct ColumnDescriptor {
   const char* name;
   const int colspan;
 };
@@ -18,6 +18,7 @@ bool writeHTML(const char* path, const std::string& title, std::vector<micro_lin
   std::ofstream file(path);
   if(file.is_open()) {
 
+    // write HTML header
     file << "<!doctype html>\n"
       << "<html>\n"
       << "<head>\n"
@@ -38,6 +39,7 @@ bool writeHTML(const char* path, const std::string& title, std::vector<micro_lin
     file << "<table class=\"program\">\n";
 
     // bit numbers from 79 to 0
+    // skips some columns because we want less chars in the big columns
     file << "<tr class=\"bits\"><td></td>";
     for(int i = 79; i >= 0; i--) {
       if(i == 73) {
@@ -55,7 +57,7 @@ bool writeHTML(const char* path, const std::string& title, std::vector<micro_lin
     file << "</tr>\n";
 
     // table description header
-    static row descriptionRow[] = {
+    static ColumnDescriptor columnDescriptors[] = {
       {"IE", 1},
       {"Interrupt", 4},
       {"KMUX", 1},
@@ -77,8 +79,9 @@ bool writeHTML(const char* path, const std::string& title, std::vector<micro_lin
       {NULL, 0}
     };
 
+    // write header row
     file << "<tr class=\"description\"><td></td>";
-    for(row *column = descriptionRow; column->name != NULL; column++) {
+    for(ColumnDescriptor *column = columnDescriptors; column->name != NULL; column++) {
       if(column->colspan == 1) {
         file << "<td>";
       } else {
@@ -89,7 +92,7 @@ bool writeHTML(const char* path, const std::string& title, std::vector<micro_lin
     file << "</tr>\n";
 
     // string constants
-    const char *MI_INTERRUPT[] = {"LDM", "RDM", "CLM", "STM", "BCLM", "BSTM", "LDST", 
+    const char *MI_INTERRUPT[] = {"LDM", "RDM", "CLM", "STM", "BCLM", "BSTM", "LDST",
       "RDST", "ENI", "DISI", "RDVC", "CLI", "CLMR", "CLMB", "CLVC", "MCL"};
     const char *MI_SRC[] = {"AQ", "AB", "ZQ", "ZB", "ZA", "DA", "DQ", "DZ"};
     const char *MI_FUNC[] = {"ADD", "SUBR", "SUBS", "OR", "AND", "NOTRS", "EXOR", "EXNOR"};
@@ -112,6 +115,7 @@ bool writeHTML(const char* path, const std::string& title, std::vector<micro_lin
     // program lines
     for(auto& line : lines) {
 
+      // insert a special named row if there is a jump between the line numbers
       if(outputExtraNameLine || (line.number > lastLineNumber + 1)) {
         file << "<tr><th colspan=\"55\">" << htmlspecialchars(line.name) << "</th></tr>\n";
         outputExtraNameLine = true;
@@ -121,6 +125,7 @@ bool writeHTML(const char* path, const std::string& title, std::vector<micro_lin
 
       // Name and line number
       file << "<td>" << line.number;
+      // don't insert the name of the line if there is already the special named row
       if(!outputExtraNameLine && line.name.length() > 0) {
         file << " <span class=\"line-name\">" << htmlspecialchars(line.name) << "</span>";
       }
@@ -294,10 +299,12 @@ bool writeHTML(const char* path, const std::string& title, std::vector<micro_lin
 
       file << "</tr>\n";
 
+      // save the last line number and reset the extra name row variable
       lastLineNumber = line.number;
       outputExtraNameLine = false;
     }
 
+    // output machine program / RAM
     file << "</table>\n";
     file << "<h1>Machine program</h1>\n";
     file << "<table class=\"ram\">\n";
@@ -307,6 +314,7 @@ bool writeHTML(const char* path, const std::string& title, std::vector<micro_lin
     for(auto& cell : ram_cells) {
       file << "<tr><td>" << (i++) <<"</td><td>" << cell.data << "</td><td>";
 
+      // if this is may be no data but an opcode
       if(!(cell.data[0] == '0' && cell.data[1] == '0')) {
         int opCode = parseOpCode(cell.data);
         const char* name = getMicroLineNameByLineNumber(lines, opCode * 16);
@@ -333,6 +341,9 @@ int parseOpCode(const char data[5]) {
   return parseHexDigit(data[0]) * 16 + parseHexDigit(data[1]);
 }
 
+// find the micro line with the given line number
+// and return its name
+// if nothing is found returns null
 const char* getMicroLineNameByLineNumber(std::vector<micro_line>& lines, int lineNumber) {
   for(auto& line : lines) {
     if(line.number == lineNumber) {
@@ -343,6 +354,7 @@ const char* getMicroLineNameByLineNumber(std::vector<micro_line>& lines, int lin
   return NULL;
 }
 
+// computes the integer from the bitset in them given interval
 int getInt(const std::bitset<80> bits, int fromBit, int toBit) {
   int result = 0;
 

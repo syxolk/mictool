@@ -98,14 +98,17 @@ bool readFile(const char* path, std::vector<micro_line>& lines, std::vector<ram_
   }
 }
 
+// outputs an unexpected value in case of an error
 void errorUnexpected(const char* expected, const char* found) {
   std::cout << "Error: expected " << expected << " but found " << found << std::endl;
 }
 
+// outputs an "end of file" error
 void errorEOF(const char* expected) {
   std::cout << "Error: expected " << expected << "but reached EOF";
 }
 
+// parses the micro bitset part of the MPR files
 void parseMicroBitset(const std::string& str, std::bitset<80>& bits) {
   int i, bitPos = 0, hex;
   for(i = 1; i < 30; i+=3) {
