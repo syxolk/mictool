@@ -6,6 +6,7 @@
 #include "io.h"
 #include "html.h"
 #include "util.h"
+#include "mpr.h"
 
 enum OutputType {
   HTML, DEBUG, LATEX
@@ -67,9 +68,8 @@ int main(int argc, char* argv[]) {
     opts.inputFile = argv[optind];
 
     // read and parse input file
-    std::vector<micro_line> lines;
-    std::vector<ram_cell> ram_cells;
-    if(! readFile(opts.inputFile, lines, ram_cells)) {
+    MPRFile mprFile;
+    if(! readFile(opts.inputFile, mprFile)) {
       return EXIT_FAILURE;
     }
 
@@ -77,16 +77,16 @@ int main(int argc, char* argv[]) {
     if(opts.outputType == DEBUG) {
       std::cout << extractFilename(std::string(opts.inputFile)) << "\n\n";
 
-      for(auto& line : lines) {
-        std::cout << line.number << " : " << line.name  << std::endl;
-        std::cout << " " << line.bits << std::endl;
+      for(auto& line : mprFile.getMicroLines()) {
+        std::cout << line.getLineNumber() << " : " << line.getName()  << std::endl;
+        std::cout << " " << line.getBits() << std::endl;
       }
 
-      for(auto& cell : ram_cells) {
-        std::cout << cell.data << std::endl;
+      for(auto& cell : mprFile.getRamCells()) {
+        std::cout << cell.getData() << std::endl;
       }
     } else if(opts.outputType == HTML) {
-      if(! writeHTML(opts.outputFile, extractFilename(std::string(opts.inputFile)), lines, ram_cells)) {
+      if(! writeHTML(opts.outputFile, extractFilename(std::string(opts.inputFile)), mprFile)) {
         return EXIT_FAILURE;
       }
     }

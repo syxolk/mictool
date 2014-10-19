@@ -1,9 +1,9 @@
 #include <iostream>
 #include <fstream>
-#include <vector>
 #include <cstring>
 #include "io.h"
 #include "util.h"
+#include "mpr.h"
 
 void errorUnexpected(const char* expected, const char* found);
 void errorEOF(const char* expected);
@@ -23,7 +23,7 @@ enum ParsingMode {
   UNKNOWN, MI_PROGRAM, MA_PROGRAM, REGISTER, IP
 };
 
-bool readFile(const char* path, std::vector<micro_line>& lines, std::vector<ram_cell>& ram_cells) {
+bool readFile(const char* path, MPRFile& mprFile) {
   std::string line;
 
   // open the file
@@ -66,26 +66,28 @@ bool readFile(const char* path, std::vector<micro_line>& lines, std::vector<ram_
           continue;
         }
 
-        micro_line ml;
+        int mlLineNumber;
+        std::string mlName;
+        std::bitset<80> mlBits;
 
         //ml.number = stoi(line.substr(0, 3), NULL, 16);
-        sscanf(line.substr(0, 3).c_str(), "%x", &ml.number);
+        sscanf(line.substr(0, 3).c_str(), "%x", &mlLineNumber);
         if(line_length > 34) {
-          ml.name = line.substr(4, line_length - 34);
+          mlName = line.substr(4, line_length - 34);
         } else {
-          ml.name = "";
+          mlName = "";
         }
-        parseMicroBitset(line.substr(line_length - 30, 30), ml.bits);
+        parseMicroBitset(line.substr(line_length - 30, 30), mlBits);
 
-        lines.push_back(ml);
+        MicroLine ml(mlLineNumber, mlName, mlBits);
+        mprFile.getMicroLines().push_back(ml);
       } else if(mode == MA_PROGRAM) {
         size_t line_length = line.length();
 
         if(line_length == 4) {
-          ram_cell cell;
-          memcpy(&cell.data, line.c_str(), 5);
+          RamCell cell(line);
 
-          ram_cells.push_back(cell);
+          mprFile.getRamCells().push_back(cell);
         }
       }
     }
