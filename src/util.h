@@ -5,6 +5,8 @@ int parseHexDigit(char c);
 
 const std::string extractFilename(const std::string& path);
 
+const std::string extractFileExtension(const std::string& path);
+
 const std::string htmlspecialchars(const std::string& data);
 
 std::string intToString(int value);

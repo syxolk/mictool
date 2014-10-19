@@ -2,7 +2,7 @@ CXXFLAGS = -Wall -Wextra -Werror -std=c++0x -O3
 EXECUTABLE = mictool
 CXX = g++
 BIN = bin
-OBJECTS = $(addprefix $(BIN)/,main.o io.o html.o util.o mpr.o)
+OBJECTS = $(addprefix $(BIN)/,main.o io.o html.o util.o mpr.o latex.o)
 INSTALLDIR = /usr/local/bin
 MANDIR = /usr/local/share/man/man1
 MANDIR_DE = /usr/local/share/man/de/man1
@@ -27,16 +27,16 @@ $(MANDIR_DE)/$(EXECUTABLE).1.gz : $(EXECUTABLE)_de.1 | $(MANDIR_DE)
 
 $(MANDIR) :
 	mkdir -p $(MANDIR)
-	
+
 $(MANDIR_DE) :
 	mkdir -p $(MANDIR_DE)
-	
+
 uninstall :
 	rm -f $(INSTALLDIR)/$(EXECUTABLE) $(MANDIR)/$(EXECUTABLE).1.gz $(MANDIR_DE)/$(EXECUTABLE).1.gz
 
 $(OBJECTS) : | $(BIN)
 
-$(BIN) : 
+$(BIN) :
 	mkdir $(BIN)
 
 $(BIN)/%.o : src/%.cpp
@@ -47,3 +47,4 @@ $(BIN)/main.o : src/main.cpp src/io.h src/html.h src/util.h src/mpr.h
 $(BIN)/io.o : src/io.cpp src/io.h src/util.h src/mpr.h
 $(BIN)/html.o : src/html.cpp src/html.h src/mpr.h src/util.h
 $(BIN)/mpr.o : src/mpr.cpp src/mpr.h src/util.h
+$(BIN)/latex.o : src/latex.cpp src/latex.h src/mpr.h

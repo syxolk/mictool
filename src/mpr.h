@@ -72,16 +72,21 @@ public:
 
 class MPRFile {
 private:
+	std::string name;
 	std::vector<MicroLine> micLines;
 	std::vector<RamCell> ramCells;
 public:
-	MPRFile() {
+	MPRFile(std::string name) :
+			 name(name) {
 	}
 	std::vector<MicroLine>& getMicroLines() {
 		return micLines;
 	}
 	std::vector<RamCell>& getRamCells() {
 		return ramCells;
+	}
+	std::string getName() {
+		return name;
 	}
 	std::string getMicroLineByLineNumber(int lineNumber);
 };

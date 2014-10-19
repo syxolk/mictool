@@ -3,8 +3,10 @@
 #include <cstring>
 #include <cstdlib>
 #include <getopt.h>
+#include <algorithm>
 #include "io.h"
 #include "html.h"
+#include "latex.h"
 #include "util.h"
 #include "mpr.h"
 
@@ -33,7 +35,12 @@ int main(int argc, char* argv[]) {
 
 	static option long_options[] = { { "help", no_argument, 0, 'h' }, {
 			"version", no_argument, 0, 'v' }, { "debug", no_argument, 0, 'd' },
-			{ "output-html", required_argument, 0, 'o' }, { 0, 0, 0, 0 } };
+			{ "output", required_argument, 0, 'o' },
+			{ "output-html", required_argument, 0, 1 },
+			{ "output-latex", required_argument, 0, 2 },
+			{ 0, 0, 0, 0 } };
+
+	std::string extension;
 
 	// parse command line options
 	while ((c = getopt_long(argc, argv, "hvo:d", long_options, NULL)) != -1) {
@@ -45,8 +52,26 @@ int main(int argc, char* argv[]) {
 			printVersion();
 			return EXIT_SUCCESS;
 		case 'o':
+			// try to detect output type by file name extension
+			extension = extractFileExtension(optarg);
+			std::transform(extension.begin(), extension.end(), extension.begin(), tolower);
+			if(extension == "html") {
+				opts.outputType = HTML;
+			} else if(extension == "tex") {
+				opts.outputType = LATEX;
+			} else {
+				std::cout << "Cannot detect file type by extension: " << extension << "\n";
+				return EXIT_FAILURE;
+			}
+			opts.outputFile = optarg;
+			break;
+		case 1 :
 			opts.outputFile = optarg;
 			opts.outputType = HTML;
+			break;
+		case 2 :
+			opts.outputFile = optarg;
+			opts.outputType = LATEX;
 			break;
 		case 'd':
 			opts.outputType = DEBUG;
@@ -64,7 +89,7 @@ int main(int argc, char* argv[]) {
 		opts.inputFile = argv[optind];
 
 		// read and parse input file
-		MPRFile mprFile;
+		MPRFile mprFile(extractFilename(std::string(opts.inputFile)));
 		if (!readFile(opts.inputFile, mprFile)) {
 			return EXIT_FAILURE;
 		}
@@ -85,8 +110,12 @@ int main(int argc, char* argv[]) {
 			}
 			break;
 		case HTML:
-			if (!writeHTML(opts.outputFile,
-					extractFilename(std::string(opts.inputFile)), mprFile)) {
+			if (!writeHTML(opts.outputFile, mprFile)) {
+				return EXIT_FAILURE;
+			}
+			break;
+		case LATEX:
+			if (!writeLaTeX(opts.outputFile, mprFile)) {
 				return EXIT_FAILURE;
 			}
 			break;

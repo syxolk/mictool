@@ -35,6 +35,16 @@ const std::string extractFilename(const std::string& path) {
 	return path.substr(slashIndex, dotIndex - slashIndex);
 }
 
+const std::string extractFileExtension(const std::string& path) {
+	int dotIndex = path.find_last_of(".");
+	
+	if(dotIndex == -1) {
+		return "";
+	}
+	
+	return path.substr(dotIndex + 1);
+}
+
 // works like PHP htmlspecialchars
 // -> http://de1.php.net/manual/en/function.htmlspecialchars.php
 // implementation is from stackoverflow

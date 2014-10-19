@@ -1,5 +1,4 @@
 #include <fstream>
-#include <vector>
 #include <iostream>
 #include "html.h"
 #include "util.h"
@@ -35,7 +34,7 @@ void writeTD(std::ofstream& file, std::string value) {
 	writeTD(file, value, 1, false);
 }
 
-bool writeHTML(const char* path, const std::string& title, MPRFile& mprFile) {
+bool writeHTML(const char* path, MPRFile& mprFile) {
   std::ofstream file(path);
   if(file.is_open()) {
 
@@ -43,7 +42,7 @@ bool writeHTML(const char* path, const std::string& title, MPRFile& mprFile) {
     file << "<!doctype html>\n"
       << "<html>\n"
       << "<head>\n"
-      << "<meta charset=\"utf-8\"><title>" << htmlspecialchars(title) << "</title>\n"
+      << "<meta charset=\"utf-8\"><title>" << htmlspecialchars(mprFile.getName()) << "</title>\n"
       << "<style type=\"text/css\">\n"
       << ".bits, .description {font-size: xx-small;}\n"
       << ".ram {font-size: small;}\n"
