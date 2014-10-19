@@ -12,6 +12,7 @@
 #include <bitset>
 
 class MicroLine {
+private:
 	int lineNumber;
 	std::string name;
 	std::bitset<80> bits;
@@ -20,7 +21,6 @@ public:
 			lineNumber(lineNumber), name(name), bits(bits) {
 	}
 	int getLineNumber();
-	bool hasName();
 	std::string getName();
 	std::bitset<80> getBits();
 	static bool isDefaultValue(std::string value);

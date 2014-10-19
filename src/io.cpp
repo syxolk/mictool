@@ -13,7 +13,7 @@ void parseMicroBitset(const std::string& str, std::bitset<80>& bits);
 // reading Windows files on Linux.
 std::istream& safe_getline(std::istream& is, std::string& str) {
   getline(is, str);
-  if(str.length() > 0 && str.back() == '\r') {
+  if(!str.empty() && str.back() == '\r') {
     str.resize(str.length() - 1);
   }
   return is;
@@ -48,13 +48,13 @@ bool readFile(const char* path, MPRFile& mprFile) {
     while( safe_getline(file, line) ) {
 
       // check for special lines
-      if(line.compare("mikroprogramm:") == 0) {
+      if(line == "mikroprogramm:") {
         mode = MI_PROGRAM;
-      } else if(line.compare("maschinenprogramm:") == 0) {
+      } else if(line == "maschinenprogramm:") {
         mode = MA_PROGRAM;
-      } else if(line.compare("register:") == 0) {
+      } else if(line == "register:") {
         mode = REGISTER;
-      } else if(line.compare("befehlszaehler:") == 0) {
+      } else if(line == "befehlszaehler:") {
         mode = IP;
       } else if(mode == UNKNOWN) {
         std::cout << "Don't know what to do with line: " << line << std::endl;

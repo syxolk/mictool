@@ -35,10 +35,6 @@ int MicroLine::getLineNumber() {
 	return lineNumber;
 }
 
-bool MicroLine::hasName() {
-	return name.length() > 0;
-}
-
 std::string MicroLine::getName() {
 	return name;
 }

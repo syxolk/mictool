@@ -103,12 +103,7 @@ bool writeHTML(const char* path, const std::string& title, MPRFile& mprFile) {
     // write header row
     file << "<tr class=\"description\"><td></td>";
     for(ColumnDescriptor *column = columnDescriptors; column->name != NULL; column++) {
-      if(column->colspan == 1) {
-        file << "<td>";
-      } else {
-        file << "<td colspan=\"" << column->colspan << "\">";
-      }
-      file << column->name << "</td>";
+      writeTD(file, column->name, column->colspan);
     }
     file << "</tr>\n";
 
@@ -129,38 +124,37 @@ bool writeHTML(const char* path, const std::string& title, MPRFile& mprFile) {
       // Name and line number
       file << "<td>" << line.getLineNumber();
       // don't insert the name of the line if there is already the special named row
-      if(!outputExtraNameLine && line.getName().length() > 0) {
+      if(!outputExtraNameLine && !line.getName().empty()) {
         file << " <span class=\"line-name\">" << htmlspecialchars(line.getName()) << "</span>";
       }
       file << "</td>";
 
       // Interrupt
-      file << "<td>" << line.getInterruptFlag() << "</td>";
-
-      file << "<td colspan=\"4\">" << line.getInterrupt() << "</td>";
+      writeTD(file, line.getInterruptFlag());
+      writeTD(file, line.getInterrupt(), 4);
 
       // KMUX
-      file << "<td>" << line.getKMux() << "</td>";
+      writeTD(file, line.getKMux());
 
       // Constant
-      file << "<td>" << line.getConstant() << "</td>";
+      writeTD(file, intToString(line.getConstant()));
 
       // Source
-      file << "<td colspan=\"3\">" << line.getSource() << "</td>";
+      writeTD(file, line.getSource(), 3);
 
       // Function
-      file << "<td colspan=\"3\">" << line.getFunction() << "</td>";
+      writeTD(file, line.getFunction(), 3);
 
       // Destination
-      file << "<td colspan=\"3\">" << line.getDestination() << "</td>";
+      writeTD(file, line.getDestination(), 3);
 
       // RA Addr
-      file << "<td colspan=\"4\">" << line.getRAAddr() << "</td>";
-      file << "<td>" << line.getRAAddrContext() << "</td>";
+      writeTD(file, intToString(line.getRAAddr()), 4);
+      writeTD(file, line.getRAAddrContext());
 
       // RB Addr
-      file << "<td colspan=\"4\">" << line.getRBAddr() << "</td>";
-      file << "<td>" << line.getRBAddrContext() << "</td>";
+      writeTD(file, intToString(line.getRBAddr()), 4);
+      writeTD(file, line.getRBAddrContext());
 
       // Y-Mux
       writeTDWithCheckDefault(file, line.getYMuxAB());
@@ -191,7 +185,7 @@ bool writeHTML(const char* path, const std::string& title, MPRFile& mprFile) {
       file << "<td>" << barColumn;
       if(barColumn != 0) {
         std::string barName = mprFile.getMicroLineByLineNumber(barColumn);
-        if(barName.length() > 0) {
+        if(!barName.empty()) {
           file << " (" << htmlspecialchars(barName) << ")";
         }
       }
@@ -235,9 +229,9 @@ bool writeHTML(const char* path, const std::string& title, MPRFile& mprFile) {
       // if this is may be no data but an opcode
       if(cell.couldHaveAnOpcode()) {
         int opCode = cell.getOpCode();
-        std::string name = mprFile.getMicroLineByLineNumber(opCode*16);
+        std::string name = mprFile.getMicroLineByLineNumber(opCode * 16);
 
-        if(name.length() > 0) {
+        if(!name.empty()) {
           file << htmlspecialchars(name);
         }
       }
