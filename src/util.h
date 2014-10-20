@@ -9,6 +9,8 @@ const std::string extractFileExtension(const std::string& path);
 
 const std::string htmlspecialchars(const std::string& data);
 
+const std::string escapeLatex(const std::string& data);
+
 std::string intToString(int value);
 
 #endif /* _MICTOOL_UTIL_H_ */

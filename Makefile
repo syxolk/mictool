@@ -47,4 +47,4 @@ $(BIN)/main.o : src/main.cpp src/io.h src/html.h src/util.h src/mpr.h
 $(BIN)/io.o : src/io.cpp src/io.h src/util.h src/mpr.h
 $(BIN)/html.o : src/html.cpp src/html.h src/mpr.h src/util.h
 $(BIN)/mpr.o : src/mpr.cpp src/mpr.h src/util.h
-$(BIN)/latex.o : src/latex.cpp src/latex.h src/mpr.h
+$(BIN)/latex.o : src/latex.cpp src/latex.h src/mpr.h src/util.h

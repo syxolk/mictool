@@ -18,7 +18,7 @@ const char *MI_FUNC[] = { "ADD", "SUBR", "SUBS", "OR", "AND", "NOTRS", "EXOR",
 const char *MI_DEST[] = { "QREG", "NOP", "RAMA", "RAMF", "RAMQD", "RAMD",
 		"RAMQU", "RAMU" };
 const char *MI_CIN_MUX[] = { "CI0", "CI1", "CIX", "CIC" };
-const char *MI_TEST_WHAT[] = { "-", "&mu;SR", "MSR", "-" };
+const char *MI_TEST_WHAT[] = { "-", "&micro;SR", "MSR", "-" };
 const char *MI_TEST[] = { "signed &gt;", "signed &le;", "signed &ge;",
 		"signed &lt;", "&ne;", "=", "Not overflow", "Overflow",
 		"&not; (C &or; Z)", "C &or; Z", "unsigned &lt;", "unsigned &ge;",
