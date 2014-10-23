@@ -1,24 +1,31 @@
 .TH MICTOOL 1
 .SH NAME
-mictool \- formatiert MPR-Dateien aus JMic als HTML
+mictool \- formatiert MPR-Dateien aus JMic als HTML oder LaTeX.
 .SH SYNTAX
 .B mictool
 [\fB\-\-help\fR]
 [\fB\-\-version\fR]
-.IR eingabedatei
+.IR MPRDATEI
 [\fB\-\-debug\fR]
-[\fB\-\-output\-html\fR \fIAUSGABEDATEI\fR]
+[\fB\-\-output\-html\fR \fIHTMLDATEI\fR]
+[\fB\-\-output\-latex\fR \fILATEXDATEI\fR]
 .SH BESCHREIBUNG
 .B mictool
 liest eine MPR-Datei in Version 4 (kompatibel zu JMic 1.4) ein und formatiert diese als HTML zum besseren Lesen.
 (Beachte: MPR-Dateien sind text-basiert, aber die wichtigen Daten sind binär-kodiert.)
 .SH OPTIONEN
 .TP
-.BR \-o ", " \-\-output\-html " " \fIAUSGABEDATEI\fR
-Formatiert die \fIEingabedatei\fR als HTML.
+.BR \-o ", " \-\-output " " \fIAUSGABEDATEI\fR
+Formatiert die \fIMPRDATEI\fR als HTML oder LaTeX abhängig von der Datei-Endung.
+.TP
+.BR \-\-output\-html " " \fIHTMLDATEI\fR
+Formatiert die \fIMPRDATEI\fR als HTML.
+.TP
+.BR \-\-output-latex " " \fILATEXDATEI\fR
+Formatiert die \fIMPRDATEI\fR als LaTeX.
 .TP
 .BR \-d ", " \-\-debug
-Schreibt den Inhalt von \fIEingabedatei\fR nach stdout (Standard-Ausgabe).
+Schreibt den Inhalt von \fIMPRDATEI\fR nach stdout (Standard-Ausgabe).
 .TP
 .BR \-h ", " \-\-help
 Zeigt die Hilfe.

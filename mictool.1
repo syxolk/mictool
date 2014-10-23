@@ -1,24 +1,31 @@
 .TH MICTOOL 1
 .SH NAME
-mictool \- format MPR files from JMic as HTML
+mictool \- format MPR files from JMic as HTML or LaTeX.
 .SH SYNOPSIS
 .B mictool
 [\fB\-\-help\fR]
 [\fB\-\-version\fR]
-.IR inputfile
+.IR MPRFILE
 [\fB\-\-debug\fR]
-[\fB\-\-output\-html\fR \fIOUTPUTFILE\fR]
+[\fB\-\-output\-html\fR \fIHTMLFILE\fR]
+[\fB\-\-output\-latex\fR \fILATEXFILE\fR]
 .SH DESCRIPTION
 .B mictool
 parses an MPR file in version 4 (compatible to JMic 1.4) and formats it as an HTML file for better reading.
 (Note: MPR files are text based but the important data is encoded binary.)
 .SH OPTIONS
 .TP
-.BR \-o ", " \-\-output\-html " " \fIOUTPUTFILE\fR
-Format the \fIinputfile\fR as HTML.
+.BR \-o ", " \-\-output " " \fIOUTPUTFILE\fR
+Format the \fMPRFILE\fR as HTML or LaTeX depending on file name extension.
+.TP
+.BR \-\-output\-html " " \fIHTMLFILE\fR
+Format the \fIMPRFILE\fR as HTML.
+.TP
+.BR \-\-output\-latex " " \fILATEXFILE\fR
+Format the \fIMPRFILE\fR as LaTeX.
 .TP
 .BR \-d ", " \-\-debug
-Print the contents of \fIinputfile\fR on stdout.
+Print the contents of \fIMPRFILE\fR on stdout.
 .TP
 .BR \-h ", " \-\-help
 Show help.

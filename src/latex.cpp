@@ -10,10 +10,14 @@ struct ColumnDescriptor {
 
 void writeMulticolumn(std::ofstream& file, std::string value, int colspan) {
 	if (colspan > 1) {
-		file << "\\multicolumn{" << colspan << "}{|c|}{" << value << "}";
+		file << "\\multicolumn{" << colspan << "}{|l|}{" << value << "}";
 	} else {
 		file << value;
 	}
+}
+
+void writeRotatedMulticolumn(std::ofstream& file, std::string value, int colspan) {
+	writeMulticolumn(file, "\\rotatebox[origin=c]{90}{" + value + "}", colspan);
 }
 
 void writeMulticolumnWithAmp(std::ofstream& file, std::string value,
@@ -31,11 +35,13 @@ bool writeLaTeX(const char* path, MPRFile& mprFile) {
 	if (file.is_open()) {
 
 		// write LaTeX header
-		file << "\\documentclass[12pt,landscape]{article}\n"
-				<< "\\usepackage{longtable}\n" << "\\begin{document}\n"
+		file << "\\documentclass[landscape,10pt,oneside,a4paper]{article}\n"
+				<< "\\usepackage[landscape, top=1cm, left=1cm, right=1cm, bottom=1cm]{geometry}\n"
+				<< "\\usepackage{longtable}\n" << "\\usepackage{graphicx}" << "\\begin{document}\n"
+				<< "\\thispagestyle{empty}"
 				<< "\\begin{center}\n" << "\\begin{longtable}{|";
-		for (int i = 0; i < 80; i++) {
-			file << "c|";
+		for (int i = 0; i < 55; i++) {
+			file << "l|";
 		}
 		file << "}\n";
 
@@ -43,22 +49,22 @@ bool writeLaTeX(const char* path, MPRFile& mprFile) {
 		// row with bit numbers
 		for (int i = 79; i >= 0; i--) {
 			if (i == 73) {
-				file << " & 73 - 58";
+				file << " & {\\tiny 73 - 58}";
 			} else if (i < 73 && i >= 58) {
 				// no column
 			} else if (i == 17) {
-				file << " & 17 - 6";
+				file << " & {\\tiny 17 - 6}";
 			} else if (i < 17 && i >= 6) {
 				// no column
 			} else {
-				file << " & " << i;
+				file << " & {\\tiny " << i << "}";
 			}
 		}
 		file << " \\\\ \\hline\n";
 
 		// table description header
 		static ColumnDescriptor columnDescriptors[] = { { "IE", 1 }, {
-				"Interrupt", 4 }, { "KMUX", 1 }, { "Konstante", 1 },
+				"Interrupt", 4 }, { "KMUX", 1 }, { "Konst.", 1 },
 				{ "Src", 3 }, { "Func", 3 }, { "Dest", 3 }, { "RA", 4 }, {
 						"ASEL", 1 }, { "RB", 4 }, { "BSEL", 1 }, { "YMUX", 2 },
 				{ "CIN MUX", 2 }, { "Shift", 4 }, { "CE\\micro", 1 },
@@ -72,12 +78,13 @@ bool writeLaTeX(const char* path, MPRFile& mprFile) {
 				column++) {
 
 			file << " & ";
-			writeMulticolumn(file, escapeLatex(column->name), column->colspan);
+			writeRotatedMulticolumn(file, escapeLatex(column->name), column->colspan);
 		}
 		file << " \\\\ \\hline\n";
 
 		int lastLineNumber = -1;
 		bool outputExtraNameLine = true;
+		bool isFirstLine = true;
 
 		// program lines
 		for (auto& line : mprFile.getMicroLines()) {
@@ -86,8 +93,12 @@ bool writeLaTeX(const char* path, MPRFile& mprFile) {
 			if (outputExtraNameLine
 					|| (line.getLineNumber() > lastLineNumber + 1)) {
 
+				if(!isFirstLine) {
+					file << "\\hline\n";
+				}
 				writeMulticolumn(file, escapeLatex(line.getName()), 55);
 				file << " \\\\\n";
+				file << "\\hline\n";
 				outputExtraNameLine = true;
 			}
 
@@ -187,6 +198,7 @@ bool writeLaTeX(const char* path, MPRFile& mprFile) {
 			// save the last line number and reset the extra name row variable
 			lastLineNumber = line.getLineNumber();
 			outputExtraNameLine = false;
+			isFirstLine = false;
 		}
 
 		// output machine program / RAM
