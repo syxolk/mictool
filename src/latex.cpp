@@ -34,6 +34,8 @@ bool writeLaTeX(const char* path, MPRFile& mprFile) {
 	std::ofstream file(path);
 	if (file.is_open()) {
 
+		const int TABLE_COL_COUNT = 49;
+
 		// write LaTeX header
 		file << "\\documentclass[landscape,10pt,oneside,a4paper]{article}\n"
 				<< "\\usepackage[landscape, top=1cm, left=1cm, right=1cm, bottom=1cm]{geometry}\n"
@@ -41,7 +43,7 @@ bool writeLaTeX(const char* path, MPRFile& mprFile) {
 				<< "\\thispagestyle{empty}\n" << "\\begin{center}\n"
 				<< "\\begingroup\n"
 				<< "\\setlength\\tabcolsep{3pt}\n" << "\\begin{longtable}{|";
-		for (int i = 0; i < 55; i++) {
+		for (int i = 0; i < TABLE_COL_COUNT; i++) {
 			file << "l|";
 		}
 		file << "}\n";
@@ -105,7 +107,7 @@ bool writeLaTeX(const char* path, MPRFile& mprFile) {
 				if(!isFirstLine) {
 					file << "\\hline\n";
 				}
-				writeMulticolumn(file, "\\textbf{" + escapeLatex(line.getName()) + "}", 49);
+				writeMulticolumn(file, "\\textbf{" + escapeLatex(line.getName()) + "}", TABLE_COL_COUNT);
 				file << " \\\\\n";
 				file << "\\hline\n";
 				outputExtraNameLine = true;
