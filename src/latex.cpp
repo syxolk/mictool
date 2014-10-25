@@ -37,9 +37,10 @@ bool writeLaTeX(const char* path, MPRFile& mprFile) {
 		// write LaTeX header
 		file << "\\documentclass[landscape,10pt,oneside,a4paper]{article}\n"
 				<< "\\usepackage[landscape, top=1cm, left=1cm, right=1cm, bottom=1cm]{geometry}\n"
-				<< "\\usepackage{longtable}\n" << "\\usepackage{graphicx}" << "\\begin{document}\n"
-				<< "\\thispagestyle{empty}"
-				<< "\\begin{center}\n" << "\\begin{longtable}{|";
+				<< "\\usepackage{longtable}\n" << "\\usepackage{graphicx}\n" << "\\begin{document}\n"
+				<< "\\thispagestyle{empty}\n" << "\\begin{center}\n"
+				<< "\\begingroup\n"
+				<< "\\setlength\\tabcolsep{3pt}\n" << "\\begin{longtable}{|";
 		for (int i = 0; i < 55; i++) {
 			file << "l|";
 		}
@@ -56,6 +57,14 @@ bool writeLaTeX(const char* path, MPRFile& mprFile) {
 				file << " & {\\tiny 17 - 6}";
 			} else if (i < 17 && i >= 6) {
 				// no column
+			} else if (i == 48) {
+				file << " & {\\tiny 48 - 45}";
+			} else if (i < 48 && i >= 45) {
+				// no column
+			} else if (i == 43) {
+				file << " & {\\tiny 43 - 40}";
+			} else if (i < 43 && i >= 40) {
+				// no column
 			} else {
 				file << " & {\\tiny " << i << "}";
 			}
@@ -65,12 +74,12 @@ bool writeLaTeX(const char* path, MPRFile& mprFile) {
 		// table description header
 		static ColumnDescriptor columnDescriptors[] = { { "IE", 1 }, {
 				"Interrupt", 4 }, { "KMUX", 1 }, { "Konst.", 1 },
-				{ "Src", 3 }, { "Func", 3 }, { "Dest", 3 }, { "RA", 4 }, {
-						"ASEL", 1 }, { "RB", 4 }, { "BSEL", 1 }, { "YMUX", 2 },
-				{ "CIN MUX", 2 }, { "Shift", 4 }, { "CE\\micro", 1 },
+				{ "Src", 3 }, { "Func", 3 }, { "Dest", 3 }, { "RA", 1 }, {
+						"ASEL", 1 }, { "RB", 1 }, { "BSEL", 1 }, { "YMUX", 2 },
+				{ "CIN MUX", 2 }, { "Shift", 4 }, { "CE$\\mu$", 1 },
 				{ "CEM", 1 }, { "Test", 6 }, { "CCEN", 1 }, { "AM2910", 4 }, {
-						"BAR", 1 }, { "BZ_LD", 1 }, { "BZ_ED", 1 }, { "BZ_INC",
-						1 }, { "BZ_EA", 1 }, { "IR_LD", 1 }, { "MWE", 1 }, {
+						"BAR", 1 }, { "BZ\\_LD", 1 }, { "BZ\\_ED", 1 }, { "BZ\\_INC",
+						1 }, { "BZ\\_EA", 1 }, { "IR\\_LD", 1 }, { "MWE", 1 }, {
 				NULL, 0 } };
 
 		// write header row
@@ -78,7 +87,7 @@ bool writeLaTeX(const char* path, MPRFile& mprFile) {
 				column++) {
 
 			file << " & ";
-			writeRotatedMulticolumn(file, escapeLatex(column->name), column->colspan);
+			writeRotatedMulticolumn(file, column->name, column->colspan);
 		}
 		file << " \\\\ \\hline\n";
 
@@ -96,7 +105,7 @@ bool writeLaTeX(const char* path, MPRFile& mprFile) {
 				if(!isFirstLine) {
 					file << "\\hline\n";
 				}
-				writeMulticolumn(file, escapeLatex(line.getName()), 55);
+				writeMulticolumn(file, "\\textbf{" + escapeLatex(line.getName()) + "}", 49);
 				file << " \\\\\n";
 				file << "\\hline\n";
 				outputExtraNameLine = true;
@@ -106,7 +115,7 @@ bool writeLaTeX(const char* path, MPRFile& mprFile) {
 			file << line.getLineNumber();
 			// don't insert the name of the line if there is already the special named row
 			if (!outputExtraNameLine && !line.getName().empty()) {
-				file << " " << escapeLatex(line.getName());
+				file << " {\\tiny " << escapeLatex(line.getName()) << "}";
 			}
 			file << " & ";
 
@@ -130,11 +139,11 @@ bool writeLaTeX(const char* path, MPRFile& mprFile) {
 			writeMulticolumnWithAmp(file, line.getDestination(), 3);
 
 			// RA Addr
-			writeMulticolumnWithAmp(file, intToString(line.getRAAddr()), 4);
+			writeMulticolumnWithAmp(file, intToString(line.getRAAddr()), 1);
 			writeMulticolumnWithAmp(file, line.getRAAddrContext());
 
 			// RB Addr
-			writeMulticolumnWithAmp(file, intToString(line.getRBAddr()), 4);
+			writeMulticolumnWithAmp(file, intToString(line.getRBAddr()), 1);
 			writeMulticolumnWithAmp(file, line.getRBAddrContext());
 
 			// Y-Mux
@@ -153,9 +162,9 @@ bool writeLaTeX(const char* path, MPRFile& mprFile) {
 
 			// Test status register
 			writeMulticolumnWithAmp(file,
-					escapeLatex(line.getStatusRegisterTestContext()), 2);
+					replaceLatexCommands(line.getStatusRegisterTestContext()), 2);
 			writeMulticolumnWithAmp(file,
-					escapeLatex(line.getStatusRegisterTest()), 4);
+					replaceLatexCommands(line.getStatusRegisterTest()), 4);
 
 			// Condition Code Enable
 			writeMulticolumnWithAmp(file, line.getConditionCodeEnable());
@@ -166,13 +175,14 @@ bool writeLaTeX(const char* path, MPRFile& mprFile) {
 			// BAR
 			int barColumn = line.getBAR();
 			file << barColumn;
-			if (barColumn != 0) {
+			// Disabled due to lack of space on A4 paper
+			/*if (barColumn != 0) {
 				std::string barName = mprFile.getMicroLineByLineNumber(
 						barColumn);
 				if (!barName.empty()) {
-					file << " (" << escapeLatex(barName) << ")";
+					file << " {\\tiny (" << escapeLatex(barName) << ")}";
 				}
-			}
+			}*/
 			file << " & ";
 
 			// BZ_LD
@@ -202,7 +212,7 @@ bool writeLaTeX(const char* path, MPRFile& mprFile) {
 		}
 
 		// output machine program / RAM
-		file << "\\end{longtable}\n" << "\\end{center}\n" << "\\end{document}";
+		file << "\\hline\n" << "\\end{longtable}\n" << "\\endgroup\n" << "\\end{center}\n" << "\\end{document}";
 
 		file.close();
 		return true;

@@ -89,7 +89,7 @@ bool writeHTML(const char* path, MPRFile& mprFile) {
       {"RB", 4}, {"BSEL", 1},
       {"YMUX", 2}, {"CIN MUX", 2},
       {"Shift", 4},
-      {"CE&mu;", 1}, {"CEM", 1},
+      {"CE&micro;", 1}, {"CEM", 1},
       {"Test", 6},
       {"CCEN", 1},
       {"AM2910", 4},
@@ -170,8 +170,8 @@ bool writeHTML(const char* path, MPRFile& mprFile) {
       writeTDWithCheckDefault(file, line.getCEMachine());
 
       // Test status register
-      writeTD(file, line.getStatusRegisterTestContext(), 2);
-      writeTD(file, line.getStatusRegisterTest(), 4);
+      writeTD(file, replaceHtmlCommands(line.getStatusRegisterTestContext()), 2);
+      writeTD(file, replaceHtmlCommands(line.getStatusRegisterTest()), 4);
 
       // Condition Code Enable
       writeTD(file, line.getConditionCodeEnable());

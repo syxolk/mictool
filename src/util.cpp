@@ -77,6 +77,21 @@ const std::string htmlspecialchars(const std::string& data) {
 	return buffer;
 }
 
+const std::string replaceHtmlCommands(const std::string& data) {
+	std::string buffer(data);
+
+	replaceAll(buffer, "<ge>", "&ge;");
+	replaceAll(buffer, "<gt>", "&gt;");
+	replaceAll(buffer, "<le>", "&le;");
+	replaceAll(buffer, "<lt>", "&lt;");
+	replaceAll(buffer, "<ne>", "&ne;");
+	replaceAll(buffer, "<not>", "&not;");
+	replaceAll(buffer, "<or>", "&or;");
+	replaceAll(buffer, "<micro>", "&micro;");
+
+	return buffer;
+}
+
 // http://tex.stackexchange.com/questions/34580/escape-character-in-latex
 const std::string escapeLatex(const std::string& data) {
 	std::string buffer;
@@ -107,6 +122,33 @@ const std::string escapeLatex(const std::string& data) {
 		}
 	}
 	return buffer;
+}
+
+const std::string replaceLatexCommands(const std::string& data) {
+	std::string buffer(data);
+
+	replaceAll(buffer, "<ge>", "$\\geq$");
+	replaceAll(buffer, "<gt>", "$>$");
+	replaceAll(buffer, "<le>", "$\\leq$");
+	replaceAll(buffer, "<lt>", "$<$");
+	replaceAll(buffer, "<ne>", "$\\neg$");
+	replaceAll(buffer, "<not>", "$\\ne$");
+	replaceAll(buffer, "<or>", "$\\lor$");
+	replaceAll(buffer, "<micro>", "$\\mu$");
+
+	return buffer;
+}
+
+// Replaces all occurences of a string in a string with another string
+// http://stackoverflow.com/questions/3418231/replace-part-of-a-string-with-another-string
+void replaceAll(std::string& str, const std::string& needle, const std::string& replacement) {
+	if(needle.empty()) return;
+
+	size_t startPos = 0;
+	while((startPos = str.find(needle, startPos)) != std::string::npos) {
+		str.replace(startPos, needle.length(), replacement);
+		startPos += replacement.length();
+	}
 }
 
 std::string intToString(int value) {
