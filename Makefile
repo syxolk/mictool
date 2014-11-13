@@ -1,16 +1,16 @@
-CXXFLAGS = -Wall -Wextra -Werror -std=c++0x -O3
-EXECUTABLE = mictool
-CXX = g++
-BIN = bin
-OBJECTS = $(addprefix $(BIN)/,main.o io.o html.o util.o mpr.o latex.o)
-INSTALLDIR = /usr/local/bin
-MANDIR = /usr/local/share/man/man1
-MANDIR_DE = /usr/local/share/man/de/man1
+CXXFLAGS=-Wall -Wextra -Werror -std=c++0x -O3
+EXECUTABLE=mictool
+CXX=g++
+BIN=bin
+OBJECTS=$(addprefix $(BIN)/,main.o io.o html.o util.o mpr.o latex.o)
+INSTALLDIR=/usr/local/bin
+MANDIR=/usr/local/share/man/man1
+MANDIR_DE=/usr/local/share/man/de/man1
 
 $(EXECUTABLE) : $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o $(EXECUTABLE) $(OBJECTS)
+	$(CXX) -o $(EXECUTABLE) $(OBJECTS)
 
-.PHONY : all clean install
+.PHONY : all clean install uninstall
 all : $(EXECUTABLE)
 clean :
 	rm -f $(BIN)/*.o $(EXECUTABLE)
