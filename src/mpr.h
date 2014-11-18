@@ -17,7 +17,7 @@ private:
 	std::string name;
 	std::bitset<80> bits;
 public:
-	MicroLine(int lineNumber, std::string name, std::bitset<80> bits) :
+	MicroLine(int lineNumber, const std::string& name, const std::bitset<80>& bits) :
 			lineNumber(lineNumber), name(name), bits(bits) {
 	}
 	int getLineNumber();
@@ -60,7 +60,7 @@ class RamCell {
 private:
 	std::string data;
 public:
-	RamCell(std::string data) :
+	RamCell(const std::string& data) :
 			data(data) {
 	}
 	std::string getData() {
@@ -76,7 +76,7 @@ private:
 	std::vector<MicroLine> micLines;
 	std::vector<RamCell> ramCells;
 public:
-	MPRFile(std::string name) :
+	MPRFile(const std::string& name) :
 			 name(name) {
 	}
 	std::vector<MicroLine>& getMicroLines() {
