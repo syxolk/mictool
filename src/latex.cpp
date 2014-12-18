@@ -30,9 +30,9 @@ void writeMulticolumnWithAmp(std::ofstream& file, std::string value) {
 	writeMulticolumn(file, value, 1);
 	file << " & ";
 }
-bool writeLaTeX(const char* path, MPRFile& mprFile) {
-	std::ofstream file(path);
-	if (file.is_open()) {
+
+bool MPRWriterLaTeX::writeMPR(std::ofstream& file, MPRFile& mprFile) {
+	//std::ofstream file(path);
 
 		const int TABLE_COL_COUNT = 49;
 
@@ -218,8 +218,4 @@ bool writeLaTeX(const char* path, MPRFile& mprFile) {
 
 		file.close();
 		return true;
-	} else {
-		std::cout << "Cannot write file: " << path << std::endl;
-		return false;
-	}
 }

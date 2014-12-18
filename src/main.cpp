@@ -9,6 +9,7 @@
 #include "latex.h"
 #include "util.h"
 #include "mpr.h"
+#include "mpr_writer.h"
 
 enum OutputType {
 	HTML, DEBUG, LATEX
@@ -84,6 +85,8 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
+	MPRWriter *writer = NULL;
+
 	// input file is now the last string in argv
 	if (optind == argc - 1) {
 		opts.inputFile = argv[optind];
@@ -110,16 +113,21 @@ int main(int argc, char* argv[]) {
 			}
 			break;
 		case HTML:
-			if (!writeHTML(opts.outputFile, mprFile)) {
+			/*if (!writeHTML(opts.outputFile, mprFile)) {
 				return EXIT_FAILURE;
-			}
+			}*/
+			writer = new MPRWriterHTML();
 			break;
 		case LATEX:
-			if (!writeLaTeX(opts.outputFile, mprFile)) {
+			/*if (!writeLaTeX(opts.outputFile, mprFile)) {
 				return EXIT_FAILURE;
-			}
+			}*/
+			writer = new MPRWriterLaTeX();
 			break;
 		}
+
+		std::ofstream file(opts.outputFile);
+		writer->writeMPR(file, mprFile);
 	} else {
 		printError(argv[0]);
 		return EXIT_FAILURE;

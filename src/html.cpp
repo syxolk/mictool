@@ -34,9 +34,8 @@ void writeTD(std::ofstream& file, std::string value) {
 	writeTD(file, value, 1, false);
 }
 
-bool writeHTML(const char* path, MPRFile& mprFile) {
-  std::ofstream file(path);
-  if(file.is_open()) {
+bool MPRWriterHTML::writeMPR(std::ofstream& file, MPRFile& mprFile) {
+  //std::ofstream file(path);
 
     // write HTML header
     file << "<!doctype html>\n"
@@ -242,8 +241,4 @@ bool writeHTML(const char* path, MPRFile& mprFile) {
 
     file.close();
     return true;
-  } else {
-    std::cout << "Cannot write file: " << path << std::endl;
-    return false;
-  }
 }
