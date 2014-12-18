@@ -23,13 +23,8 @@ enum ParsingMode {
   UNKNOWN, MI_PROGRAM, MA_PROGRAM, REGISTER, IP
 };
 
-bool readFile(const char* path, MPRFile& mprFile) {
+bool readFile(std::istream& file, MPRFile& mprFile) {
   std::string line;
-
-  // open the file
-  std::ifstream file(path, std::ios::in);
-
-  if(file.is_open()) {
 
     // check file identifier
     if( safe_getline(file, line) ) {
@@ -57,12 +52,12 @@ bool readFile(const char* path, MPRFile& mprFile) {
       } else if(line == "befehlszaehler:") {
         mode = IP;
       } else if(mode == UNKNOWN) {
-        std::cout << "Don't know what to do with line: " << line << std::endl;
+        std::cerr << "Don't know what to do with line: " << line << std::endl;
       } else if(mode == MI_PROGRAM) {
         size_t line_length = line.length();
 
         if(line_length < 33) {
-          std::cout << "Can't parse line, too short: " << line << std::endl;
+          std::cerr << "Can't parse line, too short: " << line << std::endl;
           continue;
         }
 
@@ -92,22 +87,17 @@ bool readFile(const char* path, MPRFile& mprFile) {
       }
     }
 
-    file.close();
     return true;
-  } else {
-    std::cout << "Unable to open file: " << path  << std::endl;
-    return false;
-  }
 }
 
 // outputs an unexpected value in case of an error
 void errorUnexpected(const char* expected, const char* found) {
-  std::cout << "Error: expected " << expected << " but found " << found << std::endl;
+  std::cerr << "Error: expected " << expected << " but found " << found << std::endl;
 }
 
 // outputs an "end of file" error
 void errorEOF(const char* expected) {
-  std::cout << "Error: expected " << expected << "but reached EOF";
+  std::cerr << "Error: expected " << expected << "but reached EOF";
 }
 
 // parses the micro bitset part of the MPR files

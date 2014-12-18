@@ -8,7 +8,7 @@
 class MPRWriterHTML : public MPRWriter {
 	public:
 		MPRWriterHTML() {};
-		bool writeMPR(std::ofstream& stream, const MPRFile& mpr);
+		bool writeMPR(std::ostream& stream, const MPRFile& mpr);
 };
 
 #endif /* _MICTOOL_HTML_H_ */

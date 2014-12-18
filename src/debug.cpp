@@ -1,7 +1,7 @@
 #include <iostream>
 #include "debug.h"
 
-bool MPRWriterDebug::writeMPR(std::ofstream& stream, const MPRFile& mprFile) {
+bool MPRWriterDebug::writeMPR(std::ostream& stream, const MPRFile& mprFile) {
 	stream << mprFile.getName() << "\n\n";
 
 	for (auto& line : mprFile.getMicroLines()) {

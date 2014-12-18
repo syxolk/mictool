@@ -8,7 +8,7 @@
 class MPRWriterLaTeX : public MPRWriter {
 	public:
 		MPRWriterLaTeX() {};
-		bool writeMPR(std::ofstream& stream, const MPRFile& mprFile);
+		bool writeMPR(std::ostream& stream, const MPRFile& mprFile);
 };
 
 #endif /* _MICTOOL_LATEX_H_ */

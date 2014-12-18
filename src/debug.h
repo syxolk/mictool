@@ -8,7 +8,7 @@
 class MPRWriterDebug : public MPRWriter {
 	public:
 		MPRWriterDebug() {};
-		bool writeMPR(std::ofstream& stream, const MPRFile& mpr);
+		bool writeMPR(std::ostream& stream, const MPRFile& mpr);
 };
 
 #endif /* _MICTOOL_DEBUG_H_ */

@@ -8,7 +8,7 @@ struct ColumnDescriptor {
   const int colspan;
 };
 
-void writeTD(std::ofstream& file, std::string value, int colspan, bool checkDefault) {
+void writeTD(std::ostream& file, std::string value, int colspan, bool checkDefault) {
 	file << "<td";
 
 	if(colspan > 1) {
@@ -22,19 +22,19 @@ void writeTD(std::ofstream& file, std::string value, int colspan, bool checkDefa
 	file << ">" << value << "</td>";
 }
 
-void writeTDWithCheckDefault(std::ofstream& file, std::string value) {
+void writeTDWithCheckDefault(std::ostream& file, std::string value) {
 	writeTD(file, value, 1, true);
 }
 
-void writeTD(std::ofstream& file, std::string value, int colspan) {
+void writeTD(std::ostream& file, std::string value, int colspan) {
 	writeTD(file, value, colspan, false);
 }
 
-void writeTD(std::ofstream& file, std::string value) {
+void writeTD(std::ostream& file, std::string value) {
 	writeTD(file, value, 1, false);
 }
 
-bool MPRWriterHTML::writeMPR(std::ofstream& file, const MPRFile& mprFile) {
+bool MPRWriterHTML::writeMPR(std::ostream& file, const MPRFile& mprFile) {
   //std::ofstream file(path);
 
     // write HTML header
@@ -239,6 +239,5 @@ bool MPRWriterHTML::writeMPR(std::ofstream& file, const MPRFile& mprFile) {
 
     file << "</table>\n</body>\n</html>";
 
-    file.close();
     return true;
 }

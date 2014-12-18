@@ -8,7 +8,7 @@ struct ColumnDescriptor {
 	const int colspan;
 };
 
-void writeMulticolumn(std::ofstream& file, std::string value, int colspan) {
+void writeMulticolumn(std::ostream& file, std::string value, int colspan) {
 	if (colspan > 1) {
 		file << "\\multicolumn{" << colspan << "}{|l|}{" << value << "}";
 	} else {
@@ -16,22 +16,22 @@ void writeMulticolumn(std::ofstream& file, std::string value, int colspan) {
 	}
 }
 
-void writeRotatedMulticolumn(std::ofstream& file, std::string value, int colspan) {
+void writeRotatedMulticolumn(std::ostream& file, std::string value, int colspan) {
 	writeMulticolumn(file, "\\rotatebox[origin=c]{90}{" + value + "}", colspan);
 }
 
-void writeMulticolumnWithAmp(std::ofstream& file, std::string value,
+void writeMulticolumnWithAmp(std::ostream& file, std::string value,
 		int colspan) {
 	writeMulticolumn(file, value, colspan);
 	file << " & ";
 }
 
-void writeMulticolumnWithAmp(std::ofstream& file, std::string value) {
+void writeMulticolumnWithAmp(std::ostream& file, std::string value) {
 	writeMulticolumn(file, value, 1);
 	file << " & ";
 }
 
-bool MPRWriterLaTeX::writeMPR(std::ofstream& file, const MPRFile& mprFile) {
+bool MPRWriterLaTeX::writeMPR(std::ostream& file, const MPRFile& mprFile) {
 	//std::ofstream file(path);
 
 		const int TABLE_COL_COUNT = 49;
@@ -216,6 +216,5 @@ bool MPRWriterLaTeX::writeMPR(std::ofstream& file, const MPRFile& mprFile) {
 		// output machine program / RAM
 		file << "\\hline\n" << "\\end{longtable}\n" << "\\endgroup\n" << "\\end{center}\n" << "\\end{document}";
 
-		file.close();
 		return true;
 }

@@ -7,7 +7,7 @@
 class MPRWriter {
 	public:
 		MPRWriter() {};
-		virtual bool writeMPR(std::ofstream& stream, const MPRFile& file) =0;
+		virtual bool writeMPR(std::ostream& stream, const MPRFile& file) =0;
 };
 
 #endif

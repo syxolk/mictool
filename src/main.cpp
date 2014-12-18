@@ -14,7 +14,7 @@
 #include "mpr_writer.h"
 
 enum OutputType {
-	HTML, DEBUG, LATEX
+	UNKNOWN, HTML, DEBUG, LATEX
 };
 
 // CLI options
@@ -28,19 +28,21 @@ struct options {
 void printHelp();
 void printVersion();
 void printError(char* arg0);
+void printUnknownOutputType(char* arg0);
 
 int main(int argc, char* argv[]) {
 
 	int c;
 	options opts;
-	opts.inputFile = opts.outputFile = NULL;
-	opts.outputType = DEBUG;
+	opts.inputFile = opts.outputFile = nullptr;
+	opts.outputType = UNKNOWN;
 
-	static option long_options[] = { { "help", no_argument, 0, 'h' }, {
-			"version", no_argument, 0, 'v' }, { "output-debug", required_argument, 0, 3 },
+	static option long_options[] = { { "help", no_argument, 0, 'h' },
+			{ "version", no_argument, 0, 'v' },
 			{ "output", required_argument, 0, 'o' },
-			{ "output-html", required_argument, 0, 1 },
-			{ "output-latex", required_argument, 0, 2 },
+			{ "html", no_argument, 0, 1 },
+			{ "latex", no_argument, 0, 2 },
+			{ "debug", no_argument, 0, 3 },
 			{ 0, 0, 0, 0 } };
 
 	std::string extension;
@@ -62,22 +64,18 @@ int main(int argc, char* argv[]) {
 				opts.outputType = HTML;
 			} else if(extension == "tex") {
 				opts.outputType = LATEX;
-			} else {
-				std::cout << "Cannot detect file type by extension: " << extension << "\n";
-				return EXIT_FAILURE;
+			} else if(extension == "dbg" || extension == "debug") {
+				opts.outputType = DEBUG;
 			}
 			opts.outputFile = optarg;
 			break;
 		case 1 :
-			opts.outputFile = optarg;
 			opts.outputType = HTML;
 			break;
 		case 2 :
-			opts.outputFile = optarg;
 			opts.outputType = LATEX;
 			break;
 		case 3:
-			opts.outputFile = optarg;
 			opts.outputType = DEBUG;
 			break;
 		case '?':
@@ -88,43 +86,83 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	std::unique_ptr<MPRWriter> writer(nullptr);
-
 	// input file is now the last string in argv
 	if (optind == argc - 1) {
 		opts.inputFile = argv[optind];
+	}
 
-		// read and parse input file
-		MPRFile mprFile(extractFilename(std::string(opts.inputFile)));
-		if (!readFile(opts.inputFile, mprFile)) {
+	std::string title("Formatted MPR file");
+	
+	// try to get the MPR file title from input or output file name
+	if(opts.inputFile != nullptr) {
+		title = extractFilename(std::string(opts.inputFile));
+	} else if(opts.outputFile != nullptr) {
+		title = extractFilename(std::string(opts.outputFile));
+	}
+
+	MPRFile mprFile(title);
+
+	// check different input sources
+	if(opts.inputFile == nullptr) {
+		// read from standard input
+		if(! readFile(std::cin, mprFile)) {
 			return EXIT_FAILURE;
 		}
-
-		// check different output formats
-		switch (opts.outputType) {
-		case DEBUG:
-			writer = std::unique_ptr<MPRWriter>(new MPRWriterDebug());
-			break;
-		case HTML:
-			writer = std::unique_ptr<MPRWriter>(new MPRWriterHTML());
-			break;
-		case LATEX:
-			writer = std::unique_ptr<MPRWriter>(new MPRWriterLaTeX());
-			break;
+	} else {
+		 // open the file
+  		std::ifstream file(opts.inputFile, std::ios::in);
+  		
+  		if(! file.is_open()) {
+  			std::cout << "Unable to open file: " << opts.inputFile << std::endl;
+  			return EXIT_FAILURE;
+    	}
+    	
+    	// read and parse from input file
+		if (!readFile(file, mprFile)) {
+			return EXIT_FAILURE;
 		}
+		
+		file.close();
+	}
 
+	std::unique_ptr<MPRWriter> writer(nullptr);
+
+	// check different output formats
+	switch (opts.outputType) {
+	case DEBUG:
+		writer = std::unique_ptr<MPRWriter>(new MPRWriterDebug());
+		break;
+	case HTML:
+		writer = std::unique_ptr<MPRWriter>(new MPRWriterHTML());
+		break;
+	case LATEX:
+		writer = std::unique_ptr<MPRWriter>(new MPRWriterLaTeX());
+		break;
+	case UNKNOWN:
+		printUnknownOutputType(argv[0]);
+		return EXIT_FAILURE;
+	}
+
+	// check for output file
+	if(opts.outputFile == nullptr) {
+		// write to standard output
+		if(! writer->writeMPR(std::cout, mprFile)) {
+			return EXIT_FAILURE;
+		}
+	} else {
+		// open file for writing
 		std::ofstream file(opts.outputFile);
 
 		if(! file.is_open()) {
 			return EXIT_FAILURE;
 		}
-
+		
+		// write to file
 		if(! writer->writeMPR(file, mprFile)) {
 			return EXIT_FAILURE;
 		}
-	} else {
-		printError(argv[0]);
-		return EXIT_FAILURE;
+	
+		file.close();
 	}
 
 	return EXIT_SUCCESS;
@@ -153,6 +191,11 @@ void printVersion() {
 
 // print error in case of wrong command line usage
 void printError(char* arg0) {
-	std::cout << "Wrong parameters.\n" << "Type " << arg0
+	std::cerr << "Wrong parameters.\n" << "Type " << arg0
+			<< " --help for help.\n" << std::endl;
+}
+
+void printUnknownOutputType(char* arg0) {
+	std::cerr << "Unknown output type.\n" << "Type " << arg0
 			<< " --help for help.\n" << std::endl;
 }
