@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <getopt.h>
 #include <algorithm>
+#include <memory>
 #include "io.h"
 #include "html.h"
 #include "latex.h"
@@ -85,7 +86,7 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	MPRWriter *writer = NULL;
+	std::unique_ptr<MPRWriter> writer(nullptr);
 
 	// input file is now the last string in argv
 	if (optind == argc - 1) {
@@ -113,21 +114,17 @@ int main(int argc, char* argv[]) {
 			}
 			break;
 		case HTML:
-			/*if (!writeHTML(opts.outputFile, mprFile)) {
-				return EXIT_FAILURE;
-			}*/
-			writer = new MPRWriterHTML();
+			writer = std::unique_ptr<MPRWriter>(new MPRWriterHTML());
 			break;
 		case LATEX:
-			/*if (!writeLaTeX(opts.outputFile, mprFile)) {
-				return EXIT_FAILURE;
-			}*/
-			writer = new MPRWriterLaTeX();
+			writer = std::unique_ptr<MPRWriter>(new MPRWriterLaTeX());
 			break;
 		}
 
 		std::ofstream file(opts.outputFile);
-		writer->writeMPR(file, mprFile);
+		if(! writer->writeMPR(file, mprFile)) {
+			return EXIT_FAILURE;
+		}
 	} else {
 		printError(argv[0]);
 		return EXIT_FAILURE;
