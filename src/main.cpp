@@ -8,6 +8,7 @@
 #include "io.h"
 #include "html.h"
 #include "latex.h"
+#include "debug.h"
 #include "util.h"
 #include "mpr.h"
 #include "mpr_writer.h"
@@ -36,7 +37,7 @@ int main(int argc, char* argv[]) {
 	opts.outputType = DEBUG;
 
 	static option long_options[] = { { "help", no_argument, 0, 'h' }, {
-			"version", no_argument, 0, 'v' }, { "debug", no_argument, 0, 'd' },
+			"version", no_argument, 0, 'v' }, { "output-debug", required_argument, 0, 3 },
 			{ "output", required_argument, 0, 'o' },
 			{ "output-html", required_argument, 0, 1 },
 			{ "output-latex", required_argument, 0, 2 },
@@ -45,7 +46,7 @@ int main(int argc, char* argv[]) {
 	std::string extension;
 
 	// parse command line options
-	while ((c = getopt_long(argc, argv, "hvo:d", long_options, NULL)) != -1) {
+	while ((c = getopt_long(argc, argv, "hvo:", long_options, NULL)) != -1) {
 		switch (c) {
 		case 'h':
 			printHelp();
@@ -75,7 +76,8 @@ int main(int argc, char* argv[]) {
 			opts.outputFile = optarg;
 			opts.outputType = LATEX;
 			break;
-		case 'd':
+		case 3:
+			opts.outputFile = optarg;
 			opts.outputType = DEBUG;
 			break;
 		case '?':
@@ -101,17 +103,7 @@ int main(int argc, char* argv[]) {
 		// check different output formats
 		switch (opts.outputType) {
 		case DEBUG:
-			std::cout << extractFilename(std::string(opts.inputFile)) << "\n\n";
-
-			for (auto& line : mprFile.getMicroLines()) {
-				std::cout << line.getLineNumber() << " : " << line.getName()
-						<< std::endl;
-				std::cout << " " << line.getBits() << std::endl;
-			}
-
-			for (auto& cell : mprFile.getRamCells()) {
-				std::cout << cell.getData() << std::endl;
-			}
+			writer = std::unique_ptr<MPRWriter>(new MPRWriterDebug());
 			break;
 		case HTML:
 			writer = std::unique_ptr<MPRWriter>(new MPRWriterHTML());
@@ -122,6 +114,11 @@ int main(int argc, char* argv[]) {
 		}
 
 		std::ofstream file(opts.outputFile);
+
+		if(! file.is_open()) {
+			return EXIT_FAILURE;
+		}
+
 		if(! writer->writeMPR(file, mprFile)) {
 			return EXIT_FAILURE;
 		}
