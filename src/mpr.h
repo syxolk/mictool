@@ -20,40 +20,40 @@ public:
 	MicroLine(int lineNumber, const std::string& name, const std::bitset<80>& bits) :
 			lineNumber(lineNumber), name(name), bits(bits) {
 	}
-	int getLineNumber();
-	std::string getName();
-	std::bitset<80> getBits();
+	int getLineNumber() const;
+	std::string getName() const;
+	std::bitset<80> getBits() const;
 	static bool isDefaultValue(std::string value);
-	std::string getInterruptFlag();
-	std::string getInterrupt();
-	std::string getKMux();
-	int getConstant();
-	std::string getSource();
-	std::string getFunction();
-	std::string getDestination();
-	int getRAAddr();
-	std::string getRAAddrContext();
-	int getRBAddr();
-	std::string getRBAddrContext();
-	std::string getYMuxAB();
-	std::string getYMuxDB();
-	std::string getCINMux();
-	std::string getShifts();
-	std::string getCEMicro();
-	std::string getCEMachine();
-	std::string getStatusRegisterTestContext();
-	std::string getStatusRegisterTest();
-	std::string getConditionCodeEnable();
-	std::string getJump();
-	int getBAR();
-	std::string getBZ_LD();
-	std::string getBZ_ED();
-	std::string getBZ_INC();
-	std::string getBZ_EA();
-	std::string getIR_LD();
-	std::string getMWE();
+	std::string getInterruptFlag() const;
+	std::string getInterrupt() const;
+	std::string getKMux() const;
+	int getConstant() const;
+	std::string getSource() const;
+	std::string getFunction() const;
+	std::string getDestination() const;
+	int getRAAddr() const;
+	std::string getRAAddrContext() const;
+	int getRBAddr() const;
+	std::string getRBAddrContext() const;
+	std::string getYMuxAB() const;
+	std::string getYMuxDB() const;
+	std::string getCINMux() const;
+	std::string getShifts() const;
+	std::string getCEMicro() const;
+	std::string getCEMachine() const;
+	std::string getStatusRegisterTestContext() const;
+	std::string getStatusRegisterTest() const;
+	std::string getConditionCodeEnable() const;
+	std::string getJump() const;
+	int getBAR() const;
+	std::string getBZ_LD() const;
+	std::string getBZ_ED() const;
+	std::string getBZ_INC() const;
+	std::string getBZ_EA() const;
+	std::string getIR_LD() const;
+	std::string getMWE() const;
 protected:
-	int getInt(int fromBit, int toBit);
+	int getInt(int fromBit, int toBit) const;
 };
 
 class RamCell {
@@ -63,11 +63,11 @@ public:
 	RamCell(const std::string& data) :
 			data(data) {
 	}
-	std::string getData() {
+	std::string getData() const {
 		return data;
 	}
-	bool couldHaveAnOpcode();
-	int getOpCode();
+	bool couldHaveAnOpcode() const;
+	int getOpCode() const;
 };
 
 class MPRFile {
@@ -79,16 +79,22 @@ public:
 	MPRFile(const std::string& name) :
 			 name(name) {
 	}
+	const std::vector<MicroLine>& getMicroLines() const {
+		return micLines;
+	}
 	std::vector<MicroLine>& getMicroLines() {
 		return micLines;
+	}
+	const std::vector<RamCell>& getRamCells() const {
+		return ramCells;
 	}
 	std::vector<RamCell>& getRamCells() {
 		return ramCells;
 	}
-	std::string getName() {
+	std::string getName() const {
 		return name;
 	}
-	std::string getMicroLineByLineNumber(int lineNumber);
+	std::string getMicroLineByLineNumber(int lineNumber) const;
 };
 
 #endif /* _MICTOOL_MPR_H_ */

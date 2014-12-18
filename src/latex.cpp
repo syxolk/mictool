@@ -31,7 +31,7 @@ void writeMulticolumnWithAmp(std::ofstream& file, std::string value) {
 	file << " & ";
 }
 
-bool MPRWriterLaTeX::writeMPR(std::ofstream& file, MPRFile& mprFile) {
+bool MPRWriterLaTeX::writeMPR(std::ofstream& file, const MPRFile& mprFile) {
 	//std::ofstream file(path);
 
 		const int TABLE_COL_COUNT = 49;

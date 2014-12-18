@@ -34,7 +34,7 @@ void writeTD(std::ofstream& file, std::string value) {
 	writeTD(file, value, 1, false);
 }
 
-bool MPRWriterHTML::writeMPR(std::ofstream& file, MPRFile& mprFile) {
+bool MPRWriterHTML::writeMPR(std::ofstream& file, const MPRFile& mprFile) {
   //std::ofstream file(path);
 
     // write HTML header
