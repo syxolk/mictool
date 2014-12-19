@@ -37,26 +37,32 @@ bool CLI::parse() {
 			printVersion();
 			return EXIT_SUCCESS;
 		case 'o':
-			// try to detect output type by file name extension
-			extension = extractFileExtension(optarg);
-			std::transform(extension.begin(), extension.end(), extension.begin(), tolower);
-			if(extension == "html" || extension == "htm") {
-				outputType = HTML;
-			} else if(extension == "tex") {
-				outputType = LATEX;
-			} else if(extension == "dbg" || extension == "debug") {
-				outputType = DEBUG;
+			if(autoDetectOutputType) {
+				// try to detect output type by file name extension
+				extension = extractFileExtension(optarg);
+				std::transform(extension.begin(), extension.end(), extension.begin(), tolower);
+				if(extension == "html" || extension == "htm") {
+					outputType = HTML;
+				} else if(extension == "tex") {
+					outputType = LATEX;
+				} else if(extension == "dbg" || extension == "debug") {
+					outputType = DEBUG;
+				}
 			}
+
 			outputFile = optarg;
 			break;
 		case 1 :
 			outputType = HTML;
+			autoDetectOutputType = false;
 			break;
 		case 2 :
 			outputType = LATEX;
+			autoDetectOutputType = false;
 			break;
 		case 3:
 			outputType = DEBUG;
+			autoDetectOutputType = false;
 			break;
 		case '?':
 			break;

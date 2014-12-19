@@ -20,11 +20,12 @@ class CLI {
 		int argc;
 		char **argv;
 
-		// CLI options		
+		// CLI options
 		char *inputFile = nullptr;
 		char *outputFile = nullptr;
 		OutputType outputType = UNKNOWN;
 		std::string title = "Formatted MPR file";
+		bool autoDetectOutputType = true;
 
 		// helper methods for error and help messages
 		void printHelp();
