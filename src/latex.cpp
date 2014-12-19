@@ -214,3 +214,50 @@ bool MPRWriterLaTeX::writeMPR(std::ostream& file, const MPRFile& mprFile) {
 		return true;
 }
 
+// http://tex.stackexchange.com/questions/34580/escape-character-in-latex
+std::string MPRWriterLaTeX::escapeLatex(const std::string& data) {
+	std::string buffer;
+	buffer.reserve(data.size());
+	for (size_t pos = 0; pos != data.size(); pos++) {
+		switch (data[pos]) {
+		case '&':
+		case '%':
+		case '$':
+		case '#':
+		case '_':
+		case '{':
+		case '}':
+			buffer.append("\\").append(&data[pos], 1);
+			break;
+		case '~':
+			buffer.append("\\textasciitilde{}");
+			break;
+		case '^':
+			buffer.append("\\textasciicircum{}");
+			break;
+		case '\\':
+			buffer.append("\\textbackslash{}");
+			break;
+		default:
+			buffer.append(&data[pos], 1);
+			break;
+		}
+	}
+	return buffer;
+}
+
+std::string MPRWriterLaTeX::replaceLatexCommands(const std::string& data) {
+	std::string buffer(data);
+
+	replaceAll(buffer, "<ge>", "$\\geq$");
+	replaceAll(buffer, "<gt>", "$>$");
+	replaceAll(buffer, "<le>", "$\\leq$");
+	replaceAll(buffer, "<lt>", "$<$");
+	replaceAll(buffer, "<ne>", "$\\neg$");
+	replaceAll(buffer, "<not>", "$\\ne$");
+	replaceAll(buffer, "<or>", "$\\lor$");
+	replaceAll(buffer, "<micro>", "$\\mu$");
+
+	return buffer;
+}
+

@@ -16,6 +16,9 @@ class MPRWriterLaTeX : public MPRWriter {
 		void writeMulticolumnWithAmp(std::ostream& file, std::string value, int colspan);
 		void writeMulticolumnWithAmp(std::ostream& file, std::string value);
 
+		std::string escapeLatex(const std::string& data);
+		std::string replaceLatexCommands(const std::string& data);
+
 		struct ColumnDescriptor {
 			const char* name;
 			const int colspan;

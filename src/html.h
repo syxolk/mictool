@@ -15,6 +15,9 @@ class MPRWriterHTML : public MPRWriter {
 		void writeTD(std::ostream& file, std::string value, int colspan);
 		void writeTD(std::ostream& file, std::string value);
 
+		std::string htmlspecialchars(const std::string& data);
+		std::string replaceHtmlCommands(const std::string& data);
+
 		struct ColumnDescriptor {
 			const char* name;
 			const int colspan;
