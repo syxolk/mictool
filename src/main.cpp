@@ -170,12 +170,18 @@ int main(int argc, char* argv[]) {
 
 // print help and usage (should be equals to README and man file)
 void printHelp() {
-	std::cout << "Usage: mictool <inputfile> option [outputfile]\n"
+	std::cout << "Usage: mictool [inputfile] [format options] -o [outputfile]\n"
+			<< "\n"
+			<< "You can give no inputfile in order to read from standard input.\n"
+			<< "You can give no outputfile in order to write to standard output.\n"
+			<< "The -o parameter auto detects the output format depending on file\n"
+			<< "name extension if no other output format parameter is given.\n"
+			<< "\n"
 			<< "Options:\n"
-			<< "-o, --output      OUTPUTFILE Writes a formatted HTML or LaTeX file of the micro program depending on file name extension\n"
-			<< "--output-html       HTMLFILE Writes a formatted HTML file of the micro program\n"
-			<< "--output-latex     LATEXFILE Writes a formatted LaTeX file of the micro program\n"
-			<< "-d, --debug                  Writes the micro program to stdout (for debugging purposes)\n"
+			<< "-o, --output      OUTPUTFILE Write the output to the given file\n"
+			<< "--html                       Set the output format to HTML\n"
+			<< "--latex                      Set the output format to LaTeX\n"
+			<< "--debug                      Set the output format to debug\n"
 			<< "-v, --version                Display mictool version\n"
 			<< "-h, --help                   Display this information\n"
 			<< std::endl;
