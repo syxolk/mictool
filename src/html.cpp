@@ -1,14 +1,8 @@
-#include <fstream>
 #include <iostream>
 #include "html.h"
 #include "util.h"
 
-struct ColumnDescriptor {
-  const char* name;
-  const int colspan;
-};
-
-void writeTD(std::ostream& file, std::string value, int colspan, bool checkDefault) {
+void MPRWriterHTML::writeTD(std::ostream& file, std::string value, int colspan, bool checkDefault) {
 	file << "<td";
 
 	if(colspan > 1) {
@@ -22,15 +16,15 @@ void writeTD(std::ostream& file, std::string value, int colspan, bool checkDefau
 	file << ">" << value << "</td>";
 }
 
-void writeTDWithCheckDefault(std::ostream& file, std::string value) {
+void MPRWriterHTML::writeTDWithCheckDefault(std::ostream& file, std::string value) {
 	writeTD(file, value, 1, true);
 }
 
-void writeTD(std::ostream& file, std::string value, int colspan) {
+void MPRWriterHTML::writeTD(std::ostream& file, std::string value, int colspan) {
 	writeTD(file, value, colspan, false);
 }
 
-void writeTD(std::ostream& file, std::string value) {
+void MPRWriterHTML::writeTD(std::ostream& file, std::string value) {
 	writeTD(file, value, 1, false);
 }
 
@@ -224,7 +218,7 @@ bool MPRWriterHTML::writeMPR(std::ostream& file, const MPRFile& mprFile) {
     for(auto& cell : mprFile.getRamCells()) {
       file << "<tr><td>" << (i++) <<"</td><td>" << cell.getData() << "</td><td>";
 
-      // if this is may be no data but an opcode
+      // test for no data but an opcode
       if(cell.couldHaveAnOpcode()) {
         int opCode = cell.getOpCode();
         std::string name = mprFile.getMicroLineByLineNumber(opCode * 16);
@@ -241,3 +235,4 @@ bool MPRWriterHTML::writeMPR(std::ostream& file, const MPRFile& mprFile) {
 
     return true;
 }
+

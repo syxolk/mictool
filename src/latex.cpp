@@ -3,12 +3,7 @@
 #include "util.h"
 #include "latex.h"
 
-struct ColumnDescriptor {
-	const char* name;
-	const int colspan;
-};
-
-void writeMulticolumn(std::ostream& file, std::string value, int colspan) {
+void MPRWriterLaTeX::writeMulticolumn(std::ostream& file, std::string value, int colspan) {
 	if (colspan > 1) {
 		file << "\\multicolumn{" << colspan << "}{|l|}{" << value << "}";
 	} else {
@@ -16,17 +11,17 @@ void writeMulticolumn(std::ostream& file, std::string value, int colspan) {
 	}
 }
 
-void writeRotatedMulticolumn(std::ostream& file, std::string value, int colspan) {
+void MPRWriterLaTeX::writeRotatedMulticolumn(std::ostream& file, std::string value, int colspan) {
 	writeMulticolumn(file, "\\rotatebox[origin=c]{90}{" + value + "}", colspan);
 }
 
-void writeMulticolumnWithAmp(std::ostream& file, std::string value,
+void MPRWriterLaTeX::writeMulticolumnWithAmp(std::ostream& file, std::string value,
 		int colspan) {
 	writeMulticolumn(file, value, colspan);
 	file << " & ";
 }
 
-void writeMulticolumnWithAmp(std::ostream& file, std::string value) {
+void MPRWriterLaTeX::writeMulticolumnWithAmp(std::ostream& file, std::string value) {
 	writeMulticolumn(file, value, 1);
 	file << " & ";
 }
@@ -218,3 +213,4 @@ bool MPRWriterLaTeX::writeMPR(std::ostream& file, const MPRFile& mprFile) {
 
 		return true;
 }
+
