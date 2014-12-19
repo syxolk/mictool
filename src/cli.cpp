@@ -8,6 +8,7 @@
 #include "util.h"
 #include "mpr.h"
 #include "mpr_writer.h"
+#include "mpr_reader.h"
 #include "cli.h"
 
 // avaliable command line options
@@ -83,10 +84,12 @@ bool CLI::parse() {
 bool CLI::work() {
 	MPRFile mprFile(title);
 
+	std::unique_ptr<MPRReader> reader(new MPRReaderV4());
+
 	// check different input sources
 	if(inputFile == nullptr) {
 		// read from standard input
-		if(! readFile(std::cin, mprFile)) {
+		if(! reader->readMPR(std::cin, mprFile)) {
 			return false;
 		}
 	} else {
@@ -99,7 +102,7 @@ bool CLI::work() {
     	}
     	
     	// read and parse from input file
-		if (!readFile(file, mprFile)) {
+		if (! reader->readMPR(file, mprFile)) {
 			return false;
 		}
 		
