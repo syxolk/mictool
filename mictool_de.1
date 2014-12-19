@@ -7,8 +7,9 @@ mictool \- formatiert MPR-Dateien aus JMic als HTML oder LaTeX.
 [\fB\-\-version\fR]
 .IR MPRDATEI
 [\fB\-\-debug\fR]
-[\fB\-\-output\-html\fR \fIHTMLDATEI\fR]
-[\fB\-\-output\-latex\fR \fILATEXDATEI\fR]
+[\fB\-\-html\fR]
+[\fB\-\-latex\fR]
+[\fB\-o \fIAUSGABEDATEI\fR]
 .SH BESCHREIBUNG
 .B mictool
 liest eine MPR-Datei in Version 4 (kompatibel zu JMic 1.4) ein und formatiert diese als HTML zum besseren Lesen.
@@ -16,16 +17,16 @@ liest eine MPR-Datei in Version 4 (kompatibel zu JMic 1.4) ein und formatiert di
 .SH OPTIONEN
 .TP
 .BR \-o ", " \-\-output " " \fIAUSGABEDATEI\fR
-Formatiert die \fIMPRDATEI\fR als HTML oder LaTeX abhängig von der Datei-Endung.
+Formatiert die \fIMPRDATEI\fR als HTML oder LaTeX abhängig von der Datei-Endung und gibt sie in der angegebenen Datei aus.
 .TP
-.BR \-\-output\-html " " \fIHTMLDATEI\fR
-Formatiert die \fIMPRDATEI\fR als HTML.
+.BR \-\-html
+Stellt die Ausgabe auf HTML.
 .TP
-.BR \-\-output-latex " " \fILATEXDATEI\fR
-Formatiert die \fIMPRDATEI\fR als LaTeX.
+.BR \-\-latex
+Stellt die Ausgabe auf LaTeX.
 .TP
-.BR \-d ", " \-\-debug
-Schreibt den Inhalt von \fIMPRDATEI\fR nach stdout (Standard-Ausgabe).
+.BR \-\-debug
+Stellt die Ausgabe auf Debug.
 .TP
 .BR \-h ", " \-\-help
 Zeigt die Hilfe.
