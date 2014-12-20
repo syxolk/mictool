@@ -7,7 +7,7 @@
 #include "mpr.h"
 #include "mpr_reader.h"
 
-/*
+/**
  * Currently the only implementation of MPRReader.
  * Reads and parses MPR files of version 4.
  *
@@ -15,12 +15,12 @@
  */
 class MPRReaderV4 : public MPRReader {
 	public:
-		/*
+		/**
 		 * Empty constructor
 		 */
 		MPRReaderV4() {};
 
-		/*
+		/**
 		 * Read a version 4 MPR file from the stream and set
 		 * the attributes of the given mprFile accordingly.
 		 *

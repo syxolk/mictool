@@ -5,7 +5,7 @@
 #include "mpr.h"
 #include "mpr_writer.h"
 
-/*
+/**
  * MPRWriter implementation that outputs MPRFile's content
  * as a full HTML document wrapped in <html> ... </html>.
  *
@@ -15,12 +15,12 @@
  */
 class MPRWriterHTML : public MPRWriter {
 	public:
-		/*
+		/**
 		 * Constucts a new HTML writer.
 		 */
 		MPRWriterHTML() {};
 
-		/*
+		/**
 		 * Write the given MPR file as a HTML document
 		 * to the given output stream.
 		 *

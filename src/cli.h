@@ -4,7 +4,7 @@
 #include <string>
 #include <getopt.h>
 
-/*
+/**
  * CLI (command line interface) is used to parse
  * command line arguments.
  *
@@ -17,7 +17,7 @@
  */
 class CLI {
 	public:
-		/*
+		/**
 		 * Constructs a new CLI object with the parameters usually
 		 * given to a main(...) function.
 		 *
@@ -25,12 +25,12 @@ class CLI {
 		 */
 		CLI(int argc, char **argv) : argc(argc), argv(argv) {};
 
-		/*
+		/**
 		 * Empty deconstructor
 		 */
 		~CLI() {};
 
-		/*
+		/**
 		 * Start parsing the command line arguments.
 		 * This method must be called first after the constructor.
 		 *
@@ -38,7 +38,7 @@ class CLI {
 		 */
 		bool parse();
 
-		/*
+		/**
 		 * Read the input source and write a formatted MPR file.
 		 * This method must be called after parse() and only
 		 * if parsed() returned with true.
