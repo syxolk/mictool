@@ -3,7 +3,7 @@
 #include "util.h"
 #include "latex.h"
 
-void MPRWriterLaTeX::writeMulticolumn(std::ostream& file, std::string value, int colspan) {
+void MPRWriterLaTeX::writeMulticolumn(std::ostream& file, const std::string& value, int colspan) {
 	if (colspan > 1) {
 		file << "\\multicolumn{" << colspan << "}{|l|}{" << value << "}";
 	} else {
@@ -11,17 +11,17 @@ void MPRWriterLaTeX::writeMulticolumn(std::ostream& file, std::string value, int
 	}
 }
 
-void MPRWriterLaTeX::writeRotatedMulticolumn(std::ostream& file, std::string value, int colspan) {
+void MPRWriterLaTeX::writeRotatedMulticolumn(std::ostream& file, const std::string& value, int colspan) {
 	writeMulticolumn(file, "\\rotatebox[origin=c]{90}{" + value + "}", colspan);
 }
 
-void MPRWriterLaTeX::writeMulticolumnWithAmp(std::ostream& file, std::string value,
+void MPRWriterLaTeX::writeMulticolumnWithAmp(std::ostream& file, const std::string& value,
 		int colspan) {
 	writeMulticolumn(file, value, colspan);
 	file << " & ";
 }
 
-void MPRWriterLaTeX::writeMulticolumnWithAmp(std::ostream& file, std::string value) {
+void MPRWriterLaTeX::writeMulticolumnWithAmp(std::ostream& file, const std::string& value) {
 	writeMulticolumn(file, value, 1);
 	file << " & ";
 }

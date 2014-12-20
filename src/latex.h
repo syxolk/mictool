@@ -31,10 +31,10 @@ class MPRWriterLaTeX : public MPRWriter {
 		bool writeMPR(std::ostream& stream, const MPRFile& mprFile);
 	private:
 		// internal helper functions for writing Latex
-		void writeMulticolumn(std::ostream& file, std::string value, int colspan);
-		void writeRotatedMulticolumn(std::ostream& file, std::string value, int colspan);
-		void writeMulticolumnWithAmp(std::ostream& file, std::string value, int colspan);
-		void writeMulticolumnWithAmp(std::ostream& file, std::string value);
+		void writeMulticolumn(std::ostream& file, const std::string& value, int colspan);
+		void writeRotatedMulticolumn(std::ostream& file, const std::string& value, int colspan);
+		void writeMulticolumnWithAmp(std::ostream& file, const std::string& value, int colspan);
+		void writeMulticolumnWithAmp(std::ostream& file, const std::string& value);
 
 		// escaping and encoding functions
 		std::string escapeLatex(const std::string& data);

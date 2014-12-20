@@ -2,7 +2,7 @@
 #include "html.h"
 #include "util.h"
 
-void MPRWriterHTML::writeTD(std::ostream& file, std::string value, int colspan, bool checkDefault) {
+void MPRWriterHTML::writeTD(std::ostream& file, const std::string& value, int colspan, bool checkDefault) {
 	file << "<td";
 
 	if(colspan > 1) {
@@ -16,15 +16,15 @@ void MPRWriterHTML::writeTD(std::ostream& file, std::string value, int colspan, 
 	file << ">" << value << "</td>";
 }
 
-void MPRWriterHTML::writeTDWithCheckDefault(std::ostream& file, std::string value) {
+void MPRWriterHTML::writeTDWithCheckDefault(std::ostream& file, const std::string& value) {
 	writeTD(file, value, 1, true);
 }
 
-void MPRWriterHTML::writeTD(std::ostream& file, std::string value, int colspan) {
+void MPRWriterHTML::writeTD(std::ostream& file, const std::string& value, int colspan) {
 	writeTD(file, value, colspan, false);
 }
 
-void MPRWriterHTML::writeTD(std::ostream& file, std::string value) {
+void MPRWriterHTML::writeTD(std::ostream& file, const std::string& value) {
 	writeTD(file, value, 1, false);
 }
 

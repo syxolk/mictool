@@ -29,10 +29,10 @@ class MPRWriterHTML : public MPRWriter {
 		bool writeMPR(std::ostream& stream, const MPRFile& mpr);
 	private:
 		// internal helper functions for writing HTML
-		void writeTD(std::ostream& file, std::string value, int colspan, bool checkDefault);
-		void writeTDWithCheckDefault(std::ostream& file, std::string value);
-		void writeTD(std::ostream& file, std::string value, int colspan);
-		void writeTD(std::ostream& file, std::string value);
+		void writeTD(std::ostream& file, const std::string& value, int colspan, bool checkDefault);
+		void writeTDWithCheckDefault(std::ostream& file, const std::string& value);
+		void writeTD(std::ostream& file, const std::string& value, int colspan);
+		void writeTD(std::ostream& file, const std::string& value);
 
 		// escape and encoding functions
 		std::string htmlspecialchars(const std::string& data);
