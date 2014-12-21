@@ -129,7 +129,7 @@ bool MPRWriterHTML::writeMPR(std::ostream& file, const MPRFile& mprFile) {
       writeTD(file, line.getKMux());
 
       // Constant
-      writeTD(file, intToString(line.getConstant()));
+      writeTD(file, Utils::intToString(line.getConstant()));
 
       // Source
       writeTD(file, line.getSource(), 3);
@@ -141,11 +141,11 @@ bool MPRWriterHTML::writeMPR(std::ostream& file, const MPRFile& mprFile) {
       writeTD(file, line.getDestination(), 3);
 
       // RA Addr
-      writeTD(file, intToString(line.getRAAddr()), 4);
+      writeTD(file, Utils::intToString(line.getRAAddr()), 4);
       writeTD(file, line.getRAAddrContext());
 
       // RB Addr
-      writeTD(file, intToString(line.getRBAddr()), 4);
+      writeTD(file, Utils::intToString(line.getRBAddr()), 4);
       writeTD(file, line.getRBAddrContext());
 
       // Y-Mux
@@ -271,14 +271,14 @@ std::string MPRWriterHTML::htmlspecialchars(const std::string& data) {
 std::string MPRWriterHTML::replaceHtmlCommands(const std::string& data) {
 	std::string buffer(data);
 
-	replaceAll(buffer, "<ge>", "&ge;");
-	replaceAll(buffer, "<gt>", "&gt;");
-	replaceAll(buffer, "<le>", "&le;");
-	replaceAll(buffer, "<lt>", "&lt;");
-	replaceAll(buffer, "<ne>", "&ne;");
-	replaceAll(buffer, "<not>", "&not;");
-	replaceAll(buffer, "<or>", "&or;");
-	replaceAll(buffer, "<micro>", "&micro;");
+	Utils::replaceAll(buffer, "<ge>", "&ge;");
+	Utils::replaceAll(buffer, "<gt>", "&gt;");
+	Utils::replaceAll(buffer, "<le>", "&le;");
+	Utils::replaceAll(buffer, "<lt>", "&lt;");
+	Utils::replaceAll(buffer, "<ne>", "&ne;");
+	Utils::replaceAll(buffer, "<not>", "&not;");
+	Utils::replaceAll(buffer, "<or>", "&or;");
+	Utils::replaceAll(buffer, "<micro>", "&micro;");
 
 	return buffer;
 }

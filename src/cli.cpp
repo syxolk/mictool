@@ -41,7 +41,7 @@ bool CLI::parse() {
 		case 'o':
 			if(autoDetectOutputType) {
 				// try to detect output type by file name extension
-				extension = extractFileExtension(optarg);
+				extension = Utils::extractFileExtension(optarg);
 				std::transform(extension.begin(), extension.end(), extension.begin(), tolower);
 				if(extension == "html" || extension == "htm") {
 					outputType = HTML;
@@ -81,9 +81,9 @@ bool CLI::parse() {
 	
 	// try to get the MPR file title from input or output file name
 	if(inputFile != nullptr) {
-		title = extractFilename(std::string(inputFile));
+		title = Utils::extractFilename(std::string(inputFile));
 	} else if(outputFile != nullptr) {
-		title = extractFilename(std::string(outputFile));
+		title = Utils::extractFilename(std::string(outputFile));
 	}
 	
 	return true;

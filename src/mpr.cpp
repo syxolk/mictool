@@ -177,7 +177,7 @@ bool RamCell::couldHaveAnOpcode() const {
 }
 
 int RamCell::getOpCode() const {
-	return parseHexDigit(data[0]) * 16 + parseHexDigit(data[1]);
+	return Utils::parseHexDigit(data[0]) * 16 + Utils::parseHexDigit(data[1]);
 }
 
 /**

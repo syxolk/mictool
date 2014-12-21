@@ -124,7 +124,7 @@ bool MPRWriterLaTeX::writeMPR(std::ostream& file, const MPRFile& mprFile) {
 			writeMulticolumnWithAmp(file, line.getKMux());
 
 			// Constant
-			writeMulticolumnWithAmp(file, intToString(line.getConstant()));
+			writeMulticolumnWithAmp(file, Utils::intToString(line.getConstant()));
 
 			// Source
 			writeMulticolumnWithAmp(file, line.getSource(), 3);
@@ -136,11 +136,11 @@ bool MPRWriterLaTeX::writeMPR(std::ostream& file, const MPRFile& mprFile) {
 			writeMulticolumnWithAmp(file, line.getDestination(), 3);
 
 			// RA Addr
-			writeMulticolumnWithAmp(file, intToString(line.getRAAddr()), 1);
+			writeMulticolumnWithAmp(file, Utils::intToString(line.getRAAddr()), 1);
 			writeMulticolumnWithAmp(file, line.getRAAddrContext());
 
 			// RB Addr
-			writeMulticolumnWithAmp(file, intToString(line.getRBAddr()), 1);
+			writeMulticolumnWithAmp(file, Utils::intToString(line.getRBAddr()), 1);
 			writeMulticolumnWithAmp(file, line.getRBAddrContext());
 
 			// Y-Mux
@@ -249,14 +249,14 @@ std::string MPRWriterLaTeX::escapeLatex(const std::string& data) {
 std::string MPRWriterLaTeX::replaceLatexCommands(const std::string& data) {
 	std::string buffer(data);
 
-	replaceAll(buffer, "<ge>", "$\\geq$");
-	replaceAll(buffer, "<gt>", "$>$");
-	replaceAll(buffer, "<le>", "$\\leq$");
-	replaceAll(buffer, "<lt>", "$<$");
-	replaceAll(buffer, "<ne>", "$\\neg$");
-	replaceAll(buffer, "<not>", "$\\ne$");
-	replaceAll(buffer, "<or>", "$\\lor$");
-	replaceAll(buffer, "<micro>", "$\\mu$");
+	Utils::replaceAll(buffer, "<ge>", "$\\geq$");
+	Utils::replaceAll(buffer, "<gt>", "$>$");
+	Utils::replaceAll(buffer, "<le>", "$\\leq$");
+	Utils::replaceAll(buffer, "<lt>", "$<$");
+	Utils::replaceAll(buffer, "<ne>", "$\\neg$");
+	Utils::replaceAll(buffer, "<not>", "$\\ne$");
+	Utils::replaceAll(buffer, "<or>", "$\\lor$");
+	Utils::replaceAll(buffer, "<micro>", "$\\mu$");
 
 	return buffer;
 }

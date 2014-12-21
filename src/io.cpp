@@ -104,13 +104,13 @@ void MPRReaderV4::errorDontKnowWhatToDo(const std::string& line) {
 void MPRReaderV4::parseMicroBitset(const std::string& str, std::bitset<80>& bits) {
   int i, bitPos = 0, hex;
   for(i = 1; i < 30; i+=3) {
-    hex = parseHexDigit(str[i + 1]);
+    hex = Utils::parseHexDigit(str[i + 1]);
     bits[bitPos++] = hex & 1; hex >>= 1;
     bits[bitPos++] = hex & 1; hex >>= 1;
     bits[bitPos++] = hex & 1; hex >>= 1;
     bits[bitPos++] = hex & 1;
 
-    hex = parseHexDigit(str[i]);
+    hex = Utils::parseHexDigit(str[i]);
     bits[bitPos++] = hex & 1; hex >>= 1;
     bits[bitPos++] = hex & 1; hex >>= 1;
     bits[bitPos++] = hex & 1; hex >>= 1;

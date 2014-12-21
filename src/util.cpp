@@ -2,9 +2,7 @@
 #include <sstream>
 #include "util.h"
 
-// parses a single hexadecimal digit
-// and returns the corresponding value
-int parseHexDigit(char c) {
+int Utils::parseHexDigit(char c) {
 	if (c >= '0' && c <= '9') {
 		return c - '0';
 	} else if (c >= 'A' && c <= 'F') {
@@ -12,15 +10,11 @@ int parseHexDigit(char c) {
 	} else if (c >= 'a' && c <= 'f') {
 		return c - 'a' + 10;
 	} else {
-		std::cout << "Unexpected char: " << c << std::endl;
-		return 0;
+		return -1;
 	}
 }
 
-// extracts the filename out of a relative or absolute path
-// file extension is stripped as well
-// example: ~/file.cpp -> file
-const std::string extractFilename(const std::string& path) {
+std::string Utils::extractFilename(const std::string& path) {
 	int slashIndex = path.find_last_of("/\\") + 1;
 	// if the slash character is not found the function will return -1
 	// -> slashIndex + 1 will be zero -> it takes the string from the beginning
@@ -35,7 +29,7 @@ const std::string extractFilename(const std::string& path) {
 	return path.substr(slashIndex, dotIndex - slashIndex);
 }
 
-const std::string extractFileExtension(const std::string& path) {
+std::string Utils::extractFileExtension(const std::string& path) {
 	int dotIndex = path.find_last_of(".");
 
 	if (dotIndex == -1) {
@@ -45,9 +39,7 @@ const std::string extractFileExtension(const std::string& path) {
 	return path.substr(dotIndex + 1);
 }
 
-// Replaces all occurences of a string in a string with another string
-// http://stackoverflow.com/questions/3418231/replace-part-of-a-string-with-another-string
-void replaceAll(std::string& str, const std::string& needle, const std::string& replacement) {
+void Utils::replaceAll(std::string& str, const std::string& needle, const std::string& replacement) {
 	if(needle.empty()) return;
 
 	size_t startPos = 0;
@@ -57,8 +49,9 @@ void replaceAll(std::string& str, const std::string& needle, const std::string& 
 	}
 }
 
-std::string intToString(int value) {
+std::string Utils::intToString(int value) {
 	std::ostringstream ss;
 	ss << value;
 	return ss.str();
 }
+
