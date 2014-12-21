@@ -7,7 +7,8 @@
 #include "mpr_writer.h"
 
 /**
- * MPRWriter implementation that outputs the MPR file as LaTeX.
+ * @brief Implementation of MPRWriter that outputs MPR files as LaTeX.
+ *
  * Note: Latex source will be outputted not an already rendered
  * PDF. You need to call pdflatex (or something similar) on the
  * output file.
@@ -19,13 +20,15 @@
 class MPRWriterLaTeX : public MPRWriter {
 	public:
 		/**
-		 * Empty constructor
+		 * @brief Empty constructor
 		 */
 		MPRWriterLaTeX() {};
 
 		/**
-		 * Write the given MPR file to the output stream as a Latex document.
+		 * @brief Write the given MPR file to the output stream as a Latex document.
 		 *
+		 * @param stream the method will write into this stream
+		 * @param mprFile this MPRFile instance will be written
 		 * @return always true
 		 */
 		bool writeMPR(std::ostream& stream, const MPRFile& mprFile);

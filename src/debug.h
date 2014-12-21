@@ -6,9 +6,9 @@
 #include "mpr_writer.h"
 
 /**
- * Special implementation of MPRWriter that is only
- * intended to be used for debugging purposes.
+ * @brief Implementation of MPRWriter for debugging outputs.
  *
+ * This is only relevant for developers of this program.
  * It outputs the raw content of an MPRFile instance.
  *
  * @author Hans Kirchner
@@ -16,16 +16,18 @@
 class MPRWriterDebug : public MPRWriter {
 	public:
 		/**
-		 * Constructs a new debug writer.
+		 * @brief Constructs a new debug writer.
 		 */
 		MPRWriterDebug() {};
 
 		/**
-		 * Write the raw content of the MPR file to the output stream.
+		 * @brief Write the raw content of the MPR file to the output stream.
 		 *
+		 * @param stream the method will write into this stream
+		 * @param mprFile this MPR file will be written
 		 * @return always true since there can't be an error here
 		 */
-		bool writeMPR(std::ostream& stream, const MPRFile& mpr);
+		bool writeMPR(std::ostream& stream, const MPRFile& mprFile);
 };
 
 #endif /* _MICTOOL_DEBUG_H_ */

@@ -8,23 +8,27 @@
 #include "mpr_reader.h"
 
 /**
+ * @brief Reads and parses MPR files of version 4.
+ *
  * Currently the only implementation of MPRReader.
- * Reads and parses MPR files of version 4.
  *
  * @author Hans Kirchner
  */
 class MPRReaderV4 : public MPRReader {
 	public:
 		/**
-		 * Empty constructor
+		 * @brief Empty constructor
 		 */
 		MPRReaderV4() {};
 
 		/**
-		 * Read a version 4 MPR file from the stream and set
-		 * the attributes of the given mprFile accordingly.
+		 * @brief Read a version 4 MPR file from the stream.
 		 *
-		 * @return false if parsing failed
+		 * Sets the attributes of the given mprFile accordingly.
+		 *
+		 * @param stream an MPR file will be read and parsed from this stream
+		 * @param mprFile the parsed data will be put into this MPRFile instance
+		 * @return false if parsing failed otherwise true
 		 */
 		bool readMPR(std::istream& stream, MPRFile& mprFile);
 	private:

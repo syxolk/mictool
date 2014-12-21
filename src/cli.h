@@ -5,8 +5,7 @@
 #include <getopt.h>
 
 /**
- * CLI (command line interface) is used to parse
- * command line arguments.
+ * @brief The command line interface implementation is used to parse command line arguments.
  *
  * Usually a file will be parsed from a file or standard input.
  * Then it will be written out to a file again or the standard ouput.
@@ -18,32 +17,40 @@
 class CLI {
 	public:
 		/**
-		 * Constructs a new CLI object with the parameters usually
-		 * given to a main(...) function.
+		 * @brief Constructs a new CLI object with the parameters usually given to a main(...) function.
 		 *
 		 * The constructor returns immediately.
+		 * The next method call must be parse().
+		 *
+		 * @see parse()
+		 * @param argc number of command line arguments
+		 * @param argv command line arguments
 		 */
 		CLI(int argc, char **argv) : argc(argc), argv(argv) {};
 
 		/**
-		 * Empty deconstructor
+		 * @brief Empty deconstructor
 		 */
 		~CLI() {};
 
 		/**
-		 * Start parsing the command line arguments.
+		 * @brief Start parsing the command line arguments.
+		 *
 		 * This method must be called first after the constructor.
 		 *
-		 * @return false if anything failed
+		 * @see work()
+		 * @return false if anything failed otherwise true
 		 */
 		bool parse();
 
 		/**
-		 * Read the input source and write a formatted MPR file.
+		 * @brief Read the input source and write a formatted MPR file.
+		 *
 		 * This method must be called after parse() and only
 		 * if parsed() returned with true.
 		 *
-		 * @return false if anything failed
+		 * @see parse()
+		 * @return false if anything failed otherwise true
 		 */
 		bool work();
 	private:

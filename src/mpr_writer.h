@@ -5,7 +5,8 @@
 #include "mpr.h"
 
 /**
- * Interface which defines exactly one method: writeMPR(istream, file).
+ * @brief Interface which defines exactly one method: writeMPR(istream, file).
+ *
  * That method shall write the given MPR file to the output stream.
  *
  * @author Hans Kirchner
@@ -13,24 +14,27 @@
 class MPRWriter {
 	public:
 		/**
-		 * Empty constructor.
+		 * @brief Empty constructor.
 		 */
 		MPRWriter() {};
 
 		/**
-		 * Empty deconstructor. Can be overwritten in subclasses
-		 * because it's virtual.
+		 * @brief Empty deconstructor.
+		 *
+		 * Can be overwritten in subclasses because it's virtual.
 		 */
 		virtual ~MPRWriter() {};
 
 		/**
-		 * Write the given MPR file to the output stream.
+		 * @brief Write the given MPR file to the output stream.
 		 *
 		 * Virtual method that must be implemented in subclasses.
 		 *
-		 * @return false if the writing failed
+		 * @param stream output stream to write the MPR file into
+		 * @param mprFile MPRFile instance that will be written
+		 * @return false if the writing failed otherwise true
 		 */
-		virtual bool writeMPR(std::ostream& stream, const MPRFile& file) =0;
+		virtual bool writeMPR(std::ostream& stream, const MPRFile& mprFile) =0;
 };
 
 #endif /* _MICTOOL_MPR_WRITER_H_ */

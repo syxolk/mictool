@@ -5,7 +5,8 @@
 #include "mpr.h"
 
 /**
- * Interface that defines eaxactly one method: readMPR(ostream, file).
+ * @brief Interface that defines eaxactly one method: readMPR(ostream, file).
+ *
  * That method shall read an MPR file from the input stream into the MPR
  * file instance.
  *
@@ -14,24 +15,29 @@
 class MPRReader {
 	public:
 		/**
-		 * Empty constructor.
+		 * @brief Empty constructor.
 		 */
 		MPRReader() {};
 
 		/**
-		 * Empty deconstructor. Can be overwritten in subclasses.
+		 * @brief Empty deconstructor.
+		 *
+		 * Can be overwritten in subclasses.
 		 */
 		virtual ~MPRReader() {};
 
 		/**
-		 * Read a single MPR file from the input stream and puts
-		 * the parsed content into the given MPRFile instance.
+		 * @brief Read a single MPR file from the input stream.
+		 *
+		 * Puts the parsed content into the given MPRFile instance.
 		 *
 		 * Virtual method that must be overwritten in subclasses.
 		 *
-		 * @return false if the reading or parsing failed
+		 * @param stream input stream to read from
+		 * @param mprFile MPR file instance to put parsed data into
+		 * @return false if the reading or parsing failed otherwise true
 		 */
-		virtual bool readMPR(std::istream& stream, MPRFile& file) =0;
+		virtual bool readMPR(std::istream& stream, MPRFile& mprFile) =0;
 };
 
 #endif /* _MICTOOL_MPR_READER_H_ */
