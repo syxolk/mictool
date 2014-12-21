@@ -60,6 +60,9 @@ class CLI {
 			UNKNOWN, HTML, DEBUG, LATEX
 		};
 
+		// available command line options
+		static const option *long_options;
+
 		// CLI arguments
 		int argc;
 		char **argv;

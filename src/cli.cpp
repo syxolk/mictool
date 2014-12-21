@@ -14,7 +14,7 @@
 
 // avaliable command line options
 // this array of structs is needed for getopt_long
-static option long_options[] = {
+static const option CLI_long_options_data[] = {
 	{ "help", no_argument, 0, 'h' },
 	{ "version", no_argument, 0, 'v' },
 	{ "output", required_argument, 0, 'o' },
@@ -23,6 +23,7 @@ static option long_options[] = {
 	{ "debug", no_argument, 0, 3 },
 	{ 0, 0, 0, 0 }
 };
+const option* CLI::long_options = CLI_long_options_data;
 
 bool CLI::parse() {
 	int c;
