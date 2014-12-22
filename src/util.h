@@ -4,18 +4,17 @@
 #include <string>
 
 /**
- * Utility class with static functions that are used by more
- * than one class.
+ * @brief Utility class with static functions that are used by more than one other class.
  *
  * @author Hans Kirchner
  */
 class Utils {
 	public:
 		/**
-		 * @brief Parses a single hexadecimal digit an return its decimal value.
+		 * @brief Parses a single hexadecimal digit and returns its decimal value.
 		 *
 		 * @param c hexadecimal character
-		 * @retrun -1 in case of an error otherwise the value of the hexadecimal value
+		 * @return -1 in case of an error otherwise the value of the hexadecimal value
 		 */
 		static int parseHexDigit(char c);
 

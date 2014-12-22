@@ -5,7 +5,7 @@
 #include "mpr.h"
 
 /**
- * @brief Interface that defines eaxactly one method: readMPR(ostream, file).
+ * @brief Interface that defines exactly one method: readMPR(ostream, file).
  *
  * That method shall read an MPR file from the input stream into the MPR
  * file instance.
