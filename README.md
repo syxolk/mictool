@@ -37,9 +37,10 @@ where the output will come out to the standard output and can be
 redirected to a file or another program. One of the output formatting
 parameters must be given.
 
-**mictool** \[**--html**\] \[**--latex**\] \[**--debug**\]
+**mictool** \[**--html**\] \[**--latex**\] \[**--debug**\] \[**--title** _title_\]
 
 where the input and the output must be provided from standard input and output.
+The title option sets the title for HTML and LaTeX documents explicitly.
 
 For more information try
 

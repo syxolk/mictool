@@ -21,6 +21,7 @@ static const option CLI_long_options_data[] = {
 	{ "html", no_argument, 0, 1 },
 	{ "latex", no_argument, 0, 2 },
 	{ "debug", no_argument, 0, 3 },
+	{ "title", required_argument, 0, 4 },
 	{ 0, 0, 0, 0 }
 };
 const option* CLI::long_options = CLI_long_options_data;
@@ -32,13 +33,13 @@ bool CLI::parse() {
 	// parse command line options
 	while ((c = getopt_long(argc, argv, "hvo:", long_options, NULL)) != -1) {
 		switch (c) {
-		case 'h':
+		case 'h': /* --help, -h */
 			printHelp();
 			return EXIT_SUCCESS;
-		case 'v':
+		case 'v': /* --version, -v */
 			printVersion();
 			return EXIT_SUCCESS;
-		case 'o':
+		case 'o': /* --output, -o */
 			if(autoDetectOutputType) {
 				// try to detect output type by file name extension
 				extension = Utils::extractFileExtension(optarg);
@@ -54,17 +55,21 @@ bool CLI::parse() {
 
 			outputFile = optarg;
 			break;
-		case 1 :
+		case 1 : /* --html */
 			outputType = HTML;
 			autoDetectOutputType = false;
 			break;
-		case 2 :
+		case 2 : /* --latex */
 			outputType = LATEX;
 			autoDetectOutputType = false;
 			break;
-		case 3:
+		case 3: /* --debug */
 			outputType = DEBUG;
 			autoDetectOutputType = false;
+			break;
+		case 4: /* --title */
+			title = optarg;
+			fixedTitle = true;
 			break;
 		case '?':
 			break;
@@ -79,11 +84,14 @@ bool CLI::parse() {
 		inputFile = argv[optind];
 	}
 	
-	// try to get the MPR file title from input or output file name
-	if(inputFile != nullptr) {
-		title = Utils::extractFilename(std::string(inputFile));
-	} else if(outputFile != nullptr) {
-		title = Utils::extractFilename(std::string(outputFile));
+	// if --title was not given
+	if(! fixedTitle) {
+		// try to get the MPR file title from input or output file name
+		if(inputFile != nullptr) {
+			title = Utils::extractFilename(std::string(inputFile));
+		} else if(outputFile != nullptr) {
+			title = Utils::extractFilename(std::string(outputFile));
+		}
 	}
 	
 	return true;
@@ -175,6 +183,7 @@ void CLI::printHelp() {
 			<< "--html                       Set the output format to HTML\n"
 			<< "--latex                      Set the output format to LaTeX\n"
 			<< "--debug                      Set the output format to debug\n"
+			<< "--title                TITLE Set the title to be used for output document\n"
 			<< "-v, --version                Display mictool version\n"
 			<< "-h, --help                   Display this information\n"
 			<< std::endl;

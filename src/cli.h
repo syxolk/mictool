@@ -73,6 +73,7 @@ class CLI {
 		OutputType outputType = UNKNOWN;
 		std::string title = "Formatted MPR file";
 		bool autoDetectOutputType = true;
+		bool fixedTitle = false;
 
 		// helper methods for error and help messages
 		void printHelp();
