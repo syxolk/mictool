@@ -6,6 +6,14 @@ This project is a CLI based tool compatible to JMic by TUM.
 Functions:
 - parse MPR files and output them as formatted HTML (*.html) or LaTeX (*.tex)
 
+Further information:
+- Input/output can be piped from/to the standard input/output. (See Usage)
+- Generate a source code documentation with
+```shell
+doxygen Doxyfile
+```
+- Only standard c++0x is used (except for getopt.h).
+
 Installation
 ------------
 
@@ -44,11 +52,15 @@ The title option sets the title for HTML and LaTeX documents explicitly.
 
 For more information try
 
-**mictool** **--help**
+```shell
+mictool --help
+```
 
 or after installation
 
-**man** **mictool**
+```shell
+man mictool
+```
 
 Code Formatting
 ---------------
