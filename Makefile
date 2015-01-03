@@ -10,7 +10,7 @@ MANDIR_DE=/usr/local/share/man/de/man1
 $(EXECUTABLE) : $(OBJECTS)
 	$(CXX) -o $(EXECUTABLE) $(OBJECTS)
 
-.PHONY : all clean install uninstall
+.PHONY : all clean install uninstall doc
 all : $(EXECUTABLE)
 clean :
 	rm -f $(BIN)/*.o $(EXECUTABLE)
@@ -33,6 +33,9 @@ $(MANDIR_DE) :
 
 uninstall :
 	rm -f $(INSTALLDIR)/$(EXECUTABLE) $(MANDIR)/$(EXECUTABLE).1.gz $(MANDIR_DE)/$(EXECUTABLE).1.gz
+
+doc :
+	doxygen Doxyfile
 
 $(OBJECTS) : | $(BIN)
 

@@ -10,7 +10,7 @@ Further information:
 - Input/output can be piped from/to the standard input/output. (See Usage)
 - Generate a source code documentation with
 ```shell
-doxygen Doxyfile
+make doc
 ```
 - Only standard c++0x is used (except for getopt.h).
 
