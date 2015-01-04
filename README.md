@@ -8,10 +8,7 @@ Functions:
 
 Further information:
 - Input/output can be piped from/to the standard input/output. (See Usage)
-- Generate a source code documentation with
-```shell
-make doc
-```
+- Can be compiled on Windows with Cygwin/MinGW (See Compatibility).
 - Only standard c++0x is used (except for getopt.h).
 
 Installation
@@ -19,54 +16,55 @@ Installation
 
 You need git, make and g++ installed.
 
-```
-git clone https://github.com/syxolk/mictool.git
-cd mictool
-make
-sudo make install
-```
+    git clone https://github.com/syxolk/mictool.git
+    cd mictool
+    make
+    sudo make install
 
 Usage
 -----
 
-**mictool** \[**--help**\] \[**--version**\] _inputfile_ **-o** _outputfile_
+    mictool [--help] [--version] INPUTFILE -o OUTPUTFILE.
 
 where _inputfile_ should be an MPR file and _outputfile_ an HTML or tex file.
 _outputfile_ will be created if not found and will be overwritten otherwise.
 The output format will be auto detected by filename extension.
 
-**mictool** **-o** _outputfile_
+    mictool -o OUTPUTFILE
 
 where the input must be provided from standard input, for example with **cat**.
 
-**mictool** _inputfile_ \[**--html**\] \[**--latex**\] \[**--debug**\]
+    mictool INPUTFILE [--html] [--latex] [--debug]
 
 where the output will come out to the standard output and can be
 redirected to a file or another program. One of the output formatting
 parameters must be given.
 
-**mictool** \[**--html**\] \[**--latex**\] \[**--debug**\] \[**--title** _title_\]
+    mictool [--html] [--latex] [--debug] [--title TITLE]
 
 where the input and the output must be provided from standard input and output.
 The title option sets the title for HTML and LaTeX documents explicitly.
 
 For more information try
 
-```shell
-mictool --help
-```
+    mictool --help
 
 or after installation
 
-```shell
-man mictool
-```
+    man mictool
 
 Code Formatting
 ---------------
 
 - use tabs for intendation
 - brackets on the same line
+
+Documentation
+-------------
+
+Generate a source code documentation with
+
+    make doc
 
 Compatibility
 -------------

@@ -34,8 +34,12 @@ $(MANDIR_DE) :
 uninstall :
 	rm -f $(INSTALLDIR)/$(EXECUTABLE) $(MANDIR)/$(EXECUTABLE).1.gz $(MANDIR_DE)/$(EXECUTABLE).1.gz
 
-doc :
+doc : mainpage.md
 	doxygen Doxyfile
+
+mainpage.md : README.md
+	echo 'Mictool {#mainpage}' > mainpage.md
+	tail -n +2 README.md >> mainpage.md
 
 $(OBJECTS) : | $(BIN)
 
