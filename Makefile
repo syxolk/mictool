@@ -13,7 +13,7 @@ $(EXECUTABLE) : $(OBJECTS)
 .PHONY : all clean install uninstall doc
 all : $(EXECUTABLE)
 clean :
-	rm -f $(BIN)/*.o $(EXECUTABLE)
+	rm -f $(BIN)/*.o $(EXECUTABLE) mainpage.md
 install : all $(INSTALLDIR)/$(EXECUTABLE) $(MANDIR)/$(EXECUTABLE).1.gz $(MANDIR_DE)/$(EXECUTABLE).1.gz
 
 $(INSTALLDIR)/$(EXECUTABLE) : $(EXECUTABLE)
