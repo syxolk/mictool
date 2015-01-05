@@ -17,6 +17,7 @@
  * The main content lays in the 80 bits long bitset. Helper methods
  * retrieve the human readable content of this bitset.
  *
+ * @see http://www.lrr.in.tum.de/~eti/Praktikum/DasBuch.pdf
  * @author Hans Kirchner
  */
 class MicroLine {
@@ -57,40 +58,155 @@ public:
 	 */
 	std::bitset<80> getBits() const;
 
+	/**
+	 * @brief Check if the micro line value is a default (unchanged).
+	 *
+	 * @return true if equals 'H' or 'R'
+	 */
 	static bool isDefaultValue(std::string value);
 
+	/**
+	 * @brief Status of the interrupt flag, either Dis or IE
+	 */
 	std::string getInterruptFlag() const;
+
+	/**
+	 * @brief Type of interrupt
+	 */
 	std::string getInterrupt() const;
+
+	/**
+	 * @brief Status of K-multiplexer, either D or K
+	 */
 	std::string getKMux() const;
+
+	/**
+	 * @brief 16 bit constant value
+	 */
 	int getConstant() const;
+
+	/**
+	 * @brief Source of the operation, e.g. AB, ZB
+	 */
 	std::string getSource() const;
+
+	/**
+	 * @brief Function to execute, e.g. ADD, SUBR
+	 */
 	std::string getFunction() const;
+
+	/**
+	 * @brief Destination of the function result, e.g. RAMA, RAMF
+	 */
 	std::string getDestination() const;
+
+	/**
+	 * @brief Register for RA
+	 */
 	int getRAAddr() const;
+
+	/**
+	 * @brief Context of getRAAddr(), either MR or IR
+	 */
 	std::string getRAAddrContext() const;
+
+	/**
+	 * @brief Register for RB
+	 */
 	int getRBAddr() const;
+
+	/**
+	 * @brief Context of getRBAddr(), either MR or IR
+	 */
 	std::string getRBAddrContext() const;
+
+	/**
+	 * @brief Enable address bus Y multiplexer, either H or AB
+	 */
 	std::string getYMuxAB() const;
+
+	/**
+	 * @brief Enable data bus Y multiplexer, either H or DB
+	 */
 	std::string getYMuxDB() const;
+
+	/**
+	 * @brief Special information for function execution, e.g. CI0, CI1
+	 */
 	std::string getCINMux() const;
+
+	/**
+	 * @brief Bit shift operations
+	 */
 	std::string getShifts() const;
+
+	/**
+	 * @brief Enable setting of micro status flags
+	 */
 	std::string getCEMicro() const;
+
+	/**
+	 * @brief Enable setting of machine status flags
+	 */
 	std::string getCEMachine() const;
+
+	/**
+	 * @brief Test machine or micro status flags
+	 */
 	std::string getStatusRegisterTestContext() const;
+
+	/**
+	 * @brief Test function, e.g. signed lower than
+	 */
 	std::string getStatusRegisterTest() const;
+
+	/**
+	 * @brief Enable condition code flag, either PS or C
+	 */
 	std::string getConditionCodeEnable() const;
+
+	/**
+	 * @brief Jump or continue function
+	 */
 	std::string getJump() const;
+
+	/**
+	 * @brief Jump destination or additional jump information
+	 */
 	int getBAR() const;
+
+	/**
+	 * @brief Load program counter from data bus
+	 */
 	std::string getBZ_LD() const;
+
+	/**
+	 * @brief Write program counter to data bus
+	 */
 	std::string getBZ_ED() const;
+
+	/**
+	 * @brief Increment program counter by 1
+	 */
 	std::string getBZ_INC() const;
+
+	/**
+	 * @brief Write program counter on address bus
+	 */
 	std::string getBZ_EA() const;
+
+	/**
+	 * @brief Load data from data bus into instruction register
+	 */
 	std::string getIR_LD() const;
+
+	/**
+	 * @brief Memory write enable, can be W or R
+	 */
 	std::string getMWE() const;
 protected:
 	/**
-	 * Computes an integer from the given bit range
-	 * in the bitset and returns the result.
+	 * @brief Computes an integer from the given bit range
 	 */
 	int getInt(int fromBit, int toBit) const;
 };
