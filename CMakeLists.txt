@@ -21,4 +21,10 @@ configure_file (
 # so that we will find MictoolConfig.h
 include_directories("${PROJECT_BINARY_DIR}")
 
-add_subdirectory (src) 
+add_subdirectory (src)
+
+add_custom_target( doc
+  COMMAND echo 'Mictool {\#mainpage}' > mainpage.md
+  COMMAND tail -n +2 README.md >> mainpage.md
+  COMMAND doxygen Doxyfile
+)
