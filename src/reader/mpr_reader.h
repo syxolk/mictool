@@ -2,7 +2,7 @@
 #define _MICTOOL_MPR_READER_H_
 
 #include <iostream>
-#include "mpr.h"
+#include <mpr/mpr.h>
 
 /**
  * @brief Interface that defines exactly one method: readMPR(ostream, file).

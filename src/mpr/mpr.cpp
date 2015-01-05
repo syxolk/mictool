@@ -6,7 +6,7 @@
  */
 
 #include "mpr.h"
-#include "util.h"
+#include <util/util.h>
 
 // string constants
 const char *MI_INTERRUPT[] = { "LDM", "RDM", "CLM", "STM", "BCLM", "BSTM",

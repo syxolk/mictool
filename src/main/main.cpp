@@ -1,5 +1,5 @@
 #include <cstdlib>
-#include "cli.h"
+#include <cli/cli.h>
 
 // entrypoint to mictool
 int main(int argc, char* argv[]) {

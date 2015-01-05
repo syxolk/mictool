@@ -2,7 +2,7 @@
 #define _MICTOOL_MPR_WRITER_H_
 
 #include <iostream>
-#include "mpr.h"
+#include <mpr/mpr.h>
 
 /**
  * @brief Interface which defines exactly one method: writeMPR(istream, file).

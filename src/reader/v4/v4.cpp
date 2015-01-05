@@ -1,9 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
-#include "io.h"
-#include "util.h"
-#include "mpr.h"
+#include <reader/v4/v4.h>
+#include <util/util.h>
+#include <mpr/mpr.h>
 
 // Helper function that removes '\r' from lines when
 // reading Windows files on Linux.

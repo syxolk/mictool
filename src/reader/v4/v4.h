@@ -4,8 +4,8 @@
 #include <iostream>
 #include <bitset>
 #include <string>
-#include "mpr.h"
-#include "mpr_reader.h"
+#include <mpr/mpr.h>
+#include <reader/mpr_reader.h>
 
 /**
  * @brief Reads and parses MPR files of version 4.

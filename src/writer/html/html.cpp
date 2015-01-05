@@ -1,6 +1,6 @@
 #include <iostream>
 #include "html.h"
-#include "util.h"
+#include <util/util.h>
 
 void MPRWriterHTML::writeTD(std::ostream& file, const std::string& value, int colspan, bool checkDefault) {
 	file << "<td";
