@@ -1,6 +1,15 @@
 cmake_minimum_required (VERSION 2.6)
 project (mictool)
 
+include(CheckIncludeFiles)
+check_include_files(getopt.h HAVE_GETOPT_H)
+
+if(HAVE_GETOPT_H)
+  message(STATUS "Found header <getopt.h>")
+else()
+  message(SEND_ERROR "Could not find heaer file getopt.h. Do you have a unix environment?")
+endif()
+
 #set (PROJECT_SOURCE_DIR src)
 #set (PROJECT_BINARY_DIR bin)
 
