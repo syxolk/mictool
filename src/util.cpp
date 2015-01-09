@@ -55,3 +55,11 @@ std::string Utils::intToString(int value) {
 	return ss.str();
 }
 
+int Utils::hexToInt(const std::string& str) {
+	unsigned int x;
+	std::stringstream ss;
+	ss << std::hex << str;
+	ss >> x;
+	return x;
+}
+

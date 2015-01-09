@@ -54,6 +54,16 @@ class Utils {
 		 * @return the converted decimal representation
 		 */
 		static std::string intToString(int value);
+
+		/**
+		 * @brief Parse a string containing a hexadecimal integer.
+		 *
+		 * Example: hexToInt("ABCD") == 43981
+		 *
+		 * @param str string to parse
+		 * @return the parsed hexadecimal integer
+		 */
+		static int hexToInt(const std::string& str);
 };
 
 #endif /* _MICTOOL_UTIL_H_ */

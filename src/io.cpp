@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <cstring>
 #include "io.h"
 #include "util.h"
 #include "mpr.h"
@@ -58,7 +57,8 @@ bool MPRReaderV4::readMPR(std::istream& file, MPRFile& mprFile) {
         std::bitset<80> mlBits;
 
         //ml.number = stoi(line.substr(0, 3), NULL, 16);
-        sscanf(line.substr(0, 3).c_str(), "%x", &mlLineNumber);
+        //sscanf(line.substr(0, 3).c_str(), "%x", &mlLineNumber);
+        mlLineNumber = Utils::hexToInt(line.substr(0, 3));
         if(line_length > 34) {
           mlName = line.substr(4, line_length - 34);
         } else {
