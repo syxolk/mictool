@@ -1,7 +1,9 @@
 Mictool
 =======
 
-This project is a CLI based tool compatible to JMic by TUM.
+Mictool parses MPR files and outputs them in human-readable formats
+like HTML or LaTeX. It's a command line based tool, compatible to the
+save files of JMic by TUM.
 
 Functions:
 - parse MPR files and output them as formatted HTML (*.html) or LaTeX (*.tex)
