@@ -13,9 +13,9 @@ endif()
 #set (PROJECT_SOURCE_DIR src)
 #set (PROJECT_BINARY_DIR bin)
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+#set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
@@ -25,19 +25,27 @@ set (Mictool_VERSION_MINOR 0)
 
 # configure a header file to pass some of the CMake settings
 # to the source code
+
+# TODO build MictoolConfig.h not in source
 configure_file (
   "${PROJECT_SOURCE_DIR}/src/MictoolConfig.h.in"
-  "${PROJECT_SOURCE_DIR}/src/MictoolConfig.h"
+  "${PROJECT_BINARY_DIR}/generated/MictoolConfig.h"
 )
 
 # add the binary tree to the search path for include files
 # so that we will find MictoolConfig.h
-include_directories(src)
+include_directories("${PROJECT_BINARY_DIR}/generated")
+include_directories("${PROJECT_SOURCE_DIR}/src")
 
 add_subdirectory (src)
 
+# TODO use add_custom_command instead
 add_custom_target( doc
   COMMAND echo 'Mictool {\#mainpage}' > mainpage.md
   COMMAND tail -n +2 README.md >> mainpage.md
   COMMAND doxygen Doxyfile
+)
+
+add_custom_target( valgrind
+  COMMAND valgrind --tool=memcheck --leak-check=yes ./mictool
 )
