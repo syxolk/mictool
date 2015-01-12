@@ -102,6 +102,24 @@ bool CLI::work() {
 
 	std::unique_ptr<MPRReader> reader(new MPRReaderV4());
 
+	std::unique_ptr<MPRWriter> writer(nullptr);
+
+	// check different output formats
+	switch (outputType) {
+	case DEBUG:
+		writer = std::unique_ptr<MPRWriter>(new MPRWriterDebug());
+		break;
+	case HTML:
+		writer = std::unique_ptr<MPRWriter>(new MPRWriterHTML());
+		break;
+	case LATEX:
+		writer = std::unique_ptr<MPRWriter>(new MPRWriterLaTeX());
+		break;
+	case UNKNOWN:
+		printUnknownOutputType(argv[0]);
+		return false;
+	}
+
 	// check different input sources
 	if(inputFile == nullptr) {
 		// read from standard input
@@ -123,24 +141,6 @@ bool CLI::work() {
 		}
 		
 		file.close();
-	}
-
-	std::unique_ptr<MPRWriter> writer(nullptr);
-
-	// check different output formats
-	switch (outputType) {
-	case DEBUG:
-		writer = std::unique_ptr<MPRWriter>(new MPRWriterDebug());
-		break;
-	case HTML:
-		writer = std::unique_ptr<MPRWriter>(new MPRWriterHTML());
-		break;
-	case LATEX:
-		writer = std::unique_ptr<MPRWriter>(new MPRWriterLaTeX());
-		break;
-	case UNKNOWN:
-		printUnknownOutputType(argv[0]);
-		return false;
 	}
 
 	// check for output file
