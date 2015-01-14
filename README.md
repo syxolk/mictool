@@ -18,8 +18,10 @@ You need git, make and g++ installed.
 
     git clone https://github.com/syxolk/mictool.git
     cd mictool
+    mkdir release
+    cd release
+    cmake -G "Unix Makefiles" ..
     make
-    sudo make install
 
 Usage
 -----
@@ -65,6 +67,17 @@ Documentation
 Generate a source code documentation with
 
     make doc
+
+Tests
+-----
+
+Start tests with
+
+    make test
+
+or execute directly the test executable
+
+    ./mictool_test
 
 Compatibility
 -------------

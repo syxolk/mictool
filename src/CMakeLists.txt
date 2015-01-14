@@ -20,3 +20,14 @@ add_executable(mictool
   writer/latex/latex
   writer/debug/debug
 )
+
+add_executable(mictool_test
+  util/util
+  test/util_test
+)
+target_link_libraries(mictool_test gtest gtest_main)
+
+if ( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
+    # This is tested
+    set_property( TARGET mictool APPEND_STRING PROPERTY COMPILE_FLAGS "-W -Wall -Werror -Wextra")
+endif ()

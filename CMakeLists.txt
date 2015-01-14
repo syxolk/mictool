@@ -10,11 +10,13 @@ else()
   message(SEND_ERROR "Could not find heaer file getopt.h. Do you have a unix environment?")
 endif()
 
+#find_package(GTest REQUIRED)
+
 #set (PROJECT_SOURCE_DIR src)
 #set (PROJECT_BINARY_DIR bin)
 
-#set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
-#set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
@@ -32,10 +34,15 @@ configure_file (
   "${PROJECT_BINARY_DIR}/generated/MictoolConfig.h"
 )
 
+add_subdirectory (ext)
+enable_testing()
+
 # add the binary tree to the search path for include files
 # so that we will find MictoolConfig.h
 include_directories("${PROJECT_BINARY_DIR}/generated")
 include_directories("${PROJECT_SOURCE_DIR}/src")
+include_directories("${PROJECT_SOURCE_DIR}/ext/gtest")
+include_directories("${PROJECT_SOURCE_DIR}/ext/gtest/include")
 
 add_subdirectory (src)
 
@@ -46,6 +53,13 @@ add_custom_target( doc
   COMMAND doxygen Doxyfile
 )
 
-add_custom_target( valgrind
-  COMMAND valgrind --tool=memcheck --leak-check=yes ./mictool
+add_test (
+  NAME mictool_test
+  COMMAND mictool_test
+)
+
+add_test(
+  NAME memcheck
+  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
+  COMMAND valgrind --tool=memcheck --leak-check=yes --error-exitcode=1 ${CMAKE_BINARY_DIR}/mictool test/implementierung.mpr -o test/implementierung.html
 )
