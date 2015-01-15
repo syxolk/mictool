@@ -10,8 +10,7 @@ set(HEADERS_SHARED
 #add_subdirectory(writer)
 #add_subdirectory(main)
 
-add_executable(mictool
-  main/main
+add_library(mic STATIC
   cli/cli
   mpr/mpr
   util/util
@@ -21,13 +20,19 @@ add_executable(mictool
   writer/debug/debug
 )
 
-add_executable(mictool_test
-  util/util
-  test/util_test
+add_executable(mictool
+  main/main
 )
-target_link_libraries(mictool_test gtest gtest_main)
+target_link_libraries(mictool mic)
+
+add_executable(mictool_test
+  test/util_test
+  test/reader_v4_test
+  test/micro_line_test
+)
+target_link_libraries(mictool_test mic gtest gtest_main)
 
 if ( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
     # This is tested
-    set_property( TARGET mictool APPEND_STRING PROPERTY COMPILE_FLAGS "-W -Wall -Werror -Wextra")
+    set_property( TARGET mic APPEND_STRING PROPERTY COMPILE_FLAGS "-W -Wall -Werror -Wextra")
 endif ()

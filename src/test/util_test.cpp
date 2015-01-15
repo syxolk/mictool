@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <util/util.h>
 
-TEST(UtilTest, parseHexDigit) {
+TEST(Utils, parseHexDigit) {
 	ASSERT_EQ(-1, Utils::parseHexDigit(0));
 	ASSERT_EQ(-1, Utils::parseHexDigit('-'));
 	ASSERT_EQ(-1, Utils::parseHexDigit('0' - 1));
@@ -23,7 +23,7 @@ TEST(UtilTest, parseHexDigit) {
 	}
 }
 
-TEST(UtilTest, extractFilename) {
+TEST(Utils, extractFilename) {
 	EXPECT_EQ("file", Utils::extractFilename("~/path/file.cpp"));
 	EXPECT_EQ("file", Utils::extractFilename("~/file.cpp"));
 	EXPECT_EQ("file", Utils::extractFilename("~/file."));
@@ -33,7 +33,7 @@ TEST(UtilTest, extractFilename) {
 	EXPECT_EQ("", Utils::extractFilename(""));
 }
 
-TEST(UtilTest, extractFileExtension) {
+TEST(Utils, extractFileExtension) {
 	EXPECT_EQ("cpp", Utils::extractFileExtension("~/path/file.cpp"));
 	EXPECT_EQ("cpp", Utils::extractFileExtension("~/file.cpp"));
 	EXPECT_EQ("", Utils::extractFileExtension("~/file."));
@@ -43,7 +43,7 @@ TEST(UtilTest, extractFileExtension) {
 	EXPECT_EQ("", Utils::extractFileExtension(""));
 }
 
-TEST(UtilTest, replaceAll) {
+TEST(Utils, replaceAll) {
 	std::string text("xaxax");
 	Utils::replaceAll(text, "a", "b");
 	ASSERT_EQ("xbxbx", text) << "simple replacement a -> b";
@@ -61,7 +61,7 @@ TEST(UtilTest, replaceAll) {
 	ASSERT_EQ("--smb", text) << "replace an empty string with something \"\" -> a";
 }
 
-TEST(UtilTest, intToString) {
+TEST(Utils, intToString) {
 	EXPECT_EQ("-1", Utils::intToString(-1));
 	EXPECT_EQ("0", Utils::intToString(0));
 	EXPECT_EQ("1", Utils::intToString(1));
