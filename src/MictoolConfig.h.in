@@ -1,0 +1,3 @@
+// the configured options and settings for Tutorial
+#define Mictool_VERSION_MAJOR @Mictool_VERSION_MAJOR@
+#define Mictool_VERSION_MINOR @Mictool_VERSION_MINOR@

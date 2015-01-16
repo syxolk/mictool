@@ -1,8 +1,9 @@
 #include <iostream>
 #include <fstream>
-#include "io.h"
-#include "util.h"
-#include "mpr.h"
+#include <cstring>
+#include <reader/v4/v4.h>
+#include <util/util.h>
+#include <mpr/mpr.h>
 
 // Helper function that removes '\r' from lines when
 // reading Windows files on Linux.
@@ -14,17 +15,17 @@ std::istream& MPRReaderV4::safe_getline(std::istream& is, std::string& str) {
   return is;
 }
 
-bool MPRReaderV4::readMPR(std::istream& file, MPRFile& mprFile) {
+bool MPRReaderV4::readMPR(std::istream& file, MPRFile& mprFile, std::ostream& err) {
   std::string line;
 
     // check file identifier
     if( safe_getline(file, line) ) {
       if(line.compare("version4") != 0) {
-        errorUnexpected("version4", line.c_str());
+        errorUnexpected(err, "version4", line.c_str());
         return false;
       }
     } else {
-      errorEOF("version4");
+      errorEOF(err, "version4");
       return false;
     }
 
@@ -43,12 +44,12 @@ bool MPRReaderV4::readMPR(std::istream& file, MPRFile& mprFile) {
       } else if(line == "befehlszaehler:") {
         mode = IP;
       } else if(mode == UNKNOWN) {
-        errorDontKnowWhatToDo(line);
+        errorDontKnowWhatToDo(err, line);
       } else if(mode == MI_PROGRAM) {
         size_t line_length = line.length();
 
         if(line_length < 33) {
-          errorCantParseTooShort(line);
+          errorCantParseTooShort(err, line);
           continue;
         }
 
@@ -83,21 +84,21 @@ bool MPRReaderV4::readMPR(std::istream& file, MPRFile& mprFile) {
 }
 
 // outputs an unexpected value in case of an error
-void MPRReaderV4::errorUnexpected(const std::string& expected, const std::string& found) {
-	std::cerr << "Error: expected " << expected << " but found " << found << std::endl;
+void MPRReaderV4::errorUnexpected(std::ostream& err, const std::string& expected, const std::string& found) {
+	err << "Error: expected " << expected << " but found " << found << std::endl;
 }
 
 // outputs an "end of file" error
-void MPRReaderV4::errorEOF(const std::string& expected) {
-	std::cerr << "Error: expected " << expected << "but reached EOF";
+void MPRReaderV4::errorEOF(std::ostream& err, const std::string& expected) {
+	err << "Error: expected " << expected << "but reached EOF" << std::endl;
 }
 
-void MPRReaderV4::errorCantParseTooShort(const std::string& line) {
-	std::cerr << "Can't parse line, too short: " << line << std::endl;
+void MPRReaderV4::errorCantParseTooShort(std::ostream& err, const std::string& line) {
+	err << "Can't parse line, too short: " << line << std::endl;
 }
 
-void MPRReaderV4::errorDontKnowWhatToDo(const std::string& line) {
-	std::cerr << "Don't know what to do with line: " << line << std::endl;
+void MPRReaderV4::errorDontKnowWhatToDo(std::ostream& err, const std::string& line) {
+	err << "Don't know what to do with line: " << line << std::endl;
 }
 
 // parses the micro bitset part of the MPR files

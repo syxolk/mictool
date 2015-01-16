@@ -2,8 +2,8 @@
 #define _MICTOOL_HTML_H_
 
 #include <iostream>
-#include "mpr.h"
-#include "mpr_writer.h"
+#include <mpr/mpr.h>
+#include <writer/mpr_writer.h>
 
 /**
  * @brief Implementation of MPRWriter that outputs MPR files as HTML.

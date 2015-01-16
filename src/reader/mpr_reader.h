@@ -2,7 +2,7 @@
 #define _MICTOOL_MPR_READER_H_
 
 #include <iostream>
-#include "mpr.h"
+#include <mpr/mpr.h>
 
 /**
  * @brief Interface that defines exactly one method: readMPR(ostream, file).
@@ -35,9 +35,10 @@ class MPRReader {
 		 *
 		 * @param stream input stream to read from
 		 * @param mprFile MPR file instance to put parsed data into
+		 * @param err error stream for parsing errors, defaults to std::cerr
 		 * @return false if the reading or parsing failed otherwise true
 		 */
-		virtual bool readMPR(std::istream& stream, MPRFile& mprFile) =0;
+		virtual bool readMPR(std::istream& stream, MPRFile& mprFile, std::ostream& err = std::cerr) =0;
 };
 
 #endif /* _MICTOOL_MPR_READER_H_ */

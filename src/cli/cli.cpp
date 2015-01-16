@@ -2,15 +2,16 @@
 #include <algorithm>
 #include <memory>
 #include <string>
-#include "io.h"
-#include "html.h"
-#include "latex.h"
-#include "debug.h"
-#include "util.h"
-#include "mpr.h"
-#include "mpr_writer.h"
-#include "mpr_reader.h"
+#include <reader/v4/v4.h>
+#include <writer/html/html.h>
+#include <writer/latex/latex.h>
+#include <writer/debug/debug.h>
+#include <util/util.h>
+#include <mpr/mpr.h>
+#include <writer/mpr_writer.h>
+#include <reader/mpr_reader.h>
 #include "cli.h"
+#include <MictoolConfig.h>
 
 // avaliable command line options
 // this array of structs is needed for getopt_long
@@ -191,7 +192,7 @@ void CLI::printHelp() {
 
 // print version and license information
 void CLI::printVersion() {
-	std::cout << "mictool 1.0\n"
+	std::cout << "mictool " << Mictool_VERSION_MAJOR << "." << Mictool_VERSION_MINOR <<"\n"
 			<< "This program is compatible with JMIC 1.4 and MPR-Files v4.\n"
 			<< "This is open source software: https://github.com/syxolk/mictool\n"
 			<< std::endl;

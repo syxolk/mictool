@@ -1,6 +1,6 @@
 #include <fstream>
 #include <iostream>
-#include "util.h"
+#include <util/util.h>
 #include "latex.h"
 
 void MPRWriterLaTeX::writeMulticolumn(std::ostream& file, const std::string& value, int colspan) {
