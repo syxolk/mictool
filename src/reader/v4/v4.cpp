@@ -5,21 +5,11 @@
 #include <util/util.h>
 #include <mpr/mpr.h>
 
-// Helper function that removes '\r' from lines when
-// reading Windows files on Linux.
-std::istream& MPRReaderV4::safe_getline(std::istream& is, std::string& str) {
-  getline(is, str);
-  if(!str.empty() && str.back() == '\r') {
-    str.resize(str.length() - 1);
-  }
-  return is;
-}
-
 bool MPRReaderV4::readMPR(std::istream& file, MPRFile& mprFile, std::ostream& err) {
   std::string line;
 
     // check file identifier
-    if( safe_getline(file, line) ) {
+    if( Utils::safeGetline(file, line) ) {
       if(line.compare("version4") != 0) {
         errorUnexpected(err, "version4", line.c_str());
         return false;
@@ -32,7 +22,7 @@ bool MPRReaderV4::readMPR(std::istream& file, MPRFile& mprFile, std::ostream& er
     // start parsing
     ParsingMode mode = UNKNOWN;
 
-    while( safe_getline(file, line) ) {
+    while( Utils::safeGetline(file, line) ) {
 
       // check for special lines
       if(line == "mikroprogramm:") {

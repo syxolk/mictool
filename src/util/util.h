@@ -64,6 +64,18 @@ class Utils {
 		 * @return the parsed hexadecimal integer
 		 */
 		static int hexToInt(const std::string& str);
+
+		/**
+		 * @brief Read a line from the input stream and normalize line endings.
+		 *
+		 * Helper function that removes '\r' from lines when
+		 * reading Windows files on Linux.
+		 *
+		 * @param is input stream to read from
+		 * @param str output parameter from the read line
+		 * @return the same as parameter is
+		 */
+		static std::istream& safeGetline(std::istream& is, std::string& str);
 };
 
 #endif /* _MICTOOL_UTIL_H_ */

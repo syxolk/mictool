@@ -63,3 +63,11 @@ int Utils::hexToInt(const std::string& str) {
 	return x;
 }
 
+std::istream& Utils::safeGetline(std::istream& is, std::string& str) {
+	std::getline(is, str);
+	if(!str.empty() && str.back() == '\r') {
+		str.resize(str.length() - 1);
+	}
+	return is;
+}
+

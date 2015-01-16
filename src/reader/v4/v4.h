@@ -42,9 +42,6 @@ class MPRReaderV4 : public MPRReader {
 		// parse a single set of 80 bit as a micro line
 		void parseMicroBitset(const std::string& str, std::bitset<80>& bits);
 
-		// reads a single safely (and more portable) from the input stream
-		std::istream& safe_getline(std::istream& is, std::string& str);
-
 		// each parsing mode corresponds to a sector in the MPR file
 		enum ParsingMode {
 			UNKNOWN, MI_PROGRAM, MA_PROGRAM, REGISTER, IP
