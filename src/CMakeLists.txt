@@ -29,6 +29,7 @@ add_executable(mictool_test
   test/util_test
   test/reader_v4_test
   test/micro_line_test
+  test/ram_cell_test
 )
 target_link_libraries(mictool_test mic gtest gtest_main)
 
