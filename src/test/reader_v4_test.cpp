@@ -1,5 +1,6 @@
 #include <sstream>
 #include <bitset>
+#include <iostream>
 #include <gtest/gtest.h>
 #include <reader/v4/v4.h>
 #include <mpr/mpr.h>
@@ -16,10 +17,12 @@ TEST(MPRReaderV4, readMPR) {
 		"0115"
 	);
 
+	std::ostream cerr(0);
+
 	MPRReaderV4 reader;
 	MPRFile mpr("test file 1");
 	
-	reader.readMPR(text, mpr);
+	reader.readMPR(text, mpr, cerr);
 
 	// check size of vectors
 	ASSERT_EQ(2, mpr.getMicroLines().size());
