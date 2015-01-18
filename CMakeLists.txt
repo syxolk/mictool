@@ -63,3 +63,24 @@ add_test(
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
   COMMAND valgrind --tool=memcheck --leak-check=yes --error-exitcode=1 ${CMAKE_BINARY_DIR}/mictool test/implementierung.mpr -o test/implementierung.html
 )
+
+set(CPACK_GENERATOR "DEB")
+set(CPACK_PACKAGE_VERSION_MAJOR ${Mictool_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${Mictool_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH 0)
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${PROJECT_SOURCE_DIR}/README.md")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Mictool is a formatter tool for MPR files of the JMIC MI-Interpreter machine.")
+set(CPACK_PACKAGE_CONTACT "Hans Kirchner h.kirchner@tum.de")
+set(CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+
+# TODO: gzip man files
+
+#add_custom_target( mictool.1.gz
+#  COMMAND ${CMAKE_COMMAND} -E
+
+install(FILES mictool.1 DESTINATION share/man/man1)
+install(FILES mictool_de.1 DESTINATION share/man/de/man1 RENAME mictool.1)
+
+include(CPack)
+
+

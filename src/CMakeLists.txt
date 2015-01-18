@@ -37,3 +37,6 @@ if ( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
     # This is tested
     set_property( TARGET mic APPEND_STRING PROPERTY COMPILE_FLAGS "-W -Wall -Werror -Wextra")
 endif ()
+
+install(TARGETS mictool DESTINATION bin)
+
