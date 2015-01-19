@@ -21,16 +21,16 @@ TEST(MPRReaderV4, readMPR) {
 
 	MPRReaderV4 reader;
 	MPRFile mpr("test file 1");
-	
+
 	reader.readMPR(text, mpr, cerr);
 
 	// check size of vectors
 	ASSERT_EQ(2, mpr.getMicroLines().size());
 	ASSERT_EQ(2, mpr.getRamCells().size());
-	
+
 	// check file name
 	EXPECT_EQ("test file 1", mpr.getName());
-	
+
 	// check first micro line
 	std::bitset<80> bits;
 	bits[0] = 1;
@@ -42,15 +42,35 @@ TEST(MPRReaderV4, readMPR) {
 	bits[55] = 1;
 	bits[74] = 1;
 	bits[79] = 1;
-	
+
 	EXPECT_EQ(bits, mpr.getMicroLines()[0].getBits());
-	
+
 	// check micro line line numbers
 	EXPECT_EQ(0, mpr.getMicroLines()[0].getLineNumber());
 	EXPECT_EQ(1, mpr.getMicroLines()[1].getLineNumber());
-	
+
 	// check ram cells
 	EXPECT_EQ("0104", mpr.getRamCells()[0].getData());
 	EXPECT_EQ("0115", mpr.getRamCells()[1].getData());
+}
+
+TEST(MPRReaderV4, readMPRWithWrongContent) {
+	std::istringstream text (
+		"<html>\n"
+		"<head></head>"
+	);
+
+	std::ostringstream errStream;
+
+	MPRReaderV4 reader;
+	MPRFile mpr("with wrong content");
+
+	bool returnCode = reader.readMPR(text, mpr, errStream);
+
+	EXPECT_FALSE(returnCode) << "Should return false in case of parsing error";
+	EXPECT_NE("", errStream.str()) << "Should print error to error stream";
+
+	EXPECT_EQ(0, mpr.getMicroLines().size());
+	EXPECT_EQ(0, mpr.getRamCells().size());
 }
 
