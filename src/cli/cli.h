@@ -2,7 +2,7 @@
 #define _MICTOOL_CLI_H_
 
 #include <string>
-#include <getopt.h>
+#include <boost/program_options.hpp>
 
 /**
  * @brief The command line interface implementation is used to parse command line arguments.
@@ -60,23 +60,20 @@ class CLI {
 			UNKNOWN, HTML, DEBUG, LATEX
 		};
 
-		// available command line options
-		static const option *long_options;
-
 		// CLI arguments
 		int argc;
 		char **argv;
 
 		// CLI options
-		char *inputFile = nullptr;
-		char *outputFile = nullptr;
+		std::string inputFile;
+		bool readFromStdIn = true;
+		std::string outputFile;
+		bool writeToStdOut = true;
 		OutputType outputType = UNKNOWN;
 		std::string title = "Formatted MPR file";
-		bool autoDetectOutputType = true;
-		bool fixedTitle = false;
 
 		// helper methods for error and help messages
-		void printHelp();
+		void printHelp(const boost::program_options::options_description& desc);
 		void printVersion();
 		void printError(char* arg0);
 		void printUnknownOutputType(char* arg0);

@@ -15,6 +15,8 @@ endif()
 #set (PROJECT_SOURCE_DIR src)
 #set (PROJECT_BINARY_DIR bin)
 
+find_package(Boost 1.54 COMPONENTS program_options REQUIRED)
+
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
@@ -43,6 +45,8 @@ include_directories("${PROJECT_BINARY_DIR}/generated")
 include_directories("${PROJECT_SOURCE_DIR}/src")
 include_directories("${PROJECT_SOURCE_DIR}/ext/gtest")
 include_directories("${PROJECT_SOURCE_DIR}/ext/gtest/include")
+include_directories(${Boost_INCLUDE_DIR})
+link_directories(${Boost_LIBRARY_DIR})
 
 add_subdirectory (src)
 

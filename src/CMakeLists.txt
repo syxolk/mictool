@@ -23,7 +23,7 @@ add_library(mic STATIC
 add_executable(mictool
   main/main
 )
-target_link_libraries(mictool mic)
+target_link_libraries(mictool mic ${Boost_LIBRARIES})
 
 add_executable(mictool_test
   test/util_test

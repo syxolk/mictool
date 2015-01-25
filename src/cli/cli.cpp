@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <memory>
 #include <string>
+#include <boost/program_options.hpp>
 #include <reader/v4/v4.h>
 #include <writer/html/html.h>
 #include <writer/latex/latex.h>
@@ -13,88 +14,87 @@
 #include "cli.h"
 #include <MictoolConfig.h>
 
-// avaliable command line options
-// this array of structs is needed for getopt_long
-static const option CLI_long_options_data[] = {
-	{ "help", no_argument, 0, 'h' },
-	{ "version", no_argument, 0, 'v' },
-	{ "output", required_argument, 0, 'o' },
-	{ "html", no_argument, 0, 1 },
-	{ "latex", no_argument, 0, 2 },
-	{ "debug", no_argument, 0, 3 },
-	{ "title", required_argument, 0, 4 },
-	{ 0, 0, 0, 0 }
-};
-const option* CLI::long_options = CLI_long_options_data;
-
 bool CLI::parse() {
-	int c;
-	std::string extension;
+	// create namespace alias (shortcut)
+	namespace po = boost::program_options;
 
-	// parse command line options
-	while ((c = getopt_long(argc, argv, "hvo:", long_options, NULL)) != -1) {
-		switch (c) {
-		case 'h': /* --help, -h */
-			printHelp();
-			return EXIT_SUCCESS;
-		case 'v': /* --version, -v */
-			printVersion();
-			return EXIT_SUCCESS;
-		case 'o': /* --output, -o */
-			if(autoDetectOutputType) {
-				// try to detect output type by file name extension
-				extension = Utils::extractFileExtension(optarg);
-				std::transform(extension.begin(), extension.end(), extension.begin(), tolower);
-				if(extension == "html" || extension == "htm") {
-					outputType = HTML;
-				} else if(extension == "tex") {
-					outputType = LATEX;
-				} else if(extension == "dbg" || extension == "debug") {
-					outputType = DEBUG;
-				}
-			}
+	// initialize description object
+	po::options_description desc("Options");
+	desc.add_options()
+		("help,h", "Print help messages")
+		("version,v", "Print version info")
+		("output,o", po::value<std::string>(), "Specify output file")
+		("html", "Set output type to HTML")
+		("latex", "Set output type to LaTeX")
+		("debug", "Set output type to Debug")
+		("title", po::value<std::string>(), "Set title for document");
 
-			outputFile = optarg;
-			break;
-		case 1 : /* --html */
+	po::options_description hiddenDesc("Hidden");
+	hiddenDesc.add_options()
+		("input", po::value<std::string>(), "Specify input file");
+
+	po::options_description allOptions("All Options");
+	allOptions.add(desc).add(hiddenDesc);
+
+	po::positional_options_description poDesc;
+	poDesc.add("input", -1);
+
+	// parse command line
+	po::variables_map vm;
+	po::store(po::command_line_parser(argc, argv).
+          options(allOptions).positional(poDesc).run(), vm);
+	po::notify(vm);
+
+	if(vm.count("help")) {
+		printHelp(desc);
+		return EXIT_SUCCESS; // TODO better exit
+	}
+
+	if(vm.count("version")) {
+		printVersion();
+		return EXIT_SUCCESS; // TODO better exit
+	}
+
+	if(vm.count("output")) {
+		writeToStdOut = false;
+		outputFile = vm["count"].as<std::string>();
+	}
+
+	if(vm.count("input")) {
+		readFromStdIn = false;
+		inputFile = vm["input"].as<std::string>();
+	}
+
+	// check for title option
+	// if there is no title option then extract the title from the input
+	// or output file
+	if(vm.count("title")) {
+		title = vm["title"].as<std::string>();
+	} else if(! readFromStdIn) {
+		title = Utils::extractFilename(inputFile);
+	} else if(! writeToStdOut) {
+		title = Utils::extractFilename(outputFile);
+	}
+
+	if(vm.count("html")) {
+		outputType = HTML;
+	} else if(vm.count("latex")) {
+		outputType = LATEX;
+	} else if(vm.count("debug")) {
+		outputType = DEBUG;
+	} else if(! writeToStdOut) { // if no output type option is given but an output file
+		std::string extension = Utils::extractFileExtension(outputFile);
+		std::transform(extension.begin(), extension.end(), extension.begin(), tolower);
+
+		if(extension == "html" || extension == "htm") {
 			outputType = HTML;
-			autoDetectOutputType = false;
-			break;
-		case 2 : /* --latex */
+		} else if(extension == "tex") {
 			outputType = LATEX;
-			autoDetectOutputType = false;
-			break;
-		case 3: /* --debug */
+		} else if(extension == "dbg" || extension == "debug") {
 			outputType = DEBUG;
-			autoDetectOutputType = false;
-			break;
-		case 4: /* --title */
-			title = optarg;
-			fixedTitle = true;
-			break;
-		case '?':
-			break;
-		default:
-			printError(argv[0]);
-			return false;
 		}
 	}
 
-	// input file is now the last string in argv
-	if (optind == argc - 1) {
-		inputFile = argv[optind];
-	}
-	
-	// if --title was not given
-	if(! fixedTitle) {
-		// try to get the MPR file title from input or output file name
-		if(inputFile != nullptr) {
-			title = Utils::extractFilename(std::string(inputFile));
-		} else if(outputFile != nullptr) {
-			title = Utils::extractFilename(std::string(outputFile));
-		}
-	}
-	
 	return true;
 }
 
@@ -122,7 +122,7 @@ bool CLI::work() {
 	}
 
 	// check different input sources
-	if(inputFile == nullptr) {
+	if(readFromStdIn) {
 		// read from standard input
 		if(! reader->readMPR(std::cin, mprFile)) {
 			return false;
@@ -130,22 +130,22 @@ bool CLI::work() {
 	} else {
 		 // open the file
   		std::ifstream file(inputFile, std::ios::in);
-  		
+
   		if(! file.is_open()) {
   			printUnableToOpenFile(inputFile);
   			return false;
     	}
-    	
+
     	// read and parse from input file
 		if (! reader->readMPR(file, mprFile)) {
 			return false;
 		}
-		
+
 		file.close();
 	}
 
 	// check for output file
-	if(outputFile == nullptr) {
+	if(writeToStdOut) {
 		// write to standard output
 		if(! writer->writeMPR(std::cout, mprFile)) {
 			return false;
@@ -158,20 +158,20 @@ bool CLI::work() {
 			printUnableToOpenFile(outputFile);
 			return false;
 		}
-		
+
 		// write to file
 		if(! writer->writeMPR(file, mprFile)) {
 			return false;
 		}
-	
+
 		file.close();
 	}
-	
+
 	return true;
 }
 
 // print help and usage (should be equals to README and man file)
-void CLI::printHelp() {
+void CLI::printHelp(const boost::program_options::options_description& desc) {
 	std::cout << "Usage: mictool [inputfile] [format options] -o [outputfile]\n"
 			<< "\n"
 			<< "You can give no inputfile in order to read from standard input.\n"
@@ -179,14 +179,7 @@ void CLI::printHelp() {
 			<< "The -o parameter auto detects the output format depending on file\n"
 			<< "name extension if no other output format parameter is given.\n"
 			<< "\n"
-			<< "Options:\n"
-			<< "-o, --output      OUTPUTFILE Write the output to the given file\n"
-			<< "--html                       Set the output format to HTML\n"
-			<< "--latex                      Set the output format to LaTeX\n"
-			<< "--debug                      Set the output format to debug\n"
-			<< "--title                TITLE Set the title to be used for output document\n"
-			<< "-v, --version                Display mictool version\n"
-			<< "-h, --help                   Display this information\n"
+			<< desc
 			<< std::endl;
 }
 
