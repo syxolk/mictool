@@ -41,14 +41,22 @@ bool CLI::parse() {
 
 	// parse command line
 	po::variables_map vm;
-	po::store(po::command_line_parser(argc, argv).
-          options(allOptions).positional(poDesc).run(), vm);
-	po::notify(vm);
 
-	if(vm.count("help")) {
+	try {
+		po::store(po::command_line_parser(argc, argv).
+			  options(allOptions).positional(poDesc).run(), vm);
+
+		if(vm.count("help")) {
+			printHelp(desc);
+			return EXIT_SUCCESS; // TODO better exit
+		}
+
+		po::notify(vm);
+	} catch(boost::program_options::error& e) {
+		std::cerr << "ERROR: " << e.what() << std::endl << std::endl;
 		printHelp(desc);
-		return EXIT_SUCCESS; // TODO better exit
-	}
+		return false;
+    }
 
 	if(vm.count("version")) {
 		printVersion();
