@@ -23,6 +23,7 @@ bool CLI::parse() {
 	desc.add_options()
 		("help,h", "Print help messages")
 		("version,v", "Print version info")
+		("quiet,q", "Do not print any error messages")
 		("output,o", po::value<std::string>(), "Specify output file")
 		("html", "Set output type to HTML")
 		("latex", "Set output type to LaTeX")
@@ -53,8 +54,10 @@ bool CLI::parse() {
 
 		po::notify(vm);
 	} catch(boost::program_options::error& e) {
-		std::cerr << "ERROR: " << e.what() << std::endl << std::endl;
-		printHelp(desc);
+		if(! beQuiet) {
+			std::cerr << "ERROR: " << e.what() << std::endl << std::endl;
+			printHelp(desc);
+		}
 		return false;
     }
 
@@ -63,13 +66,15 @@ bool CLI::parse() {
 		return EXIT_SUCCESS; // TODO better exit
 	}
 
+	if(vm.count("quiet")) {
+		beQuiet = true;
+	}
+
 	if(vm.count("output")) {
-		writeToStdOut = false;
-		outputFile = vm["count"].as<std::string>();
+        outputFile = vm["output"].as<std::string>();
 	}
 
 	if(vm.count("input")) {
-		readFromStdIn = false;
 		inputFile = vm["input"].as<std::string>();
 	}
 
@@ -77,29 +82,29 @@ bool CLI::parse() {
 	// if there is no title option then extract the title from the input
 	// or output file
 	if(vm.count("title")) {
-		title = vm["title"].as<std::string>();
-	} else if(! readFromStdIn) {
-		title = Utils::extractFilename(inputFile);
-	} else if(! writeToStdOut) {
-		title = Utils::extractFilename(outputFile);
+        docTitle = vm["title"].as<std::string>();
+	} else if(! isReadFromStdIn()) {
+        docTitle = Utils::extractFilename(inputFile);
+	} else if(! isWriteToStdOut()) {
+        docTitle = Utils::extractFilename(outputFile);
 	}
 
 	if(vm.count("html")) {
-		outputType = HTML;
+        outputType = OutputType::HTML;
 	} else if(vm.count("latex")) {
-		outputType = LATEX;
+        outputType = OutputType::LATEX;
 	} else if(vm.count("debug")) {
-		outputType = DEBUG;
-	} else if(! writeToStdOut) { // if no output type option is given but an output file
+        outputType = OutputType::DEBUG;
+	} else if(! isWriteToStdOut()) { // if no output type option is given but an output file
 		std::string extension = Utils::extractFileExtension(outputFile);
 		std::transform(extension.begin(), extension.end(), extension.begin(), tolower);
 
 		if(extension == "html" || extension == "htm") {
-			outputType = HTML;
+            outputType = OutputType::HTML;
 		} else if(extension == "tex") {
-			outputType = LATEX;
+            outputType = OutputType::LATEX;
 		} else if(extension == "dbg" || extension == "debug") {
-			outputType = DEBUG;
+            outputType = OutputType::DEBUG;
 		}
 	}
 
@@ -107,32 +112,35 @@ bool CLI::parse() {
 }
 
 bool CLI::work() {
-	MPRFile mprFile(title);
+    MPRFile mprFile(docTitle);
 
 	std::unique_ptr<MPRReader> reader(new MPRReaderV4());
 
 	std::unique_ptr<MPRWriter> writer(nullptr);
 
+    std::ostream nirvana(0); // discard all written data
+    std::ostream *errorStream = beQuiet ? &nirvana : &std::cerr;
+
 	// check different output formats
 	switch (outputType) {
-	case DEBUG:
+    case OutputType::DEBUG:
 		writer = std::unique_ptr<MPRWriter>(new MPRWriterDebug());
 		break;
-	case HTML:
+    case OutputType::HTML:
 		writer = std::unique_ptr<MPRWriter>(new MPRWriterHTML());
 		break;
-	case LATEX:
+    case OutputType::LATEX:
 		writer = std::unique_ptr<MPRWriter>(new MPRWriterLaTeX());
 		break;
-	case UNKNOWN:
+    case OutputType::UNKNOWN:
 		printUnknownOutputType(argv[0]);
 		return false;
 	}
 
 	// check different input sources
-	if(readFromStdIn) {
+	if(isReadFromStdIn()) {
 		// read from standard input
-		if(! reader->readMPR(std::cin, mprFile)) {
+        if(! reader->readMPR(std::cin, mprFile, *errorStream)) {
 			return false;
 		}
 	} else {
@@ -145,7 +153,7 @@ bool CLI::work() {
     	}
 
     	// read and parse from input file
-		if (! reader->readMPR(file, mprFile)) {
+        if (! reader->readMPR(file, mprFile, *errorStream)) {
 			return false;
 		}
 
@@ -153,7 +161,7 @@ bool CLI::work() {
 	}
 
 	// check for output file
-	if(writeToStdOut) {
+	if(isWriteToStdOut()) {
 		// write to standard output
 		if(! writer->writeMPR(std::cout, mprFile)) {
 			return false;
@@ -201,17 +209,23 @@ void CLI::printVersion() {
 
 // print error in case of wrong command line usage
 void CLI::printError(char* arg0) {
-	std::cerr << "Wrong parameters.\n" << "Type " << arg0
-			<< " --help for help.\n" << std::endl;
+	if(! beQuiet) {
+		std::cerr << "Wrong parameters.\n" << "Type " << arg0
+				<< " --help for help.\n" << std::endl;
+	}
 }
 
 void CLI::printUnknownOutputType(char* arg0) {
-	std::cerr << "Unknown output type.\n" << "Type " << arg0
-			<< " --help for help.\n" << std::endl;
+	if(! beQuiet) {
+		std::cerr << "Unknown output type.\n" << "Type " << arg0
+				<< " --help for help.\n" << std::endl;
+	}
 }
 
 void CLI::printUnableToOpenFile(std::string inputFile) {
-	std::cerr << "Unable to open file: " << inputFile
-			<< "\n" << "Check file existance and permissions.\n" << std::endl;
+	if(! beQuiet) {
+		std::cerr << "Unable to open file: " << inputFile
+				<< "\n" << "Check file existance and permissions.\n" << std::endl;
+	}
 }
 

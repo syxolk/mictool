@@ -14,7 +14,9 @@ add_library(mic STATIC
   cli/cli
   mpr/mpr
   util/util
+  reader/mpr_reader.h
   reader/v4/v4
+  writer/mpr_writer.h
   writer/html/html
   writer/latex/latex
   writer/debug/debug
