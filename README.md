@@ -28,11 +28,13 @@ You need git, make and g++ installed.
 Usage
 -----
 
-    mictool [--help] [--version] INPUTFILE -o OUTPUTFILE.
+    mictool [--help] [--version] [--quiet] INPUTFILE -o OUTPUTFILE.
 
 where _inputfile_ should be an MPR file and _outputfile_ an HTML or tex file.
 _outputfile_ will be created if not found and will be overwritten otherwise.
 The output format will be auto detected by filename extension.
+The quiet switch suppresses error messages but the error code will remain
+the same.
 
     mictool -o OUTPUTFILE
 
