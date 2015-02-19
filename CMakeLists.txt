@@ -12,9 +12,6 @@ endif()
 
 #find_package(GTest REQUIRED)
 
-#set (PROJECT_SOURCE_DIR src)
-#set (PROJECT_BINARY_DIR bin)
-
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
@@ -34,20 +31,23 @@ configure_file (
   "${PROJECT_BINARY_DIR}/generated/MictoolConfig.h"
 )
 
-add_subdirectory (ext)
+#add_subdirectory (${GTEST_ROOT})
 enable_testing()
+find_package(GTest REQUIRED)
 
 # add the binary tree to the search path for include files
 # so that we will find MictoolConfig.h
 include_directories("${PROJECT_BINARY_DIR}/generated")
 include_directories("${PROJECT_SOURCE_DIR}/src")
-include_directories("${PROJECT_SOURCE_DIR}/ext/gtest")
-include_directories("${PROJECT_SOURCE_DIR}/ext/gtest/include")
+#include_directories("${PROJECT_SOURCE_DIR}/ext/gtest")
+#include_directories("${PROJECT_SOURCE_DIR}/ext/gtest/include")
+include_directories(${GTEST_INCLUDE_DIRS})
 
 add_subdirectory (src)
 
 # TODO use add_custom_command instead
 add_custom_target( doc
+  WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
   COMMAND echo 'Mictool {\#mainpage}' > mainpage.md
   COMMAND tail -n +2 README.md >> mainpage.md
   COMMAND doxygen Doxyfile
@@ -63,3 +63,4 @@ add_test(
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
   COMMAND valgrind --tool=memcheck --leak-check=yes --error-exitcode=1 ${CMAKE_BINARY_DIR}/mictool test/implementierung.mpr -o test/implementierung.html
 )
+

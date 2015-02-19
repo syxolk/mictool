@@ -1,15 +1,3 @@
-set(HEADERS_SHARED
-  "${CMAKE_CURRENT_SOURCE_DIR}/reader/mpr_reader.h"
-  "${CMAKE_CURRENT_SOURCE_DIR}/writer/mpr_writer.h"
-  "${CMAKE_CURRENT_SOURCE_DIR}/util/util.h")
-
-#add_subdirectory(cli)
-#add_subdirectory(mpr)
-#add_subdirectory(util)
-#add_subdirectory(reader)
-#add_subdirectory(writer)
-#add_subdirectory(main)
-
 add_library(mic STATIC
   cli/cli
   mpr/mpr
@@ -32,9 +20,11 @@ add_executable(mictool_test
   test/ram_cell_test
   test/writer_html_test
 )
-target_link_libraries(mictool_test mic gtest gtest_main)
+target_link_libraries(mictool_test mic ${GTEST_BOTH_LIBRARIES} pthread)
+#target_link_libraries(mictool_test mic gtest gtest_main)
 
 if ( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
     # This is tested
     set_property( TARGET mic APPEND_STRING PROPERTY COMPILE_FLAGS "-W -Wall -Werror -Wextra")
 endif ()
+

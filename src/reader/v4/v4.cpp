@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <cstring>
 #include <reader/v4/v4.h>
 #include <util/util.h>
 #include <mpr/mpr.h>

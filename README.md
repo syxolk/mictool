@@ -22,7 +22,17 @@ You need git, make and g++ installed.
     cd mictool
     mkdir release
     cd release
-    cmake -G "Unix Makefiles" ..
+    cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DGTEST_ROOT=/usr/src/gtest/build ..
+    make
+    
+For compiling the test suite and running the tests you need GTest.
+Example for linux users:
+
+    apt-get install libgtest-dev # or download source to /usr/src/gtest
+    cd /usr/src/gtest
+    mkdir build
+    cd build
+    cmake ..
     make
 
 Usage
@@ -88,5 +98,4 @@ Compiled and tested with Debian 7 (wheezy) amd64 and GNU C++ compiler 4.7.2.
 Also tested on Ubuntu 14.04 with g++ 4.8.2 and Cygwin on Win7.
 Should be working with MinGW (GCC, Make) on Windows and RaspberryPi with Raspbian as well.
 
-For cross compiling on Linux for Windows install package mingw-w32 and use
-the make files Makefile.win32 and Makefile.win64.
+**VISUAL STUDIO:** Currently no support. Try cygwin or mingw in the mean time.
