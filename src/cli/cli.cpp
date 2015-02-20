@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <memory>
 #include <string>
-#include <boost/program_options.hpp>
 #include <reader/v4/v4.h>
 #include <writer/html/html.h>
 #include <writer/latex/latex.h>
@@ -14,141 +13,59 @@
 #include "cli.h"
 #include <MictoolConfig.h>
 
-bool CLI::parse() {
-	// create namespace alias (shortcut)
-	namespace po = boost::program_options;
-
-	// initialize description object
-	po::options_description desc("Options");
-	desc.add_options()
-		("help,h", "Print help messages")
-		("version,v", "Print version info")
-		("quiet,q", "Do not print any error messages")
-		("output,o", po::value<std::string>(), "Specify output file")
-		("html", "Set output type to HTML")
-		("latex", "Set output type to LaTeX")
-		("debug", "Set output type to Debug")
-		("title", po::value<std::string>(), "Set title for document");
-
-	po::options_description hiddenDesc("Hidden");
-	hiddenDesc.add_options()
-		("input", po::value<std::string>(), "Specify input file");
-
-	po::options_description allOptions("All Options");
-	allOptions.add(desc).add(hiddenDesc);
-
-	po::positional_options_description poDesc;
-	poDesc.add("input", -1);
-
-	// parse command line
-	po::variables_map vm;
-
-	try {
-		po::store(po::command_line_parser(argc, argv).
-			  options(allOptions).positional(poDesc).run(), vm);
-
-		if(vm.count("help")) {
-			printHelp(desc);
-			return EXIT_SUCCESS; // TODO better exit
-		}
-
-		po::notify(vm);
-	} catch(boost::program_options::error& e) {
-		if(! beQuiet) {
-			std::cerr << "ERROR: " << e.what() << std::endl << std::endl;
-			printHelp(desc);
-		}
-		return false;
+bool CLI::work() {
+    if(options.hasError()) {
+        printError();
+        return false;
     }
 
-	if(vm.count("version")) {
-		printVersion();
-		return EXIT_SUCCESS; // TODO better exit
-	}
+    if(options.requestedHelp()) {
+        printHelp();
+        return true;
+    }
 
-	if(vm.count("quiet")) {
-		beQuiet = true;
-	}
+    if(options.requestedVersion()) {
+        printVersion();
+        return true;
+    }
 
-	if(vm.count("output")) {
-        outputFile = vm["output"].as<std::string>();
-	}
-
-	if(vm.count("input")) {
-		inputFile = vm["input"].as<std::string>();
-	}
-
-	// check for title option
-	// if there is no title option then extract the title from the input
-	// or output file
-	if(vm.count("title")) {
-        docTitle = vm["title"].as<std::string>();
-	} else if(! isReadFromStdIn()) {
-        docTitle = Utils::extractFilename(inputFile);
-	} else if(! isWriteToStdOut()) {
-        docTitle = Utils::extractFilename(outputFile);
-	}
-
-	if(vm.count("html")) {
-        outputType = OutputType::HTML;
-	} else if(vm.count("latex")) {
-        outputType = OutputType::LATEX;
-	} else if(vm.count("debug")) {
-        outputType = OutputType::DEBUG;
-	} else if(! isWriteToStdOut()) { // if no output type option is given but an output file
-		std::string extension = Utils::extractFileExtension(outputFile);
-		std::transform(extension.begin(), extension.end(), extension.begin(), tolower);
-
-		if(extension == "html" || extension == "htm") {
-            outputType = OutputType::HTML;
-		} else if(extension == "tex") {
-            outputType = OutputType::LATEX;
-		} else if(extension == "dbg" || extension == "debug") {
-            outputType = OutputType::DEBUG;
-		}
-	}
-
-	return true;
-}
-
-bool CLI::work() {
-    MPRFile mprFile(docTitle);
+    MPRFile mprFile(options.title());
 
 	std::unique_ptr<MPRReader> reader(new MPRReaderV4());
 
 	std::unique_ptr<MPRWriter> writer(nullptr);
 
     std::ostream nirvana(0); // discard all written data
-    std::ostream *errorStream = beQuiet ? &nirvana : &std::cerr;
+    std::ostream *errorStream = options.quiet() ? &nirvana : &std::cerr;
 
 	// check different output formats
-	switch (outputType) {
-    case OutputType::DEBUG:
+    switch (options.format()) {
+    case CLIOptions::OutputType::DEBUG:
 		writer = std::unique_ptr<MPRWriter>(new MPRWriterDebug());
 		break;
-    case OutputType::HTML:
+    case CLIOptions::OutputType::HTML:
 		writer = std::unique_ptr<MPRWriter>(new MPRWriterHTML());
 		break;
-    case OutputType::LATEX:
+    case CLIOptions::OutputType::LATEX:
 		writer = std::unique_ptr<MPRWriter>(new MPRWriterLaTeX());
 		break;
-    case OutputType::UNKNOWN:
-		printUnknownOutputType(argv[0]);
+    case CLIOptions::OutputType::UNKNOWN:
+        printUnknownOutputType();
 		return false;
 	}
 
 	// check different input sources
-	if(isReadFromStdIn()) {
+    if(options.isReadFromStdIn()) {
 		// read from standard input
         if(! reader->readMPR(std::cin, mprFile, *errorStream)) {
 			return false;
 		}
 	} else {
 		 // open the file
-  		std::ifstream file(inputFile, std::ios::in);
+        std::ifstream file(options.input(), std::ios::in);
 
   		if(! file.is_open()) {
-  			printUnableToOpenFile(inputFile);
+            printUnableToOpenFile(options.input());
   			return false;
     	}
 
@@ -161,17 +78,17 @@ bool CLI::work() {
 	}
 
 	// check for output file
-	if(isWriteToStdOut()) {
+    if(options.isWriteToStdOut()) {
 		// write to standard output
 		if(! writer->writeMPR(std::cout, mprFile)) {
 			return false;
 		}
 	} else {
 		// open file for writing
-		std::ofstream file(outputFile);
+        std::ofstream file(options.output());
 
 		if(! file.is_open()) {
-			printUnableToOpenFile(outputFile);
+            printUnableToOpenFile(options.output());
 			return false;
 		}
 
@@ -187,7 +104,7 @@ bool CLI::work() {
 }
 
 // print help and usage (should be equals to README and man file)
-void CLI::printHelp(const boost::program_options::options_description& desc) {
+void CLI::printHelp() {
 	std::cout << "Usage: mictool [inputfile] [format options] -o [outputfile]\n"
 			<< "\n"
 			<< "You can give no inputfile in order to read from standard input.\n"
@@ -195,7 +112,7 @@ void CLI::printHelp(const boost::program_options::options_description& desc) {
 			<< "The -o parameter auto detects the output format depending on file\n"
 			<< "name extension if no other output format parameter is given.\n"
 			<< "\n"
-			<< desc
+            << options.description()
 			<< std::endl;
 }
 
@@ -208,23 +125,24 @@ void CLI::printVersion() {
 }
 
 // print error in case of wrong command line usage
-void CLI::printError(const char* arg0) {
-	if(! beQuiet) {
-		std::cerr << "Wrong parameters.\n" << "Type " << arg0
+void CLI::printError() {
+    if(! options.quiet()) {
+        std::cerr << options.error() << std::endl << std::endl;
+        std::cerr << "Wrong parameters.\n" << "Type " << options.programName()
 				<< " --help for help.\n" << std::endl;
 	}
 }
 
-void CLI::printUnknownOutputType(const char* arg0) {
-	if(! beQuiet) {
-		std::cerr << "Unknown output type.\n" << "Type " << arg0
+void CLI::printUnknownOutputType() {
+    if(! options.quiet()) {
+        std::cerr << "Unknown output type.\n" << "Type " << options.programName()
 				<< " --help for help.\n" << std::endl;
 	}
 }
 
-void CLI::printUnableToOpenFile(std::string inputFile) {
-	if(! beQuiet) {
-		std::cerr << "Unable to open file: " << inputFile
+void CLI::printUnableToOpenFile(const std::string& file) {
+    if(! options.quiet()) {
+        std::cerr << "Unable to open file: " << file
 				<< "\n" << "Check file existance and permissions.\n" << std::endl;
 	}
 }

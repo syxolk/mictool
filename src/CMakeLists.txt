@@ -12,6 +12,7 @@ set(HEADERS_SHARED
 
 add_library(mic STATIC
   cli/cli
+  cli/cli_options
   mpr/mpr
   util/util
   reader/mpr_reader.h

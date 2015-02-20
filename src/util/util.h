@@ -68,7 +68,7 @@ class Utils {
 		/**
 		 * @brief Read a line from the input stream and normalize line endings.
 		 *
-		 * Helper function that removes '\r' from lines when
+         * Helper function that removes '\\r' from lines when
 		 * reading Windows files on Linux.
 		 *
 		 * @param is input stream to read from

@@ -1,22 +1,23 @@
 #include <cstdlib>
 #include <iostream>
+#include <cli/cli_options.h>
 #include <cli/cli.h>
 
 // entrypoint to mictool
 int main(int argc, char* argv[]) {
 	try {
 		// create new command line parser
-        CLI cli(argc, (const char**) argv);
+        CLIOptions options;
 
-		// parse command line arguments
-		if(! cli.parse()) {
-			return EXIT_FAILURE;
-		}
+        bool parseResult = options.parse(argc, (const char**) argv);
 
-		// work on the input and print the results to the output
-		if(! cli.work()) {
-			return EXIT_FAILURE;
-		}
+        CLI cli(options);
+
+        bool workResult = cli.work();
+
+        if(!parseResult || !workResult) {
+            return EXIT_FAILURE;
+        }
 	} catch (std::exception& e) {
 		std::cerr << "Unhandled Exception reached the top of main: "
 			  << e.what() << ", application will now exit" << std::endl;
