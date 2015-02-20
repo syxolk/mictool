@@ -6,7 +6,7 @@
 int main(int argc, char* argv[]) {
 	try {
 		// create new command line parser
-		CLI cli(argc, argv);
+        CLI cli(argc, (const char**) argv);
 
 		// parse command line arguments
 		if(! cli.parse()) {

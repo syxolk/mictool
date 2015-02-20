@@ -33,8 +33,9 @@ add_executable(mictool_test
   test/micro_line_test
   test/ram_cell_test
   test/writer_html_test
+  test/cli_test
 )
-target_link_libraries(mictool_test mic gtest gtest_main)
+target_link_libraries(mictool_test mic ${Boost_LIBRARIES} gtest gtest_main)
 
 if ( CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX )
     # This is tested

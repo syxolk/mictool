@@ -26,7 +26,7 @@ class CLI {
 		 * @param argc number of command line arguments
 		 * @param argv command line arguments
 		 */
-        CLI(int argc, char **argv) : argc(argc), argv(argv) {}
+        CLI(int argc, const char *argv[]) : argc(argc), argv(argv) {}
 
 		/**
 		 * @brief Empty deconstructor
@@ -60,7 +60,7 @@ class CLI {
 		 *
 		 * @param beQuiet quiet flag, defaults to true
 		 */
-		void quiet(bool beQuiet = true) {
+        void quiet(bool beQuiet) {
 			this->beQuiet = beQuiet;
 		}
 		
@@ -81,7 +81,7 @@ class CLI {
          * @param argv list of string arguments
          * @return this
          */
-        CLI& arg(int argc, char **argv) {
+        CLI& arg(int argc, const char *argv[]) {
             this->argc = argc;
             this->argv = argv;
             return *this;
@@ -188,16 +188,29 @@ class CLI {
         std::string title() const {
             return docTitle;
         }
-	private:
-		// different output types
-		// UNKNOWN means there was no output type specified
-        enum class OutputType {
-			UNKNOWN, HTML, DEBUG, LATEX
-		};
 
+        /**
+         * @brief The different output formats.
+         *
+         * UNKNOWN means there was no output type specified
+         */
+        enum class OutputType {
+            UNKNOWN, HTML, DEBUG, LATEX
+        };
+
+        OutputType format() const {
+            return outputType;
+        }
+
+        CLI& format(OutputType outputType) {
+            this->outputType = outputType;
+            return *this;
+        }
+
+	private:
 		// CLI arguments
 		int argc;
-		char **argv;
+        const char **argv;
 
 		// CLI options
 		std::string inputFile;
@@ -211,8 +224,8 @@ class CLI {
 		// helper methods for error and help messages
 		void printHelp(const boost::program_options::options_description& desc);
 		void printVersion();
-		void printError(char* arg0);
-		void printUnknownOutputType(char* arg0);
+        void printError(const char* arg0);
+        void printUnknownOutputType(const char* arg0);
 		void printUnableToOpenFile(std::string inputFile);
 };
 

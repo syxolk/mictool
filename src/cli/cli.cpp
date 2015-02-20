@@ -208,14 +208,14 @@ void CLI::printVersion() {
 }
 
 // print error in case of wrong command line usage
-void CLI::printError(char* arg0) {
+void CLI::printError(const char* arg0) {
 	if(! beQuiet) {
 		std::cerr << "Wrong parameters.\n" << "Type " << arg0
 				<< " --help for help.\n" << std::endl;
 	}
 }
 
-void CLI::printUnknownOutputType(char* arg0) {
+void CLI::printUnknownOutputType(const char* arg0) {
 	if(! beQuiet) {
 		std::cerr << "Unknown output type.\n" << "Type " << arg0
 				<< " --help for help.\n" << std::endl;
