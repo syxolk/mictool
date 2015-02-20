@@ -283,7 +283,7 @@ public:
     }
 
     /**
-     * @brief error Returns the error message if there was an error
+     * @brief Returns the error message if there was an error
      *
      * @return error message or empty string if there was no error
      */
@@ -302,8 +302,6 @@ public:
     }
 
 private:
-    boost::program_options::options_description publicDesc;
-
     // name of the program being executed
     // argv[0], usually "mictool"
     std::string program;
